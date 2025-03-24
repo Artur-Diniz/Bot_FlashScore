@@ -5,6 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
+from metodos import automacaoUltimosJogos
 
 import time
 
@@ -12,6 +13,8 @@ import time
 url=""
 def Ultimos_Jogos(url):
     driver = webdriver.Chrome()
+    
+    bot = automacaoUltimosJogos(driver)
 
     driver.get(url)
 
@@ -59,16 +62,16 @@ def Ultimos_Jogos(url):
             exit()
 
     try:
-        # Clica no botão para abrir estatísticas
+        # Clica no botão para abrir os ultimos jogos
         driver.find_element(By.CSS_SELECTOR, "#detail > div.detailOver > div > a:nth-child(3) > button").click()
 
         # Listas para armazenar dados
-        items = []  # Lista que armazena as URLs
+        items = []  
         confrontoDireto = []
         casacasa = []
         forafora = []
 
-        actions = ActionChains(driver)
+        keyboard = ActionChains(driver)
 
         contador = 0
         count = 3      
@@ -84,44 +87,38 @@ def Ultimos_Jogos(url):
             
             if contador==5 and count ==3:
                 count = 1                               
-                actions.send_keys(Keys.PAGE_UP).perform()
-                actions.send_keys(Keys.PAGE_UP).perform()
+                keyboard.send_keys(Keys.PAGE_UP).perform()
+                keyboard.send_keys(Keys.PAGE_UP).perform()
                 botaocasa.click()
                 contador = 0
             if contador==5 and count==1:
-                actions.send_keys(Keys.PAGE_UP).perform()
+                keyboard.send_keys(Keys.PAGE_UP).perform()
                 botaofora.click()
-                jogofora=1
+                jogofora=1 
                 contador = 0
             
             while contador!= 5:
                 contador+=1
                 
-                driver.find_element(By.CSS_SELECTOR, f"#detail > div.h2hSection > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({contador})").click()
-                                                        
-                # driver.find_element(By.CLASS_NAME, "h2h__row ").click()
-                
-                wait.until(lambda driver: len(driver.window_handles) > 1)
-                for window in driver.window_handles:
-                    if window != original_window:
-                        driver.switch_to.window(window)
-                        break
-                current_url = driver.current_url
-                items.append(current_url)  # Armazena a URL na lista `items`
+                #count é em qual coluna do flashscore está localizado (3 é sobre confronto diretos) 
+                # os confrontos diretos variam entre quem é o mandante 
+                #contador é pq são até os 5 ultimos
+                Url_Jogo= bot.reconhecerUltimosJogos(count,contador)
+
+             
+                items.append(Url_Jogo) 
                 
                 if count == 3:                  
-                    confrontoDireto.append(current_url)
+                    confrontoDireto.append(Url_Jogo)
                 elif count == 1 and jogofora==0:
-                    casacasa.append(current_url)
+                    casacasa.append(Url_Jogo)
                 elif count == 1 and jogofora==1:
-                    forafora.append(current_url)
+                    forafora.append(Url_Jogo)
                     
-                driver.close()
-                driver.switch_to.window(original_window)
+                
 
           
 
-        # Imprime as URLs coletadas
         print("URLs coletadas:")
         for url in items:
             print(url)

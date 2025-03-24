@@ -122,4 +122,32 @@ class AutomacaoHomePage:
         except Exception as e:
             print("Erro ao adicionar holanda:", )
 
+class automacaoUltimosJogos:
+    def __init__(self, driver):
+        self.driver = driver
+        self.wait = WebDriverWait(driver, 10)
     
+    def reconhecerUltimosJogos(self, count, contador): #aqui eu tercerizei o método de clicar no ultimo jogos de cada time
+                                                       # pois vou usar em outra pagina pra n ter q repetir esse tranbolho
+        try:
+            driver = self.driver  
+            original_window = driver.current_window_handle
+
+            self.wait.until(EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, f"#detail > div.h2hSection > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({contador})")
+            )).click()
+
+            self.wait.until(lambda driver: len(driver.window_handles) > 1)
+            for window in driver.window_handles:
+                if window != original_window:
+                    driver.switch_to.window(window)
+                    break
+
+            current_url = driver.current_url
+            driver.close()
+            driver.switch_to.window(original_window)
+            return current_url
+
+        except Exception as e:
+            print(f"Ocorreu um erro: {e}")
+            return None
