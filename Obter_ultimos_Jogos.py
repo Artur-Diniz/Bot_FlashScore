@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 from metodos import automacaoUltimosJogos
-
+from models.Partidas import Partidas
 import time
 
 
@@ -17,20 +17,11 @@ def Ultimos_Jogos(url):
     bot = automacaoUltimosJogos(driver)
 
     driver.get(url)
-
+    driver.maximize_window()
     wait = WebDriverWait(driver, 10)
     cookie_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#onetrust-accept-btn-handler")))
     cookie_button.click()
 
-    # Classe para representar uma partida
-    class Partidas:
-        def __init__(self):
-            self.NomeTimeCasa = ""
-            self.NomeTimeFora = ""
-            self.data = datetime.now()
-            self.Campeonato = ""
-            self.PartidaAnalise = False
-            self.TipoPartida = ""
 
     partida = Partidas()
 
@@ -73,20 +64,19 @@ def Ultimos_Jogos(url):
 
         keyboard = ActionChains(driver)
 
-        contador = 0
+        contador = 0    #contador é pq são até os 5 ultimos jogos
         count = 3      
-        jogofora=0
+        jogofora=0 #para verificar se ja passou a seunda ou terceira coluna
          
         botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div.h2hSection > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
         botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div.h2hSection > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
 
-        confronto = driver.find_elements(By.CLASS_NAME, "rows") #
-        original_window = driver.current_window_handle
-
+        confronto = driver.find_elements(By.CLASS_NAME, "rows") 
+        
         for confr in confronto:
             
             if contador==5 and count ==3:
-                count = 1                               
+                count = 1
                 keyboard.send_keys(Keys.PAGE_UP).perform()
                 keyboard.send_keys(Keys.PAGE_UP).perform()
                 botaocasa.click()
@@ -102,9 +92,7 @@ def Ultimos_Jogos(url):
                 
                 #count é em qual coluna do flashscore está localizado (3 é sobre confronto diretos) 
                 # os confrontos diretos variam entre quem é o mandante 
-                #contador é pq são até os 5 ultimos
                 Url_Jogo= bot.reconhecerUltimosJogos(count,contador)
-
              
                 items.append(Url_Jogo) 
                 
@@ -114,10 +102,6 @@ def Ultimos_Jogos(url):
                     casacasa.append(Url_Jogo)
                 elif count == 1 and jogofora==1:
                     forafora.append(Url_Jogo)
-                    
-                
-
-          
 
         print("URLs coletadas:")
         for url in items:

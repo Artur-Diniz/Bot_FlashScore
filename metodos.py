@@ -4,8 +4,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+from models.Partidas import Partidas
+from models.EstatisticaPartidas import Estatisticas
+from datetime import datetime
 
-class AutomacaoHomePage:
+
+
+class automacao:
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
@@ -46,6 +51,9 @@ class AutomacaoHomePage:
             elemento.click()
         except Exception as e:
             print(f"Erro ao clicar no elemento {cssSelector}: {e}")
+    
+
+class AutomacaoHomePage(automacao):
     
     
 
@@ -122,7 +130,7 @@ class AutomacaoHomePage:
         except Exception as e:
             print("Erro ao adicionar holanda:", )
 
-class automacaoUltimosJogos:
+class automacaoUltimosJogos (automacao):
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
@@ -151,3 +159,53 @@ class automacaoUltimosJogos:
         except Exception as e:
             print(f"Ocorreu um erro: {e}")
             return None
+
+
+class RecolherEstatisticas(automacao):
+    def __init__(self, driver):
+        self.driver = driver
+        self.wait = WebDriverWait(driver, 10)
+        
+    def recolher_Partida(self,driver,tipoPartida ):
+        
+        partida = Partidas()
+        partida.NomeTimeCasa = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[4]/div[2]/div[3]/div[2]/a").text
+        partida.NomeTimeFora = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[4]/div[4]/div[3]/div[1]/a").text
+        nome = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[3]/div/span[3]/a").text
+        nomepart = nome.split(" - ")
+        partida.Campeonato = nomepart[0].strip()
+        partida.PartidaAnalise = True
+        diajogo =str(driver.find_element(By.XPATH, "/html/body/div[1]/div/div[4]/div[1]").text)
+        partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
+        partida.TipoPartida = tipoPartida
+        
+        return partida
+    
+    def recolher_Estatisticas(self,driver,tipoPartida ):
+        
+        partida = Estatisticas()
+        partida.NomeTimeCasa = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[4]/div[2]/div[3]/div[2]/a").text
+        partida.NomeTimeFora = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[4]/div[4]/div[3]/div[1]/a").text
+        nome = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[3]/div/span[3]/a").text
+        nomepart = nome.split(" - ")
+        partida.Campeonato = nomepart[0].strip()
+        partida.PartidaAnalise = True
+        diajogo =str(driver.find_element(By.XPATH, "/html/body/div[1]/div/div[4]/div[1]").text)
+        partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
+        partida.TipoPartida = tipoPartida
+        
+        return partida
+
+    
+    
+    def atributo_Fora(self,driver, contador ):
+        atributo=0
+        
+        atributo =int(driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[3]/strong").text.rstrip("(",")","/","%"))
+        return atributo
+    
+    def atributo_Casa(self,driver, contador ):
+        atributo=0
+        texto=""
+        texto =driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[1]/strong").text.rstrip("%")
+        return atributo

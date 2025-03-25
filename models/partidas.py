@@ -2,6 +2,7 @@ from datetime import datetime
 
 class Partidas:
     def __init__(self):
+        self.Id_Partida = 0
         self.NomeTimeCasa = ""
         self.NomeTimeFora = ""
         self.data = datetime.today()
@@ -10,7 +11,6 @@ class Partidas:
         self.TipoPartida = ""
 
     def exibir_dados(self):
-        """Exibe os dados da partida."""
         print(f"Time Casa: {self.NomeTimeCasa}")
         print(f"Time Fora: {self.NomeTimeFora}")
         print(f"Campeonato: {self.Campeonato}")
