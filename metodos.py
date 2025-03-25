@@ -166,9 +166,12 @@ class RecolherEstatisticas(automacao):
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
         
-    def recolher_Partida(self,driver,tipoPartida ):
-        
-        partida = Partidas()
+    def recolher_Partida(self,driver,tipoPartida, EstatisticasPartida ):
+        if EstatisticasPartida==True:
+            partida = Partidas()
+        else:
+            partida = Estatisticas()
+            
         partida.NomeTimeCasa = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[4]/div[2]/div[3]/div[2]/a").text
         partida.NomeTimeFora = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[4]/div[4]/div[3]/div[1]/a").text
         nome = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[3]/div/span[3]/a").text
@@ -179,33 +182,97 @@ class RecolherEstatisticas(automacao):
         partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
         partida.TipoPartida = tipoPartida
         
-        return partida
+        return partida    
+ 
     
-    def recolher_Estatisticas(self,driver,tipoPartida ):
+    def Partida(self,driver,contador,estatistica,casafora):
         
-        partida = Estatisticas()
-        partida.NomeTimeCasa = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[4]/div[2]/div[3]/div[2]/a").text
-        partida.NomeTimeFora = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[4]/div[4]/div[3]/div[1]/a").text
-        nome = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[3]/div/span[3]/a").text
-        nomepart = nome.split(" - ")
-        partida.Campeonato = nomepart[0].strip()
-        partida.PartidaAnalise = True
-        diajogo =str(driver.find_element(By.XPATH, "/html/body/div[1]/div/div[4]/div[1]").text)
-        partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
-        partida.TipoPartida = tipoPartida
-        
-        return partida
+        texto = driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[2]/strong").text 
+       
+        if texto == "Posse de bola":            
+            estatistica.Posse_de_bola= self.atributo(driver,contador,casafora)            
+        elif texto =="Total de finalizações":
+            estatistica.Total_Finalizacao= self.atributo(driver,contador,casafora)
+        elif texto =="Chutes Bloqueados":
+            estatistica.Chutes_Bloqueados= self.atributo(driver,contador,casafora)
+        elif texto =="Chances claras":
+            estatistica.Chances_claras= self.atributo(driver,contador,casafora)
+        elif texto =="Escanteios":
+            estatistica.Escanteios= self.atributo(driver,contador,casafora)
+        elif texto =="Bolas na trave":
+            estatistica.Bolas_na_trave= self.atributo(driver,contador,casafora)
+        elif texto =="Gols de cabeça":
+            estatistica.Gols_de_cabeca= self.atributo(driver,contador,casafora)
+        elif texto =="Defesas do goleiro":
+            estatistica.Defesas_do_goleiro= self.atributo(driver,contador,casafora)
+        elif texto =="Faltas":
+            estatistica.Faltas= self.atributo(driver,contador,casafora)
+        elif texto =="Impedimentos":
+            estatistica.Impedimentos= self.atributo(driver,contador,casafora)
+        elif texto =="Cartões Amarelos":
+            estatistica.Cartoes_Amarelos= self.atributo(driver,contador,casafora)
+        elif texto =="Cartões Vermelhos":
+            estatistica.Cartoes_Vermelhos= self.atributo(driver,contador,casafora)
+        elif texto =="Laterais Cobrados":
+            estatistica.Laterais_Cobrados= self.atributo(driver,contador,casafora)
+        elif texto =="Toques na área adversária":
+            estatistica.Toques_na_area_adversaria= self.atributo(driver,contador,casafora)
+        elif texto =="Passes no terço final":
+            estatistica.Passes_no_terco_final= self.atributo_Concluidos(driver,contador,casafora)
+        elif texto =="Cruzamentos":
+            estatistica.Cruzamentos= self.atributo_Concluidos(driver,contador,casafora)
+        elif texto =="Desarmes":
+            estatistica.Desarmes= self.atributo_Concluidos(driver,contador,casafora)
+        elif texto =="Bolas afastadas":
+            estatistica.Bolas_afastadas= self.atributo(driver,contador,casafora)
+        elif texto =="Interceptações":
+            estatistica.Interceptacoes= self.atributo(driver,contador,casafora)
+        elif texto == "Passes":
+            estatistica.Passes= self.atributo_Concluidos(driver,contador,casafora)
+            estatistica.Passes_Totais= self.atributo_Total(driver,contador,casafora)
+            estatistica.Precisao_Passes= self.atributo_Porcentagem(driver,contador,casafora)
+
+            
+
+        return estatistica
+
+    def atributo(self,driver, contador, timeCasa ):
+        atributo=0
+        if timeCasa==True:
+            atributo =int(driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[1]/strong").text.rstrip("%"))
+        else:
+            atributo = int(driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[3]/strong").text.rstrip("%"))
+            
+        return atributo    
+    
+
+    def atributo_Concluidos(self,driver, contador, timeCasa ):
+        atributo=0        
+        if timeCasa==True:
+            atributo = int(driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[1]/strong").text.split("(")[1].split("/")[0])
+        else:
+            atributo = int(driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[3]/strong").text.split("(")[1].split("/")[0])
+        return atributo
+    
 
     
-    
-    def atributo_Fora(self,driver, contador ):
-        atributo=0
-        
-        atributo =int(driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[3]/strong").text.rstrip("(",")","/","%"))
+    def atributo_Total(self,driver, contador, timeCasa ):
+        atributo=0 
+        if timeCasa==True: 
+            texto=driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[1]/strong").text.split("(")[1].split("/")[1].rstrip(")")
+            atributo = int(texto)
+        else:
+            texto=driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[3]/strong").text.split("(")[1].split("/")[1].rstrip(")")
+            atributo = int(texto)
         return atributo
     
-    def atributo_Casa(self,driver, contador ):
-        atributo=0
-        texto=""
-        texto =driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[1]/strong").text.rstrip("%")
+   
+    def atributo_Porcentagem(self,driver, contador, timeCasa ):
+        atributo=0        
+        if timeCasa ==True:
+            atributo = int(driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[1]/strong").text.split("(")[0].rstrip("% "))
+        else:
+            atributo = int(driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[3]/strong").text.split("(")[0].rstrip("% "))
+            
         return atributo
+    

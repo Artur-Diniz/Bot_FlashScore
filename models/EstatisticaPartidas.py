@@ -7,18 +7,13 @@ class Estatisticas(Partidas):
         self.Id = 0
         
         self.Posse_de_bola = 0
-        self.Tentativas_de_Gol = 0
-        self.Chutes_no_Gol = 0
-        self.Chutes_para_Fora = 0
+        self.Total_Finalizacao = 0
         self.Chutes_Bloqueados = 0
         self.Chances_claras = 0
         self.Escanteios = 0
-        self.Chutes_dentro_da_area = 0
-        self.Chutes_de_fora_da_area = 0
         self.Bolas_na_trave = 0
         self.Gols_de_cabeca = 0
         self.Defesas_do_goleiro = 0
-        self.Faltas_Cobradas= 0
         self.Impedimentos = 0
         self.Faltas = 0
         self.Cartoes_Amarelos = 0
@@ -27,7 +22,7 @@ class Estatisticas(Partidas):
         self.Toques_na_area_adversaria = 0
         self.Passes = 0
         self.Passes_Totais = 0
-        self.Precisao = 0
+        self.Precisao_Passes = 0
         self.Passes_no_terco_final = 0
         self.Cruzamentos = 0
         self.Desarmes = 0

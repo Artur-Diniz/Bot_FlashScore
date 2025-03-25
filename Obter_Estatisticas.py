@@ -25,28 +25,31 @@ def Obter_Estatisticas(url, tipoPartida):
     bot.cliqueCSS("#onetrust-accept-btn-handler")    
     keyboard.send_keys(Keys.DOWN).perform()  
     bot.cliqueCSS("#detail > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")
+    
+    
+    bot.cliqueCSS("#detail > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")   # esse clique é pra impedir que ele leia antes q a page carregue 
 
     partida = Partidas()
     casa = Estatisticas()
     fora = Estatisticas()
     
-    partida = bot.recolher_Partida(driver,tipoPartida)
-    casa = bot.recolher_Estatisticas(driver,tipoPartida)
-    fora = bot.recolher_Partida(driver,tipoPartida)
+    partida = bot.recolher_Partida(driver,tipoPartida,True)
+    casa = bot.recolher_Partida(driver,tipoPartida,False)
+    fora = bot.recolher_Partida(driver,tipoPartida,False)
 
-    
     rows = driver.find_elements(By.CLASS_NAME, "wcl-row_OFViZ")
 
     contador =0
     for row in rows:        
         contador +=1
-        texto = driver.find_element(By.XPATH, f"/html/body/div[1]/div/div[10]/div[{contador}]/div[1]/div[2]/strong").text 
-       
-        if texto == "Posse de bola":
-            casa.Posse_de_bola= bot.atributo_Casa(driver,contador)
-            fora.Posse_de_bola = bot.atributo_Fora(driver,contador)
         
-       
+        casa =bot.Partida(driver,contador,casa,True)
+        fora =bot.Partida(driver,contador,fora,False)
+            
+        #agora ta vindo completinho todos as informações das partidas analisadas
+            
+            
+            
     driver.quit()
 
 
