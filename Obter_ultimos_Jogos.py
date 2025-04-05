@@ -7,6 +7,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 from metodos import automacaoUltimosJogos
 from models.Partidas import Partidas
+from models.EstatisticaPartidas import Estatisticas
+from models.EstatisticaTimes import EstatisticasTimes
+from Obter_Estatisticas import Obter_Estatisticas
 import time
 
 
@@ -25,14 +28,13 @@ def Ultimos_Jogos(url):
 
     partida = Partidas()
 
-    # Coleta os dados da partida
-    partida.NomeTimeCasa = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[4]/div[2]/div[3]/div[2]/a").text
-    partida.NomeTimeFora = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[4]/div[4]/div[3]/div[1]/a").text
-    nome = driver.find_element(By.XPATH, "//*[@id=\"detail\"]/div[3]/div/span[3]/a").text
+    partida.NomeTimeCasa = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
+    partida.NomeTimeFora = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
+    nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(3) > a").text
     nomepart = nome.split(" - ")
     partida.Campeonato = nomepart[0].strip()
     partida.PartidaAnalise = True
-    diajogo =str(driver.find_element(By.XPATH, "/html/body/div[1]/div/div[4]/div[1]").text)
+    diajogo =str(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__startTime > div").text)
     partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
     partida.TipoPartida = "PartidaAnalise"
 
@@ -52,65 +54,127 @@ def Ultimos_Jogos(url):
             driver.quit()
             exit()
 
-    try:
-        # Clica no botão para abrir os ultimos jogos
-        driver.find_element(By.CSS_SELECTOR, "#detail > div.detailOver > div > a:nth-child(3) > button").click()
-
-        # Listas para armazenar dados
-        items = []  
-        confrontoDireto = []
-        casacasa = []
-        forafora = []
-
-        keyboard = ActionChains(driver)
-
-        contador = 0    #contador é pq são até os 5 ultimos jogos
-        count = 3      
-        jogofora=0 #para verificar se ja passou a seunda ou terceira coluna
+    # try:
+    # Clica no botão para abrir os ultimos jogos
+    driver.find_element(By.CSS_SELECTOR, "#detail > div.detailOver > div > a:nth-child(3) > button").click()
+    # Listas para armazenar dados
+    items = [] 
+    confrontoDireto = [] 
+    casacasa = [] 
+    forafora = [] 
+    
+    
+    
+    
+    keyboard = ActionChains(driver)
+    contador = 0    #contador é pq são até os 5 ultimos jogos
+    count = 3      
+    jogofora=0 #para verificar se ja passou a seunda ou terceira coluna
+     
+    botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div.h2hSection > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
+    botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div.h2hSection > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+    confronto = driver.find_elements(By.CLASS_NAME, "rows") 
+    
+    for confr in confronto:
+        
+        if contador==5 and count ==3:
+            count = 1
+            keyboard.send_keys(Keys.PAGE_UP).perform()
+            keyboard.send_keys(Keys.PAGE_UP).perform()
+            botaocasa.click()
+            contador = 0
+        if contador==5 and count==1:
+            keyboard.send_keys(Keys.PAGE_UP).perform()
+            botaofora.click()
+            jogofora=1 
+            contador = 0
+        
+        while contador!= 5:
+            contador+=1
+            
+            #count é em qual coluna do flashscore está localizado (3 é sobre confronto diretos) 
+            # os confrontos diretos variam entre quem é o mandante 
+            Url_Jogo= bot.reconhecerUltimosJogos(count,contador)
          
-        botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div.h2hSection > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
-        botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div.h2hSection > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
-
-        confronto = driver.find_elements(By.CLASS_NAME, "rows") 
-        
-        for confr in confronto:
+            items.append(Url_Jogo) 
             
-            if contador==5 and count ==3:
-                count = 1
-                keyboard.send_keys(Keys.PAGE_UP).perform()
-                keyboard.send_keys(Keys.PAGE_UP).perform()
-                botaocasa.click()
-                contador = 0
-            if contador==5 and count==1:
-                keyboard.send_keys(Keys.PAGE_UP).perform()
-                botaofora.click()
-                jogofora=1 
-                contador = 0
-            
-            while contador!= 5:
-                contador+=1
-                
-                #count é em qual coluna do flashscore está localizado (3 é sobre confronto diretos) 
-                # os confrontos diretos variam entre quem é o mandante 
-                Url_Jogo= bot.reconhecerUltimosJogos(count,contador)
-             
-                items.append(Url_Jogo) 
-                
-                if count == 3:                  
-                    confrontoDireto.append(Url_Jogo)
-                elif count == 1 and jogofora==0:
-                    casacasa.append(Url_Jogo)
-                elif count == 1 and jogofora==1:
-                    forafora.append(Url_Jogo)
+            if count == 3:                  
+                confrontoDireto.append(Url_Jogo)
+            elif count == 1 and jogofora==0:
+                casacasa.append(Url_Jogo)
+            elif count == 1 and jogofora==1:
+                forafora.append(Url_Jogo)
+    
+    driver.quit()
+    
+    casa = [ Estatisticas()]
+    AdversarioCasa = [ Estatisticas()]
+    fora = [ Estatisticas()]
+    AdversarioFora = [ Estatisticas()]
+    
+    confronto_timeA = [ Estatisticas()]
+    confronto_timeB = [ Estatisticas()]
 
-        print("URLs coletadas:")
-        for url in items:
-            print(url)
+    for urls in confrontoDireto:       
+        
+        timeA = Estatisticas()
+        TimeB = Estatisticas()
+        Partida = Partidas()
+        Partida, timeA, timeB = Obter_Estatisticas(urls,"Confronto Direto")
+        
+        if(timeA.NomeTimeCasa == partida.NomeTimeCasa):
+            confronto_timeA.append(timeA)
+            confronto_timeB.append(timeB)
+        if(timeA.NomeTimeCasa == partida.NomeTimeFora):
+            confronto_timeA.append(TimeB)
+            confronto_timeB.append(timeA)       
+    
+    for urls in casacasa:       
+        
+        timeA = Estatisticas()
+        TimeB = Estatisticas()
+        Partida = Partidas()
+        Partida, timeA, timeB = Obter_Estatisticas(urls,"Confronto Direto")
+        
+        casa.append(timeA)
+        AdversarioCasa.append(timeB)      
+    
+    for urls in forafora:       
+        
+        timeA = Estatisticas()
+        TimeB = Estatisticas()
+        Partida = Partidas()
+        Partida, timeA, timeB = Obter_Estatisticas(urls,"Confronto Direto")
+        
+        fora.append(timeA)
+        AdversarioFora.append(timeB)      
+    
+    
 
-        driver.quit()
-    except Exception as e:
-        print("Ocorreu um erro:", e)
-        driver.quit()
+
+   # Cria as estatísticas consolidadas
+    time_casa = bot.calcular_medias(casa)
+    time_fora = bot.calcular_medias(fora)
+    
+    # Adiciona estatísticas de adversários e confrontos
+    for prefixo, dados in [('_adversaria', AdversarioCasa), 
+                          ('_Confronto', confronto_timeA + confronto_timeB)]:
+        if dados:
+            media = bot.calcular_medias(dados)
+            for attr in dir(Estatisticas()):
+                if not attr.startswith('_') and isinstance(getattr(Estatisticas(), attr), (int, float)):
+                    setattr(time_casa, attr + prefixo, getattr(media, attr))
+    
+    # Repete para o time fora (se necessário)
+    for prefixo, dados in [('_adversaria', AdversarioFora), 
+                          ('_Confronto', confronto_timeA + confronto_timeB)]:
+        if dados:
+            media = bot.calcular_medias(dados)
+            for attr in dir(Estatisticas()):
+                if not attr.startswith('_') and isinstance(getattr(Estatisticas(), attr), (int, float)):
+                    setattr(time_fora, attr + prefixo, getattr(media, attr))
+    
+    return time_casa, time_fora
         
-        
-Ultimos_Jogos("https://www.flashscore.com.br/jogo/pOrgJQRj/#/resumo-de-jogo")
+
+time_casa,time_fora  = Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/lKLeNtAs/?isDetailPopup=true#/resumo-de-jogo")

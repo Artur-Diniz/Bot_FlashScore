@@ -5,10 +5,15 @@ class Estatisticas(Partidas):
     def __init__(self):
         
         self.Id = 0
+        self.CasaOuFora=""
+        self.Nome = ""
+
         
+        
+        self.Gol = 0
+        self.GolSofrido = 0
         self.Posse_de_bola = 0
         self.Total_Finalizacao = 0
-        self.Chutes_Bloqueados = 0
         self.Chances_claras = 0
         self.Escanteios = 0
         self.Bolas_na_trave = 0
@@ -28,3 +33,4 @@ class Estatisticas(Partidas):
         self.Desarmes = 0
         self.Bolas_afastadas = 0
         self.Interceptacoes = 0
+        

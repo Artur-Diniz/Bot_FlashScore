@@ -10,10 +10,4 @@ class Partidas:
         self.PartidaAnalise = False
         self.TipoPartida = ""
 
-    def exibir_dados(self):
-        print(f"Time Casa: {self.NomeTimeCasa}")
-        print(f"Time Fora: {self.NomeTimeFora}")
-        print(f"Campeonato: {self.Campeonato}")
-        print(f"Data: {self.data}")
-        print(f"Partida Analisada: {self.PartidaAnalise}")
-        print(f"Tipo de Partida: {self.TipoPartida}")
+   

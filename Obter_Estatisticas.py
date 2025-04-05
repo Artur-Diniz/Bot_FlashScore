@@ -33,25 +33,76 @@ def Obter_Estatisticas(url, tipoPartida):
     casa = Estatisticas()
     fora = Estatisticas()
     
+
+    
+    
     partida = bot.recolher_Partida(driver,tipoPartida,True)
     casa = bot.recolher_Partida(driver,tipoPartida,False)
     fora = bot.recolher_Partida(driver,tipoPartida,False)
-
+    casa.CasaOuFora='Casa'
+    fora.CasaOuFora='Fora'
+    casa.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(1)").text)
+    fora.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(3)").text)
+    
+    casa.GolSofrido=fora.Gol
+    fora.GolSofrido=casa.Gol
+  
     rows = driver.find_elements(By.CLASS_NAME, "wcl-row_OFViZ")
+    sessao=8
 
-    contador =0
-    for row in rows:        
-        contador +=1
+    linha =1
+    for row in rows:
         
-        casa =bot.Partida(driver,contador,casa,True)
-        fora =bot.Partida(driver,contador,fora,False)
+        bot.cliqueCSS("#detail > div.filterOver.filterOver--indent > div > a.selected > button")
+
+        try:
+        # Obtém sessão e linha ATUAIS para o row específico
+            sessao, linha = driver.execute_script("""
+                const row = arguments[0];
+                const parentDiv = row.closest('div[id^="detail"] > div');
+                const sessao = Array.from(parentDiv.parentNode.children).indexOf(parentDiv) + 1;
+                const linha = Array.from(parentDiv.children).indexOf(row) + 1;
+                return [sessao, linha];
+            """, row)  # <-- Passa o 'row' atual do loop
+
+            print(f"Processando: Sessão {sessao}, Linha {linha}")        
+        except:
+            bot.cliqueCSS("#detail > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")
+
+            continue
+        
+        if sessao==8 and linha==2:             
+             bot.cliqueCSS("#detail > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
+        
+        
+        if linha==2:
+            try:
+                texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({sessao}) > div:nth-child(2) > div.wcl-category_ITphf > div.wcl-category_7qsgP > Strong").text                                 
+            except:
+                print("obteção de estatisticas concluidas")
+                
+            if texto=="Gols esperados (xG)":
+                continue
+        
+        bot.pressionar_tecla(Keys.DOWN)
+        try:
+            texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > Strong").text                              
+        except:
+            print("")
             
-        #agora ta vindo completinho todos as informações das partidas analisadas
-            
-            
-            
+        try:
+            casa =bot.Partida(driver,linha,casa,True,sessao)
+            fora =bot.Partida(driver,linha,fora,False,sessao)
+        except:
+            print("")
+        
+
     driver.quit()
 
+    return partida,casa,fora 
+            
+            
 
 
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/4fUKLQW0/#/resumo-de-jogo/resumo-de-jogo", "Confronto_Direto")
+#partida,casa ,fora =Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/zmGWQL8t/?isDetailPopup=true#/resumo-de-jogo/resumo-de-jogo", "Confronto_Direto")
+
