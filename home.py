@@ -5,6 +5,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from metodos import AutomacaoHomePage
+from Obter_ultimos_Jogos import Ultimos_Jogos
+
+
 
 driver = webdriver.Chrome()
 
@@ -45,10 +48,16 @@ for element in jogos_dia:
     item = element.get_attribute("href")
     items.append(item)
 
+driver.quit()
+
+    
+for item in items:
+    Ultimos_Jogos(item)
+    
+
 
         
 print("Ligas selecionadas:", ligas)
 print("Jogos do dia filtrados:", items)
 
-driver.quit()
 

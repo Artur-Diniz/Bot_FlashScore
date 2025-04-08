@@ -75,8 +75,13 @@ def Ultimos_Jogos(url):
     botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div.h2hSection > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
     botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div.h2hSection > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
     confronto = driver.find_elements(By.CLASS_NAME, "rows") 
+    #essa variavel é para evitar excessões como passar por jogos q o bot n leu pq os times nunca se emfretaram ent melhor tirar
+    leu_tudo=0
     
     for confr in confronto:
+        
+        if contador==5 and count ==3 and confrontoDireto== []:
+            break
         
         if contador==5 and count ==3:
             count = 1
@@ -89,14 +94,17 @@ def Ultimos_Jogos(url):
             botaofora.click()
             jogofora=1 
             contador = 0
+            leu_tudo=1
         
         while contador!= 5:
             contador+=1
-            
             #count é em qual coluna do flashscore está localizado (3 é sobre confronto diretos) 
             # os confrontos diretos variam entre quem é o mandante 
             Url_Jogo= bot.reconhecerUltimosJogos(count,contador)
          
+            if Url_Jogo=='':
+                contador=5
+                break
             items.append(Url_Jogo) 
             
             if count == 3:                  
@@ -108,54 +116,57 @@ def Ultimos_Jogos(url):
     
     driver.quit()
     
-    casa = [ Estatisticas()]
-    AdversarioCasa = [ Estatisticas()]
-    fora = [ Estatisticas()]
-    AdversarioFora = [ Estatisticas()]
-    
-    confronto_timeA = [ Estatisticas()]
-    confronto_timeB = [ Estatisticas()]
+    if leu_tudo==1:
+        
+        
+        casa = [ Estatisticas()]
+        AdversarioCasa = [ Estatisticas()]
+        fora = [ Estatisticas()]
+        AdversarioFora = [ Estatisticas()]
 
-    for urls in confrontoDireto:       
-        
-        timeA = Estatisticas()
-        TimeB = Estatisticas()
-        Partida = Partidas()
-        Partida, timeA, timeB = Obter_Estatisticas(urls,"Confronto Direto")
-        
-        if(timeA.NomeTimeCasa == partida.NomeTimeCasa):
-            confronto_timeA.append(timeA)
-            confronto_timeB.append(timeB)
-        if(timeA.NomeTimeCasa == partida.NomeTimeFora):
-            confronto_timeA.append(TimeB)
-            confronto_timeB.append(timeA)       
-        mandarDados(timeA,timeB,Partida)
+        confronto_timeA = [ Estatisticas()]
+        confronto_timeB = [ Estatisticas()]
 
-    for urls in casacasa:       
-        
-        timeA = Estatisticas()
-        TimeB = Estatisticas()
-        Partida = Partidas()
-        Partida, timeA, timeB = Obter_Estatisticas(urls,"Casa")
-        
-        casa.append(timeA)
-        AdversarioCasa.append(timeB)      
-        mandarDados(timeA,timeB,Partida)
-        
-    
-    for urls in forafora:       
-        
-        timeA = Estatisticas()
-        TimeB = Estatisticas()
-        Partida = Partidas()
-        Partida, timeA, timeB = Obter_Estatisticas(urls,"Fora")
-        
-        fora.append(timeA)
-        AdversarioFora.append(timeB)     
-        mandarDados(timeA,timeB,Partida) 
-    
+        for urls in confrontoDireto:       
 
-    
-        
+            timeA = Estatisticas()
+            TimeB = Estatisticas()
+            Partida = Partidas()
+            Partida, timeA, timeB = Obter_Estatisticas(urls,"Confronto Direto")
 
-Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/CpPYYopR/?isDetailPopup=true#/resumo-de-jogo")
+            if(timeA.NomeTimeCasa == partida.NomeTimeCasa):
+                confronto_timeA.append(timeA)
+                confronto_timeB.append(timeB)
+            if(timeA.NomeTimeCasa == partida.NomeTimeFora):
+                confronto_timeA.append(TimeB)
+                confronto_timeB.append(timeA)       
+            mandarDados(timeA,timeB,Partida)
+
+        for urls in casacasa:       
+
+            timeA = Estatisticas()
+            TimeB = Estatisticas()
+            Partida = Partidas()
+            Partida, timeA, timeB = Obter_Estatisticas(urls,"Casa")
+
+            casa.append(timeA)
+            AdversarioCasa.append(timeB)      
+            mandarDados(timeA,timeB,Partida)
+
+
+        for urls in forafora:       
+
+            timeA = Estatisticas()
+            TimeB = Estatisticas()
+            Partida = Partidas()
+            Partida, timeA, timeB = Obter_Estatisticas(urls,"Fora")
+
+            fora.append(timeA)
+            AdversarioFora.append(timeB)     
+            mandarDados(timeA,timeB,Partida) 
+
+
+
+
+
+#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/xzDxPU6K/#/resumo-de-jogo")

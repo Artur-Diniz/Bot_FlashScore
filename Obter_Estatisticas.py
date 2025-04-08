@@ -105,5 +105,5 @@ def Obter_Estatisticas(url, tipoPartida):
             
 
 
-partida,casa ,fora =Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/IBeZ9vBb/#/resumo-de-jogo/estatisticas-de-jogo/0", "Confronto_Direto")
+# partida,casa ,fora =Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/IBeZ9vBb/#/resumo-de-jogo/estatisticas-de-jogo/0", "Confronto_Direto")
 
