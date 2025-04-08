@@ -190,7 +190,7 @@ class RecolherEstatisticas(automacao):
  
     
     def Partida(self,driver,contador,estatistica,casafora,variacao):
-        if contador==2:
+        if contador==2: 
             self.cliqueCSS("#detail > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")
                                                         ##detail > div:nth-child(8) > div:nth-child(2) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong
         texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > Strong").text                              
@@ -245,8 +245,8 @@ class RecolherEstatisticas(automacao):
         return estatistica
 
     def atributo(self,driver, contador, timeCasa ,variacao):
-        atributo=0
-        if timeCasa==True: 
+        atributo=0                                           
+        if timeCasa==True:                                  
             atributo =int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-homeValue_-iJBW > strong ").text.rstrip("%"))
         else:
             atributo = int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > strong").text.rstrip("%"))

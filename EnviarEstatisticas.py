@@ -8,16 +8,20 @@ from datetime import datetime, timedelta
 from metodos import RecolherEstatisticas
 from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
+from models.Partida_Estatistica_Dto import PartidaCompletaDto
+import json
 import requests
 
 def mandarDados(estatisticasCasa,estatisticasFora,partida):
-    url = "http://Junglernauti819.somee.com/botFlashScore/Estatistica/"  
+    url = "http://Junglernauti819.somee.com/botFlashScore/Estatistica/Partida"  
+    
     
     estatisticaCasa = {
         "Id": 0,
         "CasaOuFora": estatisticasCasa.CasaOuFora,
-        "Nome": estatisticasCasa.Nome,
-        "Gol": estatisticasCasa.Nome,
+        "NomeTime": estatisticasCasa.Nome,
+        "NomeTimeRival": estatisticasCasa.NomeRival,
+        "Gol": estatisticasCasa.Gol,
         "GolSofrido": estatisticasCasa.GolSofrido,
         "Posse_de_bola": estatisticasCasa.Posse_de_bola,
         "Total_Finalizacao": estatisticasCasa.Total_Finalizacao,
@@ -40,23 +44,15 @@ def mandarDados(estatisticasCasa,estatisticasFora,partida):
         "Desarmes": estatisticasCasa.Desarmes,
         "Bolas_afastadas": estatisticasCasa.Bolas_afastadas,
         "Interceptacoes": estatisticasCasa.Interceptacoes,
-        
-        "Id": 0,
-        "Id_EstatisticaCasa": 0,
-        "Id_EstatisticaFora": 0,
-        "NomeTimeCasa": partida.NomeTimeCasa,  
-        "NomeTimeFora": partida.NomeTimeFora,
-        "DataPartida": partida.data,
-        "Campeonato": partida.Campeonato,
-        "PartidaAnalise": False,
-        "TipoPartida": partida.TipoPartida
+
     }
     
     estatisticaFora = {
         "Id": 0,
         "CasaOuFora": estatisticasFora.CasaOuFora,
         "Nome": estatisticasFora.Nome,
-        "Gol": estatisticasFora.Nome,
+        "NomeTimeRival": estatisticasFora.NomeRival,
+        "Gol": estatisticasFora.Gol,
         "GolSofrido": estatisticasFora.GolSofrido,
         "Posse_de_bola": estatisticasFora.Posse_de_bola,
         "Total_Finalizacao": estatisticasFora.Total_Finalizacao,
@@ -80,15 +76,7 @@ def mandarDados(estatisticasCasa,estatisticasFora,partida):
         "Bolas_afastadas": estatisticasFora.Bolas_afastadas,
         "Interceptacoes": estatisticasFora.Interceptacoes,
         
-        "Id": 0,
-        "Id_EstatisticaCasa": 0,
-        "Id_EstatisticaFora": 0,
-        "NomeTimeCasa": partida.NomeTimeCasa,  
-        "NomeTimeFora": partida.NomeTimeFora,
-        "DataPartida": partida.data,
-        "Campeonato": partida.Campeonato,
-        "PartidaAnalise": False,
-        "TipoPartida": partida.TipoPartida
+
     }
     
     Partida = {
@@ -97,12 +85,13 @@ def mandarDados(estatisticasCasa,estatisticasFora,partida):
         "Id_EstatisticaFora": 0,
         "NomeTimeCasa": partida.NomeTimeCasa,  
         "NomeTimeFora": partida.NomeTimeFora,
-        "DataPartida": partida.data,
+        "DataPartida": partida.data.isoformat(),
         "Campeonato": partida.Campeonato,
         "PartidaAnalise": False,
         "TipoPartida": partida.TipoPartida
     }
     
+    EstatisticaPartida= PartidaCompletaDto()
 
     EstatisticaPartida = {
         "estatisticaCasa": estatisticaCasa,
@@ -111,13 +100,30 @@ def mandarDados(estatisticasCasa,estatisticasFora,partida):
     }
 
     headers = {"Content-Type": "application/json"}
+    try:
+        response = requests.post(url, json=EstatisticaPartida, headers=headers)
 
-    response = requests.post(url, json=EstatisticaPartida, headers=headers)
-    print("o id recebido é esse aqui veinho", response.json(), "  \n informação recebida com sucesso bora pra Proxima!")
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                print("✅ Dados enviados com sucesso! ID:", data)
+            except json.JSONDecodeError:
+                print("⚠️ Dados enviados com sucesso, mas a resposta não é um JSON válido.")
+                print("Resposta bruta:", response.text)
+        else:
+            print("❌ Erro ao enviar dados:")
+            print("Status Code:", response.status_code)
+            print("Motivo:", response.reason)
+            print("Resposta do servidor:", response.text)
+
+    except requests.RequestException as e:
+        print("❌ Erro de requisição:", e)
 
 
-partida=Partidas()
 
-estatisticasCasa = Estatisticas()
-estatisticasFora = Estatisticas()
-mandarDados(estatisticasCasa,estatisticasFora,partida)
+
+# partida=Partidas()
+
+# estatisticasCasa = Estatisticas()
+# estatisticasFora = Estatisticas()
+# mandarDados(estatisticasCasa,estatisticasFora,partida)

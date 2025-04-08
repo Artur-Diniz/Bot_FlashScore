@@ -10,6 +10,7 @@ from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from models.EstatisticaTimes import EstatisticasTimes
 from Obter_Estatisticas import Obter_Estatisticas
+from EnviarEstatisticas import mandarDados
 import time
 
 
@@ -128,53 +129,33 @@ def Ultimos_Jogos(url):
         if(timeA.NomeTimeCasa == partida.NomeTimeFora):
             confronto_timeA.append(TimeB)
             confronto_timeB.append(timeA)       
-    
+        mandarDados(timeA,timeB,Partida)
+
     for urls in casacasa:       
         
         timeA = Estatisticas()
         TimeB = Estatisticas()
         Partida = Partidas()
-        Partida, timeA, timeB = Obter_Estatisticas(urls,"Confronto Direto")
+        Partida, timeA, timeB = Obter_Estatisticas(urls,"Casa")
         
         casa.append(timeA)
         AdversarioCasa.append(timeB)      
+        mandarDados(timeA,timeB,Partida)
+        
     
     for urls in forafora:       
         
         timeA = Estatisticas()
         TimeB = Estatisticas()
         Partida = Partidas()
-        Partida, timeA, timeB = Obter_Estatisticas(urls,"Confronto Direto")
+        Partida, timeA, timeB = Obter_Estatisticas(urls,"Fora")
         
         fora.append(timeA)
-        AdversarioFora.append(timeB)      
-    
+        AdversarioFora.append(timeB)     
+        mandarDados(timeA,timeB,Partida) 
     
 
-
-   # Cria as estatísticas consolidadas
-    time_casa = bot.calcular_medias(casa)
-    time_fora = bot.calcular_medias(fora)
     
-    # Adiciona estatísticas de adversários e confrontos
-    for prefixo, dados in [('_adversaria', AdversarioCasa), 
-                          ('_Confronto', confronto_timeA + confronto_timeB)]:
-        if dados:
-            media = bot.calcular_medias(dados)
-            for attr in dir(Estatisticas()):
-                if not attr.startswith('_') and isinstance(getattr(Estatisticas(), attr), (int, float)):
-                    setattr(time_casa, attr + prefixo, getattr(media, attr))
-    
-    # Repete para o time fora (se necessário)
-    for prefixo, dados in [('_adversaria', AdversarioFora), 
-                          ('_Confronto', confronto_timeA + confronto_timeB)]:
-        if dados:
-            media = bot.calcular_medias(dados)
-            for attr in dir(Estatisticas()):
-                if not attr.startswith('_') and isinstance(getattr(Estatisticas(), attr), (int, float)):
-                    setattr(time_fora, attr + prefixo, getattr(media, attr))
-    
-    return time_casa, time_fora
         
 
-time_casa,time_fora  = Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/lKLeNtAs/?isDetailPopup=true#/resumo-de-jogo")
+Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/CpPYYopR/?isDetailPopup=true#/resumo-de-jogo")

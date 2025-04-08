@@ -1,12 +1,13 @@
 from datetime import datetime
 from models.Partidas import Partidas
 
-class Estatisticas(Partidas):
+class Estatisticas():
     def __init__(self):
         
         self.Id = 0
         self.CasaOuFora=""
         self.Nome = ""
+        self.NomeRival = ""
 
         
         
