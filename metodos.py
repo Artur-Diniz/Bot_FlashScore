@@ -96,8 +96,7 @@ class AutomacaoHomePage(automacao):
     
     def times(self):
         try:
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[3]/div/div[2]") # abre aba
-            
+                      
             self.clique("/html/body/div[8]/section/div[1]/input")
             self.digitar_texto("/html/body/div[8]/section/div[1]/input", "al ahly")# caixa de texto
             self.clique("/html/body/div[8]/section/div[2]/div/a[1]/div[4]/div")# add o time
@@ -119,6 +118,8 @@ class AutomacaoHomePage(automacao):
             print("Erro ao adicionar os times:", e )
     
 
+        
+    
     
     def apagar(self):
         try:

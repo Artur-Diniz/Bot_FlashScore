@@ -47,14 +47,15 @@ def Ultimos_Jogos(url):
     adiado = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__status > span").text
     if adiado == "ADIADO":
         driver.quit()
-        exit()
+        return
+    
     if nomepart[1].strip() in ["PLAYOFFS", "QUALIFICAÇÃO"]:
         brasileiro = False
         if "Bra" in partida.NomeTimeCasa or "Bra" in partida.NomeTimeFora:
             brasileiro = True
         if not brasileiro: # não analisamos jogos mata a mata
             driver.quit()
-            exit()
+            return
     # try:
     # Clica no botão para abrir os ultimos jogos
     driver.find_element(By.CSS_SELECTOR, "#detail > div.detailOver > div > a:nth-child(3) > button").click()
@@ -117,4 +118,4 @@ def Ultimos_Jogos(url):
 
 
 
-Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/WpUQJkaf/#/resumo-de-jogo/resumo-de-jogo")
+#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/WpUQJkaf/#/resumo-de-jogo/resumo-de-jogo")

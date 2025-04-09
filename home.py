@@ -6,6 +6,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from metodos import AutomacaoHomePage
 from Obter_ultimos_Jogos import Ultimos_Jogos
+from ObterJogosEspecificos import Obter_Times_Especificos
 
 
 
@@ -23,7 +24,6 @@ bot.argentina()
 bot.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/span") # botão more
 bot.portugal()
 bot.holanda()
-bot.times()
 
 
 ligas = []
@@ -50,7 +50,11 @@ for element in jogos_dia:
 
 driver.quit()
 
-    
+jogos_Especificos=Obter_Times_Especificos()
+
+for item in jogos_Especificos:
+    items.append(item)
+
 for item in items:
     Ultimos_Jogos(item)
     
