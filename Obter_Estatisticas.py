@@ -8,12 +8,13 @@ from datetime import datetime, timedelta
 from metodos import RecolherEstatisticas
 from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
+from EnviarEstatisticas import mandarDados
 
 import time
 
 url=""
 tipoPartida=""
-def Obter_Estatisticas(url, tipoPartida):
+def  Obter_Estatisticas(url, tipoPartida):
     driver = webdriver.Chrome()
     bot = RecolherEstatisticas(driver)
     keyboard = ActionChains(driver)
@@ -26,9 +27,14 @@ def Obter_Estatisticas(url, tipoPartida):
     keyboard.send_keys(Keys.DOWN).perform()  
     bot.cliqueCSS("#detail > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")
     
+    dados=driver.find_element(By.CSS_SELECTOR, "#detail > div.filterOver.filterOver--indent > div > a:nth-child(2) > button").text
+    if dados!="Estatísticas":
+        driver.quit()        
+        return
     
-    bot.cliqueCSS("#detail > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")   # esse clique é pra impedir que ele leia antes q a page carregue 
-
+    bot.cliqueCSS("#detail > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button") 
+    # esse clique é pra impedir que ele leia antes q a page carregue 
+    
     partida = Partidas()
     casa = Estatisticas()
     fora = Estatisticas()
@@ -46,13 +52,18 @@ def Obter_Estatisticas(url, tipoPartida):
     
     casa.GolSofrido=fora.Gol
     fora.GolSofrido=casa.Gol
+    # não se le jogos amistosos ele n valem de nada
+    if partida.Campeonato=="AMISTOSO INTERCLUBES":
+        driver.quit()
+
+        return
+ 
   
     rows = driver.find_elements(By.CLASS_NAME, "wcl-row_OFViZ")
     for row in rows:
-      
+    
         sessao = 0
         linha = 0
-
         try:
         # Tenta achar a sessão do row baseado no pai
             secoes = driver.find_element(By.ID, "detail").find_elements(By.XPATH, "./div")
@@ -67,43 +78,33 @@ def Obter_Estatisticas(url, tipoPartida):
                     break
         except Exception as e:
             print(f"Erro ao identificar sessão e linha: {e}")
-
         print(f"Linha está na sessão {sessao}, linha {linha}")
         bot.pressionar_tecla(Keys.DOWN)
-
         if sessao==8 and linha==2:             
              bot.cliqueCSS("#detail > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
-        
         texto=""
         if linha==2:
             try:
                 texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({sessao}) > div:nth-child(2) > div.wcl-category_ITphf > div.wcl-category_7qsgP > Strong").text                                 
             except:
                 print("obteção de estatisticas concluidas")
-                
             if texto=="Gols esperados (xG)":
                 continue
-        
+            
         bot.pressionar_tecla(Keys.DOWN)                                          
         try:                                                
             texto = driver.find_element
             (By.CSS_SELECTOR, f"#detail > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > Strong").text                              
         except:                                         #/html/body/div[4]/div[1]/div/div/main/div[6]/div[1]/div[8]/div[2]
             print("")
-            
         try:
             casa =bot.Partida(driver,linha,casa,True,sessao)
             fora =bot.Partida(driver,linha,fora,False,sessao)
         except:
             print("")
-        
-
     driver.quit()
-
-    return partida,casa,fora 
-            
-            
-
-
-# partida,casa ,fora =Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/IBeZ9vBb/#/resumo-de-jogo/estatisticas-de-jogo/0", "Confronto_Direto")
-
+    mandarDados(casa,fora,partida)
+    #retorna só pro comodidade sinceramente n serve pra nada ja q esta enviando a informação antes
+    #return partida,casa,fora 
+    
+#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/WpUQJkaf/#/resumo-de-jogo/resumo-de-jogo", "Confronto_Direto")
