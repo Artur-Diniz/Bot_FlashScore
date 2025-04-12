@@ -136,14 +136,14 @@ class automacaoUltimosJogos (automacao):
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
     
-    def reconhecerUltimosJogos(self, count, contador): #aqui eu tercerizei o método de clicar no ultimo jogos de cada time
+    def reconhecerUltimosJogos(self, count, linha): #aqui eu tercerizei o método de clicar no ultimo jogos de cada time
                                                        # pois vou usar em outra pagina pra n ter q repetir esse tranbolho
         try:
             driver = self.driver  
             original_window = driver.current_window_handle
-
+                                    ##detail > div:nth-child(6) > div > div.h2h > div:nth-child(3) > div.rows > div:nth-child(1)
             self.wait.until(EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, f"#detail > div.h2hSection > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({contador})")
+                (By.CSS_SELECTOR, f"#detail > div:nth-child(6) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
             )).click()
 
             self.wait.until(lambda driver: len(driver.window_handles) > 1)
@@ -170,14 +170,10 @@ class RecolherEstatisticas(automacao):
         self.driver = driver
         self.wait = WebDriverWait(driver, 10)
         
-    def recolher_Partida(self,driver,tipoPartida, EstatisticasPartida ):
-        if EstatisticasPartida==True:
-            partida = Partidas()
-        else:
-            partida = Estatisticas()
-            
-        partida.NomeTimeCasa = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
-        partida.NomeTimeFora = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
+    def recolher_Info_Partida(self,driver,tipoPartida):
+        partida = Partidas()       
+        partida.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
+        partida.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
         nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(3) > a").text
         nomepart = nome.split(" - ")
         partida.Campeonato = nomepart[0].strip()
@@ -188,101 +184,113 @@ class RecolherEstatisticas(automacao):
 
         
         return partida    
+    def recolher_Estatistica_Time_Base(self,driver,CasaOufora ):
+        Estatistica = Estatisticas()   
+        if CasaOufora==True:
+            Estatistica.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
+            Estatistica.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
+        else :
+            Estatistica.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
+            Estatistica.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
+
+    
+        return Estatistica    
  
     
-    def Partida(self,driver,contador,estatistica,casafora,variacao):
-        if contador==2: 
-            self.cliqueCSS("#detail > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")
-                                                        ##detail > div:nth-child(8) > div:nth-child(2) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong
-        texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > Strong").text                              
+    def Partida(self,driver,estatistica,casafora,variacao,sessao,linha):
+        if linha==2: 
+            self.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")
+ #           texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({sessao}) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
+                            
+        texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
             
         try:
             if texto == "Posse de bola" and estatistica.Posse_de_bola==0:            
-                estatistica.Posse_de_bola= self.atributo(driver,contador,casafora,variacao) 
+                estatistica.Posse_de_bola= self.atributo(driver,casafora,variacao,sessao,linha) 
                         
             elif texto =="Total de finalizações" and estatistica.Total_Finalizacao==0:
-                estatistica.Total_Finalizacao= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Total_Finalizacao= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Chutes Bloqueados" and estatistica.Chutes_Bloqueados==0:
-                estatistica.Chutes_Bloqueados= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Chutes_Bloqueados= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Chances claras" and estatistica.Chances_claras==0:
-                estatistica.Chances_claras= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Chances_claras= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Escanteios" and estatistica.Escanteios==0:
-                estatistica.Escanteios= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Escanteios= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Bolas na trave" and estatistica.Bolas_na_trave==0:
-                estatistica.Bolas_na_trave= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Bolas_na_trave= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Gols de cabeça" and estatistica.Gols_de_cabeca==0:
-                estatistica.Gols_de_cabeca= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Gols_de_cabeca= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Defesas do goleiro" and estatistica.Defesas_do_goleiro==0:
-                estatistica.Defesas_do_goleiro= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Defesas_do_goleiro= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Faltas" and estatistica.Faltas==0:
-                estatistica.Faltas= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Faltas= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Impedimentos" and estatistica.Impedimentos==0:
-                estatistica.Impedimentos= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Impedimentos= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Cartões Amarelos" and estatistica.Cartoes_Amarelos==0:
-                estatistica.Cartoes_Amarelos= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Cartoes_Amarelos= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Cartões Vermelhos" and estatistica.Cartoes_Vermelhos:
-                estatistica.Cartoes_Vermelhos= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Cartoes_Vermelhos= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Laterais Cobrados" and estatistica.Laterais_Cobrados==0:
-                estatistica.Laterais_Cobrados= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Laterais_Cobrados= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Toques na área adversária" and estatistica.Toques_na_area_adversaria==0:
-                estatistica.Toques_na_area_adversaria= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Toques_na_area_adversaria= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Passes no terço final" and  estatistica.Passes_no_terco_final==0:
-                estatistica.Passes_no_terco_final= self.atributo_Concluidos(driver,contador,casafora,variacao)
+                estatistica.Passes_no_terco_final= self.atributo_Concluidos(driver,casafora,variacao,sessao,linha)
             elif texto =="Cruzamentos" and estatistica.Cruzamentos==0:
-                estatistica.Cruzamentos= self.atributo_Concluidos(driver,contador,casafora,variacao)
+                estatistica.Cruzamentos= self.atributo_Concluidos(driver,casafora,variacao,sessao,linha)
             elif texto =="Desarmes" and estatistica.Desarmes==0:
-                estatistica.Desarmes= self.atributo_Concluidos(driver,contador,casafora,variacao)
+                estatistica.Desarmes= self.atributo_Concluidos(driver,casafora,variacao,sessao,linha)
             elif texto =="Bolas afastadas" and estatistica.Bolas_afastadas==0:
-                estatistica.Bolas_afastadas= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Bolas_afastadas= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto =="Interceptações" and estatistica.Interceptacoes==0:
-                estatistica.Interceptacoes= self.atributo(driver,contador,casafora,variacao)
+                estatistica.Interceptacoes= self.atributo(driver,casafora,variacao,sessao,linha)
             elif texto == "Passes" and estatistica.Passes==0:
-                estatistica.Passes= self.atributo_Concluidos(driver,contador,casafora,variacao)
-                estatistica.Passes_Totais= self.atributo_Total(driver,contador,casafora,variacao)
-                estatistica.Precisao_Passes= self.atributo_Porcentagem(driver,contador,casafora,variacao)
+                estatistica.Passes= self.atributo_Concluidos(driver,casafora,variacao,sessao,linha)
+                estatistica.Passes_Totais= self.atributo_Total(driver,casafora,variacao,sessao,linha)
+                estatistica.Precisao_Passes= self.atributo_Porcentagem(driver,casafora,variacao,sessao,linha)
         except: 
             print("")
    
         return estatistica
 
-    def atributo(self,driver, contador, timeCasa ,variacao):
+    def atributo(self,driver, timeCasa,variacao, sessao,linha ):
         atributo=0                                           
-        if timeCasa==True:                                  
-            atributo =int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-homeValue_-iJBW > strong ").text.rstrip("%"))
+        if timeCasa==True:                                     #detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong
+            atributo =int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-homeValue_-iJBW > strong ").text.rstrip("%"))
         else:
-            atributo = int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > strong").text.rstrip("%"))
+            atributo = int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > strong").text.rstrip("%"))
         self.pressionar_tecla(Keys.ARROW_DOWN)
         return atributo    
     
 
-    def atributo_Concluidos(self,driver, contador, timeCasa,variacao ):
+    def atributo_Concluidos(self,driver, timeCasa,variacao, sessao,linha ):
         atributo=0        
         if timeCasa==True:       
-            texto = (driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-homeValue_-iJBW > span").text).split("/")[0].strip("(").strip(")")
+            texto = (driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-homeValue_-iJBW > span").text).split("/")[0].strip("(").strip(")")
             atributo = int(texto)
         else:    
-            texto=driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > span").text.split("/")[0].strip("(").strip(")")
+            texto=driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > span").text.split("/")[0].strip("(").strip(")")
             atributo = int(texto)
         return atributo
-        ##detail > div:nth-child(13) > div:nth-child(3) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > span
+        ##detail > div:nth-child(13) > div:nth-child(2) > div:nth-child(2) > div:nth-child(3) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > span
     
-    def atributo_Total(self,driver, contador, timeCasa,variacao ):
+    def atributo_Total(self,driver, timeCasa,variacao, sessao,linha ):
         atributo=0 
         if timeCasa==True: 
-            texto=driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-homeValue_-iJBW > span ").text.split("(")[1].split("/")[1].rstrip(")")
+            texto=driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-homeValue_-iJBW > span ").text.split("(")[1].split("/")[1].rstrip(")")
             atributo = int(texto)
         else:
-            texto=driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > span").text.split("(")[1].split("/")[1].rstrip(")")
+            texto=driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > span").text.split("(")[1].split("/")[1].rstrip(")")
             atributo = int(texto)
         return atributo
     
    
-    def atributo_Porcentagem(self,driver, contador, timeCasa,variacao ):
+    def atributo_Porcentagem(self,driver, timeCasa,variacao, sessao,linha ):
         atributo=0        
         if timeCasa ==True:
-            atributo = int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-homeValue_-iJBW > strong ").text.rstrip("%").rstrip(" "))
+            atributo = int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-homeValue_-iJBW > strong ").text.rstrip("%").rstrip(" "))
         else:
-            atributo = int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child({contador}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > strong").text.rstrip("%").rstrip(" "))
+            atributo = int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > strong").text.rstrip("%").rstrip(" "))
             
         return atributo
     

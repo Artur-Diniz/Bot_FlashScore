@@ -49,7 +49,8 @@ def Obter_Times_Especificos():
             for partidas in jogos:
                 url = partidas.get_attribute("href")
                 lista_URl.append(url)
-
+    
+    driver.quit()
     return  lista_URl
 
 # Obter_Times_Especificos()

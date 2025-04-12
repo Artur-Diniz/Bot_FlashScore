@@ -12,7 +12,7 @@ from models.Partida_Estatistica_Dto import PartidaCompletaDto
 import json
 import requests
 
-def mandarDados(estatisticasCasa,estatisticasFora,partida):
+def mandarDados( estatisticasCasa: Estatisticas,estatisticasFora: Estatisticas, partida: Partidas) :
     url = "http://Junglernauti819.somee.com/botFlashScore/Estatistica/Partida"  
     
     
@@ -23,7 +23,7 @@ def mandarDados(estatisticasCasa,estatisticasFora,partida):
         "NomeTimeRival": estatisticasCasa.NomeRival,
         "Gol": estatisticasCasa.Gol,
         "GolSofrido": estatisticasCasa.GolSofrido,
-        "Posse_de_bola": estatisticasCasa.Posse_de_bola,
+        "Posse_bola": estatisticasCasa.Posse_de_bola,
         "Total_Finalizacao": estatisticasCasa.Total_Finalizacao,
         "Chances_claras": estatisticasCasa.Chances_claras,
         "Escanteios": estatisticasCasa.Escanteios,
@@ -54,7 +54,7 @@ def mandarDados(estatisticasCasa,estatisticasFora,partida):
         "NomeTimeRival": estatisticasFora.NomeRival,
         "Gol": estatisticasFora.Gol,
         "GolSofrido": estatisticasFora.GolSofrido,
-        "Posse_de_bola": estatisticasFora.Posse_de_bola,
+        "Posse_bola": estatisticasFora.Posse_de_bola,
         "Total_Finalizacao": estatisticasFora.Total_Finalizacao,
         "Chances_claras": estatisticasFora.Chances_claras,
         "Escanteios": estatisticasFora.Escanteios,
@@ -83,8 +83,8 @@ def mandarDados(estatisticasCasa,estatisticasFora,partida):
         "Id": 0,
         "Id_EstatisticaCasa": 0,
         "Id_EstatisticaFora": 0,
-        "NomeTimeCasa": partida.NomeTimeCasa,  
-        "NomeTimeFora": partida.NomeTimeFora,
+        "NomeTimeCasa": estatisticasCasa.Nome,  
+        "NomeTimeFora": estatisticasFora.Nome,
         "DataPartida": partida.data.isoformat(),
         "Campeonato": partida.Campeonato,
         "PartidaAnalise": False,
@@ -118,12 +118,51 @@ def mandarDados(estatisticasCasa,estatisticasFora,partida):
 
     except requests.RequestException as e:
         print("❌ Erro de requisição:", e)
+        
 
 
 
 
-# partida=Partidas()
+def gerarEstatiscasMedias(casa,fora):
 
-# estatisticasCasa = Estatisticas()
-# estatisticasFora = Estatisticas()
-# mandarDados(estatisticasCasa,estatisticasFora,partida)
+
+    urlcasa=f"http://Junglernauti819.somee.com/botFlashScore/EstatisticaTimes/GerarEstatistica/{casa}" 
+    try:
+        response = requests.post(urlcasa)
+
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                print("✅ Dados enviados com sucesso! ID:", data)
+            except json.JSONDecodeError:
+                print("⚠️ Dados enviados com sucesso, mas a resposta não é um JSON válido.")
+                print("Resposta bruta:", response.text)
+        else:
+            print("❌ Erro ao enviar dados:")
+            print("Status Code:", response.status_code)
+            print("Motivo:", response.reason)
+            print("Resposta do servidor:", response.text)
+
+    except requests.RequestException as e:
+        print("❌ Erro de requisição:", e)
+        
+        
+    urlfora=f"http://Junglernauti819.somee.com/botFlashScore/EstatisticaTimes/GerarEstatistica/{fora}" 
+    try:
+        response = requests.post(urlfora)
+
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                print("✅ Dados enviados com sucesso! ID:", data)
+            except json.JSONDecodeError:
+                print("⚠️ Dados enviados com sucesso, mas a resposta não é um JSON válido.")
+                print("Resposta bruta:", response.text)
+        else:
+            print("❌ Erro ao enviar dados:")
+            print("Status Code:", response.status_code)
+            print("Motivo:", response.reason)
+            print("Resposta do servidor:", response.text)
+
+    except requests.RequestException as e:
+        print("❌ Erro de requisição:", e)
