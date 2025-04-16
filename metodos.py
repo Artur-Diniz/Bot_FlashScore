@@ -8,6 +8,7 @@ from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from models.EstatisticaTimes import EstatisticasTimes
 from datetime import datetime
+from models.ErrosLogs import ErrosLogs
 
 
 
@@ -51,6 +52,24 @@ class automacao:
             elemento.click()
         except Exception as e:
             print(f"Erro ao clicar no elemento {cssSelector}: {e}")
+    
+    def BackLogs(self, url,Page,descricao):
+        erro = ErrosLogs()
+        
+        if Page==1:
+            erro.emQualPageFoi="Obter_Estatisticas.py"        
+        elif Page==2:
+            erro.emQualPageFoi="Obter_Ultimos_jogos.py"
+        elif Page==3:
+            erro.emQualPageFoi="Home.py"
+        elif Page==4:
+            erro.emQualPageFoi="Obter_ultimos_Jogos.py"
+        elif Page==5:
+            erro.emQualPageFoi="EnviarEstatistica.py"
+            
+        erro.QualaUrl=url
+        erro.OqueProvavelmenteAConteceu=descricao
+        
     
 
 class AutomacaoHomePage(automacao):
@@ -141,10 +160,14 @@ class automacaoUltimosJogos (automacao):
         try:
             driver = self.driver  
             original_window = driver.current_window_handle
-                                    ##detail > div:nth-child(6) > div > div.h2h > div:nth-child(3) > div.rows > div:nth-child(1)
-            self.wait.until(EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, f"#detail > div:nth-child(6) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
-            )).click()
+            try:                       ##detail > div:nth-child(7) > div > div.h2h > div:nth-child(3) > div.rows > div:nth-child(1)
+                self.wait.until(EC.element_to_be_clickable(
+                    (By.CSS_SELECTOR, f"#detail > div:nth-child(6) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
+                )).click()
+            except:            
+                self.wait.until(EC.element_to_be_clickable(
+                    (By.CSS_SELECTOR, f"#detail > div:nth-child(7) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
+                )).click()
 
             self.wait.until(lambda driver: len(driver.window_handles) > 1)
             for window in driver.window_handles:

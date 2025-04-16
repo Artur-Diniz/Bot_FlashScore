@@ -79,8 +79,13 @@ def Ultimos_Jogos(url):
     count = 3      
     jogofora=0 #para verificar se ja passou a seunda ou terceira coluna
     bot.pressionar_tecla(Keys.DOWN)
-    botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
-    botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+    try:
+        botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
+        botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+    except:
+        botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
+        botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+    
     confronto = driver.find_elements(By.CLASS_NAME, "rows") 
     #essa variavel é para evitar excessões como passar por jogos q o bot n leu pq os times nunca se emfretaram ent melhor tirar
     leu_tudo=0
@@ -116,6 +121,7 @@ def Ultimos_Jogos(url):
             elif count == 1 and jogofora==1:
                 forafora.append(Url_Jogo)
     driver.quit()
+    
     if leu_tudo==1:      
         
         for urls in confrontoDireto:     
@@ -125,11 +131,11 @@ def Ultimos_Jogos(url):
         for urls in forafora:   
            Obter_Estatisticas(urls,"Fora")
 
-    gerarEstatiscasMedias(partida.NomeTimeCasa,partida.NomeTimeFora)
+        gerarEstatiscasMedias(partida.NomeTimeCasa,partida.NomeTimeFora)
 
 
 
 
 
 
-Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/KSgVuKzp/#/resumo-de-jogo/resumo-de-jogo")
+Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/CxqIiqLk/#/resumo-de-jogo")
