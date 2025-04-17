@@ -25,9 +25,10 @@ try:
     desc="O erro aconteceu logo no começo da page especificamente na hora de adicionar as ligas alternativas"
     
     bot.clique("/html/body/div[6]/div[2]/div/div[1]/div/div[2]/div/button[1]") #cookies
-    bot.alemanha()# adição das ligas
+    #principal liga dos paises:
+    bot.alemanha()
     bot.argentina()            
-    bot.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/span") # botão more
+    bot.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/span") # botão more (para mostrar todos os paises)
     bot.portugal()
     bot.holanda()
         

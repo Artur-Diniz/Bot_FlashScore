@@ -1,0 +1,36 @@
+from selenium import webdriver
+from selenium.webdriver.support import expected_conditions as EC
+from datetime import datetime, timedelta
+from models.ErrosLogs import ErrosLogs
+import json
+import requests
+
+def MandraBackLogs( Erros:ErrosLogs) :
+    #acertar a URL dps pois ainda n criei o metodo na api
+    url = "http://Junglernauti819.somee.com/botFlashScore/Estatistica/Partida"  
+    
+    ErrosLogs = {
+        "Id": 0,
+        "emQualPageFoi": Erros.emQualPageFoi,
+        "QualaUrl": Erros.QualaUrl,
+        "OqueProvavelmenteAConteceu": Erros.OqueProvavelmenteAConteceu       
+    }
+    
+    headers = {"Content-Type": "application/json"}
+    try:
+        response = requests.post(url, json=ErrosLogs, headers=headers)
+
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                print("✅ Dados enviados com sucesso! ID:", data)
+            except json.JSONDecodeError:
+                print("Resposta bruta:", response.text)
+        else:
+            print("❌ Erro ao enviar dados:")
+            print("Status Code:", response.status_code)
+            print("Motivo:", response.reason)
+            print("Resposta do servidor:", response.text)
+
+    except requests.RequestException as e:
+        print("❌ Erro de requisição:", e)

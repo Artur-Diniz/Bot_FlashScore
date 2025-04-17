@@ -108,7 +108,6 @@ def mandarDados( estatisticasCasa: Estatisticas,estatisticasFora: Estatisticas, 
                 data = response.json()
                 print("✅ Dados enviados com sucesso! ID:", data)
             except json.JSONDecodeError:
-                print("⚠️ Dados enviados com sucesso, mas a resposta não é um JSON válido.")
                 print("Resposta bruta:", response.text)
         else:
             print("❌ Erro ao enviar dados:")
@@ -135,7 +134,6 @@ def gerarEstatiscasMedias(casa,fora):
                 data = response.json()
                 print("✅ Dados enviados com sucesso! ID:", data)
             except json.JSONDecodeError:
-                print("⚠️ Dados enviados com sucesso, mas a resposta não é um JSON válido.")
                 print("Resposta bruta:", response.text)
         else:
             print("❌ Erro ao enviar dados:")
@@ -156,7 +154,6 @@ def gerarEstatiscasMedias(casa,fora):
                 data = response.json()
                 print("✅ Dados enviados com sucesso! ID:", data)
             except json.JSONDecodeError:
-                print("⚠️ Dados enviados com sucesso, mas a resposta não é um JSON válido.")
                 print("Resposta bruta:", response.text)
         else:
             print("❌ Erro ao enviar dados:")

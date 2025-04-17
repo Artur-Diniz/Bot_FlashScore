@@ -9,7 +9,7 @@ from models.EstatisticaPartidas import Estatisticas
 from models.EstatisticaTimes import EstatisticasTimes
 from datetime import datetime
 from models.ErrosLogs import ErrosLogs
-
+from EnviarBackLog import MandraBackLogs
 
 
 class automacao:
@@ -53,7 +53,7 @@ class automacao:
         except Exception as e:
             print(f"Erro ao clicar no elemento {cssSelector}: {e}")
     
-    def BackLogs(self, url,Page,descricao):
+    def BackLogs(self, url:str,Page:int,descricao:str):
         erro = ErrosLogs()
         
         if Page==1:
@@ -63,12 +63,14 @@ class automacao:
         elif Page==3:
             erro.emQualPageFoi="Home.py"
         elif Page==4:
-            erro.emQualPageFoi="Obter_ultimos_Jogos.py"
+            erro.emQualPageFoi="ObterJogosEspecificos.py"
         elif Page==5:
             erro.emQualPageFoi="EnviarEstatistica.py"
             
         erro.QualaUrl=url
         erro.OqueProvavelmenteAConteceu=descricao
+        
+        MandraBackLogs(erro)
         
     
 

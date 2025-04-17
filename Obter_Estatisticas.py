@@ -15,7 +15,7 @@ import time
 
 url=""
 tipoPartida=""
-def  Obter_Estatisticas(url, tipoPartida):
+def  Obter_Estatisticas(url='', tipoPartida=''):
     desc=""    
     try:
         driver = webdriver.Chrome()
