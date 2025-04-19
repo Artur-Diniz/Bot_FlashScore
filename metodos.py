@@ -15,7 +15,7 @@ from EnviarBackLog import MandraBackLogs
 class automacao:
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        self.wait = WebDriverWait(driver, 3)
     
     def pressionar_tecla(self, tecla):
         """
@@ -155,7 +155,7 @@ class AutomacaoHomePage(automacao):
 class automacaoUltimosJogos (automacao):
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        self.wait = WebDriverWait(driver, 3)
     
     def reconhecerUltimosJogos(self, count, linha): #aqui eu tercerizei o método de clicar no ultimo jogos de cada time
                                                        # pois vou usar em outra pagina pra n ter q repetir esse tranbolho
@@ -166,10 +166,15 @@ class automacaoUltimosJogos (automacao):
                 self.wait.until(EC.element_to_be_clickable(
                     (By.CSS_SELECTOR, f"#detail > div:nth-child(6) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
                 )).click()
-            except:            
-                self.wait.until(EC.element_to_be_clickable(
-                    (By.CSS_SELECTOR, f"#detail > div:nth-child(7) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
-                )).click()
+            except:      
+                try:      
+                    self.wait.until(EC.element_to_be_clickable(
+                        (By.CSS_SELECTOR, f"#detail > div:nth-child(7) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
+                    )).click()
+                except:
+                    self.wait.until(EC.element_to_be_clickable(
+                        (By.CSS_SELECTOR, f"#detail > div:nth-child(8) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
+                    )).click()
 
             self.wait.until(lambda driver: len(driver.window_handles) > 1)
             for window in driver.window_handles:
@@ -193,7 +198,7 @@ class automacaoUltimosJogos (automacao):
 class RecolherEstatisticas(automacao):
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        self.wait = WebDriverWait(driver, 3)
         
     def recolher_Info_Partida(self,driver,tipoPartida):
         partida = Partidas()       

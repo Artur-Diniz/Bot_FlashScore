@@ -15,17 +15,18 @@ import time
 
 url=""
 tipoPartida=""
-def  Obter_Estatisticas(url='', tipoPartida=''):
+def  Obter_Estatisticas(url:str, tipoPartida:str):
     desc=""    
     try:
         driver = webdriver.Chrome()
         bot = RecolherEstatisticas(driver)
         keyboard = ActionChains(driver)
-
+        wait = WebDriverWait(driver, 3)
+        cokie = WebDriverWait(driver, 15)
         driver.maximize_window()
         driver.get(url)
         
-        bot.cliqueCSS("#onetrust-accept-btn-handler")    
+        cokie.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#onetrust-accept-btn-handler"))).click()
         bot.pressionar_tecla(Keys.PAGE_DOWN)
 
         desc="falhou ao pressionar botão de estatisticas, pode ser que seja um jogo sem estatisticas, ou pode ser um jogo com mais uma variação"    
@@ -84,15 +85,19 @@ def  Obter_Estatisticas(url='', tipoPartida=''):
            
         casa.GolSofrido=fora.Gol
         fora.GolSofrido=casa.Gol
-        # não se le jogos amistosos ele n valem de nada
+        
+        
+        # não busca informações em jogos amistosos ele n valem de nada
         if partida.Campeonato=="AMISTOSO INTERCLUBES":
             driver.quit()
             return
     
         InstanciarPartidaZerada(casa)
         InstanciarPartidaZerada(fora)
-        desc="falha ao dados da classe Eststisticas Partida"            
-        rows = driver.find_elements(By.CLASS_NAME, "wcl-row_OFViZ")
+        desc="falha ao dados da classe Eststisticas Partida"           
+        
+        
+        rows =driver.find_elements(By.CLASS_NAME, "wcl-row_OFViZ")
         for row in rows:
             sessao = 0
             linha = 0
@@ -130,8 +135,8 @@ def  Obter_Estatisticas(url='', tipoPartida=''):
 
             bot.pressionar_tecla(Keys.DOWN)
             
-            if sessao == 2 and linha == 2:             
-                bot.cliqueCSS("#detail > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
+            if sessao == 2 and linha == 2: #detail > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong            
+                bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
             
             texto = ""
             try:
@@ -157,6 +162,10 @@ def  Obter_Estatisticas(url='', tipoPartida=''):
             
         driver.quit()
     except:  
+        try:
+            driver.quit()
+        except:
+            print("")
         bot.BackLogs(url,1,desc)
         return    
 
@@ -188,4 +197,4 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
     return estatisticas
 
 
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/IuZHMLUp/#/resumo-de-jogo/resumo-de-jogo", "Casa")   
+#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Cd7a4M4e/#/resumo-de-jogo/resumo-de-jogo", "Fora")   

@@ -27,9 +27,9 @@ def Ultimos_Jogos(url):
 
         driver.get(url)
         driver.maximize_window()
-        wait = WebDriverWait(driver, 10)
-        cookie_button = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#onetrust-accept-btn-handler")))
-        cookie_button.click()
+        wait = WebDriverWait(driver, 3)       
+        cokie = WebDriverWait(driver, 15)
+        cokie.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#onetrust-accept-btn-handler"))).click()   
 
 
         try:
@@ -66,18 +66,19 @@ def Ultimos_Jogos(url):
             return
         
         
-        
-        if nomepart[1].strip() in ["PLAYOFFS", "QUALIFICAÇÃO"]:
-            brasileiro = False
-            if "Bra" in partida.NomeTimeCasa or "Bra" in partida.NomeTimeFora:
-                brasileiro = True
-            if not brasileiro: # não analisamos jogos mata a mata
-                driver.quit()
-                return
-        desc="Erro ao enviar Partida Analise"
-        mandarPartidaAnalise(partida)
+        try:
+            if nomepart[1].strip() in ["PLAYOFFS", "QUALIFICAÇÃO"]:
+                brasileiro = False
+                if "Bra" in partida.NomeTimeCasa or "Bra" in partida.NomeTimeFora:
+                    brasileiro = True
+                if not brasileiro: # não analisamos jogos mata a mata
+                    driver.quit()
+                    return
+        except:
+            print("")
+            
         desc='Falha ao recolher Urls de Partidas anteriores'
-
+                                ##detail > div.detailOver > div > a:nth-child(3) > button
         driver.find_element(By.CSS_SELECTOR, "#detail > div.detailOver > div > a:nth-child(3) > button").click()
         # Listas para armazenar dados
         items = [] 
@@ -93,9 +94,13 @@ def Ultimos_Jogos(url):
             botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
             botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
         except:
-            botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
-            botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
-        
+            try:
+                botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
+                botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+            except:
+                botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(8) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
+                botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(8) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+
         confronto = driver.find_elements(By.CLASS_NAME, "rows") 
         #essa variavel é para evitar excessões como passar por jogos q o bot n leu pq os times nunca se enfretaram ent melhor tirar
         leu_tudo=0
@@ -120,7 +125,7 @@ def Ultimos_Jogos(url):
                 #count é em qual coluna do flashscore está localizado (3 é sobre confronto diretos) 
                 # os confrontos diretos variam entre quem é o mandante 
                 Url_Jogo= bot.reconhecerUltimosJogos(count,contador)
-                if Url_Jogo=='':
+                if Url_Jogo=='' and contador==1:
                     contador=5
                     break
                 items.append(Url_Jogo) 
@@ -132,7 +137,11 @@ def Ultimos_Jogos(url):
                     forafora.append(Url_Jogo)
         driver.quit()
         
+        
         if leu_tudo==1:      
+            desc="Erro ao enviar Partida Analise"
+            mandarPartidaAnalise(partida)
+            desc="Falha ao chamar metodo Obter_Estatisticas"
             
             with ThreadPoolExecutor(max_workers=3) as executor:  # 3 threads
             # Enfileira TODAS as URLs de uma vez
@@ -140,16 +149,29 @@ def Ultimos_Jogos(url):
                 executor.map(lambda url: Obter_Estatisticas(url, "Casa"), casacasa)
                 executor.map(lambda url: Obter_Estatisticas(url, "Fora"), forafora)
 
-           # gerarEstatiscasMedias(partida.NomeTimeCasa,partida.NomeTimeFora)
+            gerarEstatiscasMedias(partida.NomeTimeCasa,partida.NomeTimeFora)
         else:
             desc='Erro ao ler Partidas anteriores, provalvelmente uma variação nova ou pode ser que esses times nunca tenham jogados Juntos'
             raise
             
     except:
+        try:
+            driver.quit()
+        except:
+            print("")
+        print("ihhhhhhhhhhhhhhhh Deu pau")
+        print(".")
+        print(".")
+        print(".")
+        print(".")
+        print(".")
+        print(".")
+        print(".")
+        print("MADEIRAAAAA !!!!!!!!")
         bot.BackLogs(url,2,desc)
         return
 
 
 
 
-#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/4r4DR3x1/#/resumo-de-jogo/resumo-de-jogo")
+Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/ppxuQFlT/#/resumo-de-jogo")

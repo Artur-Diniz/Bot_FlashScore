@@ -14,6 +14,7 @@ import requests
 
 def mandarDados( estatisticasCasa: Estatisticas,estatisticasFora: Estatisticas, partida: Partidas) :
     url = "http://Junglernauti819.somee.com/botFlashScore/Estatistica/Partida"  
+    #url = "http://localhost:5194/Estatistica/Partida"  
     
     
     estatisticaCasa = {
@@ -51,7 +52,7 @@ def mandarDados( estatisticasCasa: Estatisticas,estatisticasFora: Estatisticas, 
     estatisticaFora = {
         "Id": 0,
         "CasaOuFora": estatisticasFora.CasaOuFora,
-        "Nome": estatisticasFora.Nome,
+        "NomeTime": estatisticasFora.Nome,
         "NomeTimeRival": estatisticasFora.NomeRival,
         "Gol": estatisticasFora.Gol,
         "GolSofrido": estatisticasFora.GolSofrido,
@@ -125,8 +126,6 @@ def mandarDados( estatisticasCasa: Estatisticas,estatisticasFora: Estatisticas, 
 
 
 def gerarEstatiscasMedias(casa,fora):
-
-
     urlcasa=f"http://Junglernauti819.somee.com/botFlashScore/EstatisticaTimes/GerarEstatistica/{casa}" 
     try:
         response = requests.post(urlcasa)
@@ -200,3 +199,5 @@ def mandarPartidaAnalise(partida: Partidas) :
     except requests.RequestException as e:
         print("❌ Erro de requisição:", e)
         
+        
+#gerarEstatiscasMedias("Juventude","Mirassol")

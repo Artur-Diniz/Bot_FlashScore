@@ -23,7 +23,7 @@ def MandraBackLogs( Erros:ErrosLogs) :
         if response.status_code == 200:
             try:
                 data = response.json()
-                print("✅ Dados enviados com sucesso! ID:", data)
+                print("❌DEU MERDA VE AI A CAGADA O ID É:", data)
             except json.JSONDecodeError:
                 print("Resposta bruta:", response.text)
         else:
