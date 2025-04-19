@@ -7,12 +7,12 @@ import requests
 
 def MandraBackLogs( Erros:ErrosLogs) :
     #acertar a URL dps pois ainda n criei o metodo na api
-    url = "http://Junglernauti819.somee.com/botFlashScore/Estatistica/Partida"  
+    url = "http://Junglernauti819.somee.com/botFlashScore/ErrosLogs/"  
     
     ErrosLogs = {
         "Id": 0,
-        "emQualPageFoi": Erros.emQualPageFoi,
-        "QualaUrl": Erros.QualaUrl,
+        "qualPageFoi": Erros.emQualPageFoi,
+        "qualUrl": Erros.QualaUrl,
         "OqueProvavelmenteAConteceu": Erros.OqueProvavelmenteAConteceu       
     }
     
@@ -31,6 +31,19 @@ def MandraBackLogs( Erros:ErrosLogs) :
             print("Status Code:", response.status_code)
             print("Motivo:", response.reason)
             print("Resposta do servidor:", response.text)
-
+            
+        # url=url+"GetAll"
+        # response = requests.get(url, json=ErrosLogs, headers=headers)
+        # print(response) 
+        # data = response.json()
+        # print("✅ Dados enviados com sucesso! ID:", data)
     except requests.RequestException as e:
         print("❌ Erro de requisição:", e)
+        
+
+# erro =ErrosLogs()
+
+# erro.emQualPageFoi="aaa"
+# erro.QualaUrl="aaa.com.br"
+# erro.OqueProvavelmenteAConteceu="sei la ve ai "
+# MandraBackLogs(erro)

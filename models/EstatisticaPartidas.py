@@ -8,6 +8,7 @@ class Estatisticas():
         self.CasaOuFora=""
         self.Nome = ""
         self.NomeRival = ""
+        self.TipoPartida = ""
 
         
         

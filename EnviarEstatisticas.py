@@ -44,6 +44,7 @@ def mandarDados( estatisticasCasa: Estatisticas,estatisticasFora: Estatisticas, 
         "Desarmes": estatisticasCasa.Desarmes,
         "Bolas_afastadas": estatisticasCasa.Bolas_afastadas,
         "Interceptacoes": estatisticasCasa.Interceptacoes,
+        "TipoPartida":partida.TipoPartida
 
     }
     
@@ -75,6 +76,7 @@ def mandarDados( estatisticasCasa: Estatisticas,estatisticasFora: Estatisticas, 
         "Desarmes": estatisticasFora.Desarmes,
         "Bolas_afastadas": estatisticasFora.Bolas_afastadas,
         "Interceptacoes": estatisticasFora.Interceptacoes,
+        "TipoPartida":partida.TipoPartida
         
 
     }
@@ -163,3 +165,38 @@ def gerarEstatiscasMedias(casa,fora):
 
     except requests.RequestException as e:
         print("❌ Erro de requisição:", e)
+        
+def mandarPartidaAnalise(partida: Partidas) :
+    url = "http://Junglernauti819.somee.com/botFlashScore/Partida/"  
+    
+    Partida = {
+        "Id": 0,
+        "Id_EstatisticaCasa": 0,
+        "Id_EstatisticaFora": 0,
+        "NomeTimeCasa": partida.NomeTimeCasa,  
+        "NomeTimeFora": partida.NomeTimeFora,
+        "DataPartida": partida.data.isoformat(),
+        "Campeonato": partida.Campeonato,
+        "PartidaAnalise": True,
+        "TipoPartida": partida.TipoPartida
+    }
+    
+    headers = {"Content-Type": "application/json"}
+    try:
+        response = requests.post(url, json=Partida, headers=headers)
+
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                print("✅ Dados enviados com sucesso! ID:", data)
+            except json.JSONDecodeError:
+                print("Resposta bruta:", response.text)
+        else:
+            print("❌ Erro ao enviar dados:")
+            print("Status Code:", response.status_code)
+            print("Motivo:", response.reason)
+            print("Resposta do servidor:", response.text)
+
+    except requests.RequestException as e:
+        print("❌ Erro de requisição:", e)
+        

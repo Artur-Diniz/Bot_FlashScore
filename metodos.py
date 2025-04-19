@@ -43,7 +43,7 @@ class automacao:
             elemento = self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
             elemento.click()
         except Exception as e:
-            print(f"Erro ao clicar no elemento {xpath}: {e}")
+            print(f"Erro ao clicar no elemento {xpath} ")
     
     def cliqueCSS(self, cssSelector):
         """Método para clicar em um elemento usando seu cssSelector"""
@@ -51,7 +51,7 @@ class automacao:
             elemento = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, cssSelector)))
             elemento.click()
         except Exception as e:
-            print(f"Erro ao clicar no elemento {cssSelector}: {e}")
+            print(f"Erro ao clicar no elemento {cssSelector} ")
     
     def BackLogs(self, url:str,Page:int,descricao:str):
         erro = ErrosLogs()
@@ -214,16 +214,18 @@ class RecolherEstatisticas(automacao):
         if CasaOufora==True:
             Estatistica.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
             Estatistica.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
+            Estatistica.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(1)").text)            
         else :
             Estatistica.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
             Estatistica.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
+            Estatistica.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(3)").text)            
 
     
         return Estatistica    
  
     
     def Partida(self,driver,estatistica,casafora,variacao,sessao,linha):
-        if linha==2: 
+        if linha==2 and sessao==2: 
             self.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")
  #           texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({sessao}) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
                             

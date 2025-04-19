@@ -75,15 +75,13 @@ def  Obter_Estatisticas(url='', tipoPartida=''):
         partida = Partidas()
         casa = Estatisticas()
         fora = Estatisticas()    
-        
+
         partida = bot.recolher_Info_Partida(driver,tipoPartida)
         casa = bot.recolher_Estatistica_Time_Base(driver,True)
         fora = bot.recolher_Estatistica_Time_Base(driver,False)
         casa.CasaOuFora='Casa'
         fora.CasaOuFora='Fora'
-        casa.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(1)").text)
-        fora.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(3)").text)
-        
+           
         casa.GolSofrido=fora.Gol
         fora.GolSofrido=casa.Gol
         # não se le jogos amistosos ele n valem de nada
@@ -91,8 +89,9 @@ def  Obter_Estatisticas(url='', tipoPartida=''):
             driver.quit()
             return
     
-        desc="falha ao dados da classe Eststisticas Partida"    
-
+        InstanciarPartidaZerada(casa)
+        InstanciarPartidaZerada(fora)
+        desc="falha ao dados da classe Eststisticas Partida"            
         rows = driver.find_elements(By.CLASS_NAME, "wcl-row_OFViZ")
         for row in rows:
             sessao = 0
@@ -126,7 +125,7 @@ def  Obter_Estatisticas(url='', tipoPartida=''):
                 sessao = int(parts[8].split("(")[1].replace(")", "") if len(parts) > 2 else "N/A")
                 linha = int(parts[9].split("(")[1].replace(")", "") if len(parts) > 3 else "N/A")
             except Exception as e:
-                print(f"Erro ao processar linha: {e}")
+                # print(f"Erro ao processar linha: {e}")
                 continue 
 
             bot.pressionar_tecla(Keys.DOWN)
@@ -159,6 +158,34 @@ def  Obter_Estatisticas(url='', tipoPartida=''):
         driver.quit()
     except:  
         bot.BackLogs(url,1,desc)
-        return
-    
-# Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/WU55TP7l/#/resumo-de-jogo/resumo-de-jogo", "Confronto_Direto")   
+        return    
+
+
+def InstanciarPartidaZerada(estatisticas:Estatisticas):
+    #isso é para evitar q saia alguma informação nula para API
+
+    estatisticas.Posse_de_bola = 0
+    estatisticas.Total_Finalizacao = 0
+    estatisticas.Chances_claras = 0
+    estatisticas.Escanteios = 0
+    estatisticas.Bolas_na_trave = 0
+    estatisticas.Gols_de_cabeca = 0
+    estatisticas.Defesas_do_goleiro = 0
+    estatisticas.Impedimentos = 0
+    estatisticas.Faltas = 0
+    estatisticas.Cartoes_Amarelos = 0
+    estatisticas.Cartoes_Vermelhos = 0
+    estatisticas.Laterais_Cobrados = 0
+    estatisticas.Toques_na_area_adversaria = 0
+    estatisticas.Passes = 0
+    estatisticas.Passes_Totais = 0
+    estatisticas.Precisao_Passes = 0
+    estatisticas.Passes_no_terco_final = 0
+    estatisticas.Cruzamentos = 0
+    estatisticas.Desarmes = 0
+    estatisticas.Bolas_afastadas = 0
+    estatisticas.Interceptacoes = 0
+    return estatisticas
+
+
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/IuZHMLUp/#/resumo-de-jogo/resumo-de-jogo", "Casa")   

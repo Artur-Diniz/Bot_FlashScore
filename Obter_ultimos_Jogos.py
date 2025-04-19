@@ -11,6 +11,8 @@ from models.EstatisticaPartidas import Estatisticas
 from models.EstatisticaTimes import EstatisticasTimes
 from Obter_Estatisticas import Obter_Estatisticas
 from EnviarEstatisticas import gerarEstatiscasMedias
+from EnviarEstatisticas import mandarPartidaAnalise
+from concurrent.futures import ThreadPoolExecutor
 
 import time
 
@@ -72,7 +74,8 @@ def Ultimos_Jogos(url):
             if not brasileiro: # não analisamos jogos mata a mata
                 driver.quit()
                 return
-            
+        desc="Erro ao enviar Partida Analise"
+        mandarPartidaAnalise(partida)
         desc='Falha ao recolher Urls de Partidas anteriores'
 
         driver.find_element(By.CSS_SELECTOR, "#detail > div.detailOver > div > a:nth-child(3) > button").click()
@@ -131,14 +134,13 @@ def Ultimos_Jogos(url):
         
         if leu_tudo==1:      
             
-            for urls in confrontoDireto:     
-                Obter_Estatisticas(urls,"Confronto Direto")
-            for urls in casacasa:       
-                Obter_Estatisticas(urls,"Casa")
-            for urls in forafora:   
-                Obter_Estatisticas(urls,"Fora")
+            with ThreadPoolExecutor(max_workers=3) as executor:  # 3 threads
+            # Enfileira TODAS as URLs de uma vez
+                executor.map(lambda url: Obter_Estatisticas(url, "Confronto Direto"), confrontoDireto)
+                executor.map(lambda url: Obter_Estatisticas(url, "Casa"), casacasa)
+                executor.map(lambda url: Obter_Estatisticas(url, "Fora"), forafora)
 
-            gerarEstatiscasMedias(partida.NomeTimeCasa,partida.NomeTimeFora)
+           # gerarEstatiscasMedias(partida.NomeTimeCasa,partida.NomeTimeFora)
         else:
             desc='Erro ao ler Partidas anteriores, provalvelmente uma variação nova ou pode ser que esses times nunca tenham jogados Juntos'
             raise
@@ -150,4 +152,4 @@ def Ultimos_Jogos(url):
 
 
 
-#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/CxqIiqLk/#/resumo-de-jogo")
+#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/4r4DR3x1/#/resumo-de-jogo/resumo-de-jogo")
