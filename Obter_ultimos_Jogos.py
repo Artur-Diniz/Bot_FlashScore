@@ -7,26 +7,31 @@ from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 from metodos import automacaoUltimosJogos
 from models.Partidas import Partidas
-from models.EstatisticaPartidas import Estatisticas
-from models.EstatisticaTimes import EstatisticasTimes
 from Obter_Estatisticas import Obter_Estatisticas
 from EnviarEstatisticas import gerarEstatiscasMedias
 from EnviarEstatisticas import mandarPartidaAnalise
 from concurrent.futures import ThreadPoolExecutor
+from selenium.webdriver.chrome.options import Options
 
-import time
 
 
-url=""
-def Ultimos_Jogos(url):
+def Ultimos_Jogos(url:str):
     desc=''
     try:
-        driver = webdriver.Chrome()
+        
+        chrome_options = Options()
+        
+        chrome_options.add_argument('--no-sandbox')  # Mais estável em alguns sistemas
+        chrome_options.add_argument('--disable-dev-shm-usage')  # Evita problemas de memória
+        chrome_options.add_argument('--disable-blink-features=AutomationControlled')  # Disfarça automação
+        chrome_options.add_argument('--start-maximized')  # Já inicia maximizado
+        chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])  # Remove avisos
+        
+        driver = webdriver.Chrome(options=chrome_options)
         
         bot = automacaoUltimosJogos(driver)
 
         driver.get(url)
-        driver.maximize_window()
         wait = WebDriverWait(driver, 3)       
         cokie = WebDriverWait(driver, 15)
         cokie.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#onetrust-accept-btn-handler"))).click()   
@@ -143,7 +148,7 @@ def Ultimos_Jogos(url):
             mandarPartidaAnalise(partida)
             desc="Falha ao chamar metodo Obter_Estatisticas"
             
-            with ThreadPoolExecutor(max_workers=3) as executor:  # 3 threads
+            with ThreadPoolExecutor(max_workers=2) as executor:  # 3 threads
             # Enfileira TODAS as URLs de uma vez
                 executor.map(lambda url: Obter_Estatisticas(url, "Confronto Direto"), confrontoDireto)
                 executor.map(lambda url: Obter_Estatisticas(url, "Casa"), casacasa)

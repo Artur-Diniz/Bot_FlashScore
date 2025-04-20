@@ -4,26 +4,36 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from datetime import datetime, timedelta
 from metodos import RecolherEstatisticas
 from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from EnviarEstatisticas import mandarDados
-from models.ErrosLogs import ErrosLogs
+from time import sleep
+from selenium.webdriver.chrome.options import Options
+
+import random
 
 import time
 
 url=""
 tipoPartida=""
 def  Obter_Estatisticas(url:str, tipoPartida:str):
+    sleep(random.uniform(3.0, 5.5)) 
     desc=""    
     try:
-        driver = webdriver.Chrome()
+        chrome_options = Options()
+        
+        chrome_options.add_argument('--no-sandbox')  # Mais estável em alguns sistemas
+        chrome_options.add_argument('--disable-dev-shm-usage')  # Evita problemas de memória
+        chrome_options.add_argument('--disable-blink-features=AutomationControlled')  # Disfarça automação
+        chrome_options.add_argument('--start-maximized')  # Já inicia maximizado
+        chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])  # Remove avisos
+        
+        driver = webdriver.Chrome(options=chrome_options)
         bot = RecolherEstatisticas(driver)
         keyboard = ActionChains(driver)
         wait = WebDriverWait(driver, 3)
         cokie = WebDriverWait(driver, 15)
-        driver.maximize_window()
         driver.get(url)
         
         cokie.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#onetrust-accept-btn-handler"))).click()
