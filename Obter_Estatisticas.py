@@ -93,9 +93,23 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
         casa.CasaOuFora='Casa'
         fora.CasaOuFora='Fora'
            
+
+         
+        # em jogos disputado por penaltis o site do flash score adiciona um gol para quem passa e isso altera 
+        # a quantidade de gols feitos em tempo regulamentar q é o que é esperado pelas casas de aposta
+        try:
+            penaltis=driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__status > span").text
+            if penaltis!="ENCERRADO":
+                if casa.Gol>fora.Gol:
+                    casa.Gol+= -1
+                else:
+                    fora.Gol+= -1                    
+        except:
+            print("")
+        
+        
         casa.GolSofrido=fora.Gol
         fora.GolSofrido=casa.Gol
-        
         
         # não busca informações em jogos amistosos ele n valem de nada
         if partida.Campeonato=="AMISTOSO INTERCLUBES":
@@ -207,4 +221,4 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
     return estatisticas
 
 
-#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Cd7a4M4e/#/resumo-de-jogo/resumo-de-jogo", "Fora")   
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/CSXwkwKN/#/resumo-de-jogo/resumo-de-jogo", "Teste")   

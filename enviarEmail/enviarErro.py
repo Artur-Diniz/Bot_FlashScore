@@ -16,7 +16,18 @@ import os
 
 def EmailBackLog():
     try:
-        ReceberLogs() 
+        #Verifica se o arquivo de log do dia já existe
+        pasta_log = "LOG"
+        data_hoje = datetime.now().strftime("%Y-%m-%d") 
+        arquivo_log = os.path.join(pasta_log, f"erros_{data_hoje}.txt")
+        
+        if not os.path.exists(arquivo_log):
+            ReceberLogs()  # Sua função que gera o arquivo LOG/erros_XXXX-XX-XX.txt
+            print(f"✅ Novo arquivo de log criado: {arquivo_log}")
+        else:            
+            print(f"⚠️ Arquivo de log já existe: {arquivo_log}")
+            print("⚠️ arquivo ja enviado ")
+            return
         
 
         Email = AcessoGmail()  
@@ -58,4 +69,4 @@ def EmailBackLog():
 
         
         
-EmailBackLog()
+# EmailBackLog()
