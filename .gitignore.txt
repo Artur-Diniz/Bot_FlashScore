@@ -1,2 +1,0 @@
-# Ignorar a pasta Email
-enviarEmail/Email/

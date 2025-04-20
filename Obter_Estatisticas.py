@@ -7,7 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from metodos import RecolherEstatisticas
 from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
-from EnviarEstatisticas import mandarDados
+from API.EnviarEstatisticas import mandarDados
 from time import sleep
 from selenium.webdriver.chrome.options import Options
 

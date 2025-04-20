@@ -9,7 +9,7 @@ from models.EstatisticaPartidas import Estatisticas
 from models.EstatisticaTimes import EstatisticasTimes
 from datetime import datetime
 from models.ErrosLogs import ErrosLogs
-from EnviarBackLog import MandraBackLogs
+from API.EnviarBackLog import MandraBackLogs
 
 
 class automacao:

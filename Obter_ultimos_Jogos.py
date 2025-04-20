@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 from metodos import automacaoUltimosJogos
 from models.Partidas import Partidas
 from Obter_Estatisticas import Obter_Estatisticas
-from EnviarEstatisticas import gerarEstatiscasMedias
-from EnviarEstatisticas import mandarPartidaAnalise
+from API.EnviarEstatisticas import gerarEstatiscasMedias
+from API.EnviarEstatisticas import mandarPartidaAnalise
 from concurrent.futures import ThreadPoolExecutor
 from selenium.webdriver.chrome.options import Options
 

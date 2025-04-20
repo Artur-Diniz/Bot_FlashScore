@@ -9,6 +9,7 @@ from Obter_ultimos_Jogos import Ultimos_Jogos
 from ObterJogosEspecificos import Obter_Times_Especificos
 import time
 from datetime import datetime
+from enviarEmail.enviarErro import EmailBackLog
 
 
 
@@ -77,11 +78,12 @@ try:
     for item in items:
         Ultimos_Jogos(item)
         
+    
+    EmailBackLog()
   
 
-            
-    print("Ligas selecionadas:", ligas)
-    print("Jogos do dia filtrados:", items)
+        
+
     
 except:
     bot.BackLogs(url,3,desc)
