@@ -1,15 +1,20 @@
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent))  # Adiciona a raiz do projeto ao PATH
+
+# Agora seus imports funcionarão
+from enviarEmail.enviarErro import EmailBackLog
+from enviarEmail.EnviarPalpites import EmailPalpites
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 from metodos import AutomacaoHomePage
 from Obter_ultimos_Jogos import Ultimos_Jogos
 from ObterJogosEspecificos import Obter_Times_Especificos
-import time
 from datetime import datetime
-from enviarEmail.enviarErro import EmailBackLog
+
 
 
 
@@ -78,9 +83,14 @@ try:
     for item in items:
         Ultimos_Jogos(item)
         
-    
-    EmailBackLog()
-  
+    try:
+        EmailBackLog()
+    except:
+        print("")
+    try:
+        EmailPalpites()
+    except:
+        print("")
 
         
 

@@ -87,4 +87,4 @@ def salvar_logs_por_data(logs):
 
 
 
-# ReceberLogs()
+#ReceberLogs()

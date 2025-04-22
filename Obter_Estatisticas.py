@@ -221,4 +221,4 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
     return estatisticas
 
 
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/CSXwkwKN/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
+# Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/CSXwkwKN/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
