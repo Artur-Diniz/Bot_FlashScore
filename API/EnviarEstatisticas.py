@@ -1,3 +1,12 @@
+
+import sys
+from pathlib import Path
+
+# Adiciona o diretório pai ao Python Path
+PROJECT_ROOT = Path(__file__).parent.parent  # Ajuste conforme necessário
+sys.path.append(str(PROJECT_ROOT))
+
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys

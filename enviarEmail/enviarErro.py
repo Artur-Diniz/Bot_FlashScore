@@ -1,5 +1,11 @@
+
 import sys
 from pathlib import Path
+
+# Adiciona o diretório pai ao Python Path
+PROJECT_ROOT = Path(__file__).parent.parent  # Ajuste conforme necessário
+sys.path.append(str(PROJECT_ROOT))
+
 import os 
 import smtplib
 import time
@@ -57,3 +63,5 @@ def EmailBackLog():
 
 if __name__ == "__main__":
     EmailBackLog()
+    
+#EmailBackLog()
