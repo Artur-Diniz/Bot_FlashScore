@@ -420,6 +420,11 @@
    'C:\\Users\\artur\\OneDrive\\Área de Trabalho\\program\\bot '
    'scraping\\enviarEmail\\EnviarPalpites.py',
    'PYMODULE'),
+  ('enviarEmail.MeuEmail', '-', 'PYMODULE'),
+  ('enviarEmail.MeuEmail.Gmail',
+   'C:\\Users\\artur\\OneDrive\\Área de Trabalho\\program\\bot '
+   'scraping\\enviarEmail\\MeuEmail\\Gmail.py',
+   'PYMODULE'),
   ('enviarEmail.enviarErro',
    'C:\\Users\\artur\\OneDrive\\Área de Trabalho\\program\\bot '
    'scraping\\enviarEmail\\enviarErro.py',

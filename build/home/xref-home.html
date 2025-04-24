@@ -164,6 +164,7 @@ imports:
  &#8226;   <a href="#ntpath">ntpath</a>
  &#8226;   <a href="#operator">operator</a>
  &#8226;   <a href="#os">os</a>
+ &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#posixpath">posixpath</a>
  &#8226;   <a href="#pyi_rth_inspect.py">pyi_rth_inspect.py</a>
  &#8226;   <a href="#pyi_rth_multiprocessing.py">pyi_rth_multiprocessing.py</a>
@@ -186,6 +187,7 @@ imports:
  &#8226;   <a href="#sre_constants">sre_constants</a>
  &#8226;   <a href="#sre_parse">sre_parse</a>
  &#8226;   <a href="#stat">stat</a>
+ &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#traceback">traceback</a>
  &#8226;   <a href="#types">types</a>
  &#8226;   <a href="#warnings">warnings</a>
@@ -283,17 +285,6 @@ imports:
   <div class="import">
 imported by:
     <a href="#home.py">home.py</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="'Email.Gmail'"></a>
-  <a target="code" href="" type="text/plain"><tt>'Email.Gmail'</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
-imported by:
-    <a href="#enviarEmail.EnviarPalpites">enviarEmail.EnviarPalpites</a>
 
   </div>
 
@@ -686,17 +677,6 @@ imports:
   <div class="import">
 imported by:
     <a href="#enviarEmail.EnviarPalpites">enviarEmail.EnviarPalpites</a>
-
-  </div>
-
-</div>
-
-<div class="node">
-  <a name="Email"></a>
-  <a target="code" href="" type="text/plain"><tt>Email</tt></a>
-<span class="moduletype">MissingModule</span>  <div class="import">
-imported by:
-    <a href="#enviarEmail.enviarErro">enviarEmail.enviarErro</a>
 
   </div>
 
@@ -7864,6 +7844,7 @@ imported by:
 <span class="moduletype">NamespacePackage</span>  <div class="import">
 imported by:
     <a href="#enviarEmail.EnviarPalpites">enviarEmail.EnviarPalpites</a>
+ &#8226;   <a href="#enviarEmail.MeuEmail">enviarEmail.MeuEmail</a>
  &#8226;   <a href="#enviarEmail.enviarErro">enviarEmail.enviarErro</a>
 
   </div>
@@ -7875,11 +7856,11 @@ imported by:
   <a target="code" href="///C:/Users/artur/OneDrive/%C3%81rea%20de%20Trabalho/program/bot%20scraping/enviarEmail/EnviarPalpites.py" type="text/plain"><tt>enviarEmail.EnviarPalpites</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
-    <a href="#'Email.Gmail'">'Email.Gmail'</a>
- &#8226;   <a href="#API.GerarPalpites">API.GerarPalpites</a>
+    <a href="#API.GerarPalpites">API.GerarPalpites</a>
  &#8226;   <a href="#datetime">datetime</a>
  &#8226;   <a href="#email.message">email.message</a>
  &#8226;   <a href="#enviarEmail">enviarEmail</a>
+ &#8226;   <a href="#enviarEmail.MeuEmail.Gmail">enviarEmail.MeuEmail.Gmail</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#schedule">schedule</a>
@@ -7897,15 +7878,48 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="enviarEmail.MeuEmail"></a>
+  <a target="code" href="-" type="text/plain"><tt>enviarEmail.MeuEmail</tt></a>
+<span class="moduletype">NamespacePackage</span>  <div class="import">
+imports:
+    <a href="#enviarEmail">enviarEmail</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#enviarEmail.MeuEmail.Gmail">enviarEmail.MeuEmail.Gmail</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="enviarEmail.MeuEmail.Gmail"></a>
+  <a target="code" href="///C:/Users/artur/OneDrive/%C3%81rea%20de%20Trabalho/program/bot%20scraping/enviarEmail/MeuEmail/Gmail.py" type="text/plain"><tt>enviarEmail.MeuEmail.Gmail</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#enviarEmail.MeuEmail">enviarEmail.MeuEmail</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#enviarEmail.EnviarPalpites">enviarEmail.EnviarPalpites</a>
+ &#8226;   <a href="#enviarEmail.enviarErro">enviarEmail.enviarErro</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="enviarEmail.enviarErro"></a>
   <a target="code" href="///C:/Users/artur/OneDrive/%C3%81rea%20de%20Trabalho/program/bot%20scraping/enviarEmail/enviarErro.py" type="text/plain"><tt>enviarEmail.enviarErro</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
 imports:
     <a href="#API.EnviarBackLog">API.EnviarBackLog</a>
- &#8226;   <a href="#Email">Email</a>
  &#8226;   <a href="#datetime">datetime</a>
  &#8226;   <a href="#email.message">email.message</a>
  &#8226;   <a href="#enviarEmail">enviarEmail</a>
+ &#8226;   <a href="#enviarEmail.MeuEmail.Gmail">enviarEmail.MeuEmail.Gmail</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#pathlib">pathlib</a>
  &#8226;   <a href="#smtplib">smtplib</a>
@@ -8788,7 +8802,6 @@ imports:
  &#8226;   <a href="#importlib">importlib</a>
  &#8226;   <a href="#importlib._bootstrap">importlib._bootstrap</a>
  &#8226;   <a href="#importlib._bootstrap_external">importlib._bootstrap_external</a>
- &#8226;   <a href="#importlib.machinery">importlib.machinery</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#warnings">warnings</a>
 
@@ -8940,8 +8953,7 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#importlib">importlib</a>
- &#8226;   <a href="#importlib.abc">importlib.abc</a>
+    <a href="#importlib.abc">importlib.abc</a>
  &#8226;   <a href="#inspect">inspect</a>
  &#8226;   <a href="#packaging.tags">packaging.tags</a>
  &#8226;   <a href="#pkg_resources">pkg_resources</a>
@@ -11976,6 +11988,7 @@ imported by:
  &#8226;   <a href="#API.GerarPalpites">API.GerarPalpites</a>
  &#8226;   <a href="#enviarEmail.EnviarPalpites">enviarEmail.EnviarPalpites</a>
  &#8226;   <a href="#enviarEmail.enviarErro">enviarEmail.enviarErro</a>
+ &#8226;   <a href="#home.py">home.py</a>
  &#8226;   <a href="#importlib.metadata">importlib.metadata</a>
  &#8226;   <a href="#importlib.resources._common">importlib.resources._common</a>
  &#8226;   <a href="#importlib.resources._legacy">importlib.resources._legacy</a>
@@ -17340,11 +17353,6 @@ imported by:
   <a name="selenium"></a>
   <a target="code" href="///C:/Users/artur/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/site-packages/selenium/__init__.py" type="text/plain"><tt>selenium</tt></a>
 <span class="moduletype">Package</span>  <div class="import">
-imports:
-    <a href="#selenium.webdriver">selenium.webdriver</a>
-
-  </div>
-  <div class="import">
 imported by:
     <a href="#API.EnviarEstatisticas">API.EnviarEstatisticas</a>
  &#8226;   <a href="#ObterJogosEspecificos">ObterJogosEspecificos</a>
@@ -17479,7 +17487,6 @@ imported by:
  &#8226;   <a href="#Obter_ultimos_Jogos">Obter_ultimos_Jogos</a>
  &#8226;   <a href="#home.py">home.py</a>
  &#8226;   <a href="#metodos">metodos</a>
- &#8226;   <a href="#selenium">selenium</a>
  &#8226;   <a href="#selenium.webdriver.chrome">selenium.webdriver.chrome</a>
  &#8226;   <a href="#selenium.webdriver.chrome.remote_connection">selenium.webdriver.chrome.remote_connection</a>
  &#8226;   <a href="#selenium.webdriver.chromium">selenium.webdriver.chromium</a>
@@ -24617,6 +24624,7 @@ imported by:
  &#8226;   <a href="#gettext">gettext</a>
  &#8226;   <a href="#glob">glob</a>
  &#8226;   <a href="#gzip">gzip</a>
+ &#8226;   <a href="#home.py">home.py</a>
  &#8226;   <a href="#http.client">http.client</a>
  &#8226;   <a href="#http.server">http.server</a>
  &#8226;   <a href="#importlib">importlib</a>

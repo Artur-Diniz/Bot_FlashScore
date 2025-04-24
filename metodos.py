@@ -152,48 +152,77 @@ class AutomacaoHomePage(automacao):
         except Exception as e:
             print("Erro ao adicionar holanda:", )
 
-class automacaoUltimosJogos (automacao):
+class automacaoUltimosJogos(automacao):
     def __init__(self, driver):
         self.driver = driver
         self.wait = WebDriverWait(driver, 3)
     
-    def reconhecerUltimosJogos(self, count, linha): #aqui eu tercerizei o método de clicar no ultimo jogos de cada time
-                                                       # pois vou usar em outra pagina pra n ter q repetir esse tranbolho
-        try:
-            driver = self.driver  
-            original_window = driver.current_window_handle
-            try:                       ##detail > div:nth-child(7) > div > div.h2h > div:nth-child(3) > div.rows > div:nth-child(1)
-                self.wait.until(EC.element_to_be_clickable(
-                    (By.CSS_SELECTOR, f"#detail > div:nth-child(6) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
-                )).click()
-            except:      
-                try:      
-                    self.wait.until(EC.element_to_be_clickable(
-                        (By.CSS_SELECTOR, f"#detail > div:nth-child(7) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
-                    )).click()
-                except:
-                    self.wait.until(EC.element_to_be_clickable(
-                        (By.CSS_SELECTOR, f"#detail > div:nth-child(8) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})")
-                    )).click()
-
-            self.wait.until(lambda driver: len(driver.window_handles) > 1)
-            for window in driver.window_handles:
-                if window != original_window:
-                    driver.switch_to.window(window)
-                    break
-
-            current_url = driver.current_url
-            driver.close()
-            driver.switch_to.window(original_window)
-            return current_url
-
-        except Exception as e:
-            print(f"Ocorreu um erro: {e}")
-            return ''
-
-
-   
+    def reconhecerUltimosJogos(self, count, linha):
+        driver = self.driver
+        original_url = driver.current_url
+        new_url = None  # Variável para armazenar a nova URL
         
+        # Tentativas de clique em diferentes seletores CSS
+        selectors = [
+            f"#detail > div:nth-child(5) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})",
+            f"#detail > div:nth-child(6) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})",
+            f"#detail > div:nth-child(7) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})",
+            f"#detail > div:nth-child(8) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})"
+        ]
+        
+        clicked = False
+        for selector in selectors:
+            try:
+                self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector))).click()
+                clicked = True
+                break
+            except:
+                continue
+        
+        if not clicked:
+            print("Não foi possível clicar em nenhum dos elementos")
+            return None  # Retorna None se não conseguir clicar
+
+        try:
+            # Espera por nova janela ou mudança de URL
+            WebDriverWait(driver, 3).until(
+                lambda d: len(d.window_handles) > 1 or d.current_url != original_url
+            )
+            
+            if len(driver.window_handles) > 1:
+                # Se abriu nova janela, muda para ela e pega a URL
+                for window in driver.window_handles:
+                    if window != driver.current_window_handle:
+                        driver.switch_to.window(window)
+                        new_url = driver.current_url  # Armazena a nova URL
+                        break
+            else:
+                # Se mudou a URL, armazena antes de voltar
+                if driver.current_url != original_url:
+                    new_url = driver.current_url  # Guarda a URL nova
+                    driver.back()  # Volta para a original
+                    self.wait.until(lambda d: d.current_url == original_url)
+                    
+        except Exception as e:
+            print(f"Ocorreu um erro após o clique: {e}")
+            return None
+
+        return new_url 
+    # Retorna a nova URL (ou None se falhar)
+    def recolher_Info_Partida(self,driver,tipoPartida):
+        partida = Partidas()                                #detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a
+        partida.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+        partida.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+        nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(3) > a > span").text
+        nomepart = nome.split(" - ")
+        partida.Campeonato = nomepart[0].strip()
+        partida.PartidaAnalise = True
+        diajogo =str(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__startTime > div").text)
+        partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
+        partida.TipoPartida = tipoPartida
+
+        
+        return partida 
     
 class RecolherEstatisticas(automacao):
     def __init__(self, driver):
@@ -201,29 +230,29 @@ class RecolherEstatisticas(automacao):
         self.wait = WebDriverWait(driver, 3)
         
     def recolher_Info_Partida(self,driver,tipoPartida):
-        partida = Partidas()       
-        partida.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
-        partida.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
-        nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(3) > a").text
+        partida = Partidas()                                #detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a
+        partida.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+        partida.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+        nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(3) > a > span").text
         nomepart = nome.split(" - ")
         partida.Campeonato = nomepart[0].strip()
         partida.PartidaAnalise = True
-        diajogo =str(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__startTime > div").text)
+        diajogo =str(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__startTime > div").text)
         partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
         partida.TipoPartida = tipoPartida
 
         
-        return partida    
+        return partida 
     def recolher_Estatistica_Time_Base(self,driver,CasaOufora ):
-        Estatistica = Estatisticas()   
-        if CasaOufora==True:
-            Estatistica.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
-            Estatistica.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
-            Estatistica.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(1)").text)            
-        else :
-            Estatistica.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
-            Estatistica.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
-            Estatistica.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(3)").text)            
+        Estatistica = Estatisticas()    
+        if CasaOufora==True:                                                
+            Estatistica.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+            Estatistica.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+            Estatistica.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(1)").text)            
+        else :                                                                      
+            Estatistica.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+            Estatistica.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+            Estatistica.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(3)").text)            
 
     
         return Estatistica    

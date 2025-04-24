@@ -41,11 +41,9 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
 
         desc="falhou ao pressionar botão de estatisticas, pode ser que seja um jogo sem estatisticas, ou pode ser um jogo com mais uma variação"    
         btnEstatisticaPassou=0
-
-        
-        try:             ##detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button 
-            btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(7) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button").text
-            bot.cliqueCSS("#detail > div:nth-child(7) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")      
+        try:            #detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button
+            btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button").text
+            bot.cliqueCSS("#detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")      
             
             if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
                 btnEstatisticaPassou=1
@@ -53,22 +51,33 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                     driver.quit() 
                     raise
         except:
-            try:
-                btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button ").text
-                bot.cliqueCSS("#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button ")
+        
+            try:             ##detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button 
+                btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(7) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button").text
+                bot.cliqueCSS("#detail > div:nth-child(7) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")      
+                
                 if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
                     btnEstatisticaPassou=1
                 else:
-                    driver.quit() 
-                    raise
+                        driver.quit() 
+                        raise
             except:
-                btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a.selected > button").text      
-                bot.cliqueCSS("#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a.selected > button")
-                if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
-                    btnEstatisticaPassou=1
-                else:
-                    driver.quit() 
-                    raise
+                try:
+                    btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button ").text
+                    bot.cliqueCSS("#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button ")
+                    if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
+                        btnEstatisticaPassou=1
+                    else:
+                        driver.quit() 
+                        raise
+                except:
+                    btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a.selected > button").text      
+                    bot.cliqueCSS("#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a.selected > button")
+                    if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
+                        btnEstatisticaPassou=1
+                    else:
+                        driver.quit() 
+                        raise
                 
 
 
@@ -97,8 +106,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
          
         # em jogos disputado por penaltis o site do flash score adiciona um gol para quem passa e isso altera 
         # a quantidade de gols feitos em tempo regulamentar q é o que é esperado pelas casas de aposta
-        try:
-            penaltis=driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__status > span").text
+        try:                                                #detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__fullTime
+            penaltis=driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__status > span").text
             if penaltis!="ENCERRADO":
                 if casa.Gol>fora.Gol:
                     casa.Gol+= -1
@@ -120,7 +129,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
         InstanciarPartidaZerada(fora)
         desc="falha ao dados da classe Eststisticas Partida"           
         
-        
+                                                    #wcl-row_OFViZ
         rows =driver.find_elements(By.CLASS_NAME, "wcl-row_OFViZ")
         for row in rows:
             sessao = 0
@@ -159,7 +168,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
 
             bot.pressionar_tecla(Keys.DOWN)
             
-            if sessao == 2 and linha == 2: #detail > div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong            
+            if sessao == 2 and linha == 2: #detail > div:nth-child(5) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button           
                 bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
             
             texto = ""
@@ -221,4 +230,4 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
     return estatisticas
 
 
-# Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/CSXwkwKN/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/CSXwkwKN/#/resumo-de-jogo/resumo-de-jogo", "Teste")   

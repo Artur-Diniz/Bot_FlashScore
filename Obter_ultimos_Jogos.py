@@ -20,7 +20,7 @@ def Ultimos_Jogos(url:str):
     try:
         
         chrome_options = Options()
-        
+    
         chrome_options.add_argument('--no-sandbox')  # Mais estável em alguns sistemas
         chrome_options.add_argument('--disable-dev-shm-usage')  # Evita problemas de memória
         chrome_options.add_argument('--disable-blink-features=AutomationControlled')  # Disfarça automação
@@ -49,14 +49,15 @@ def Ultimos_Jogos(url:str):
         desc='Falha ao reconhecer dados da classe Partida'
         
         partida = Partidas()
-
-        partida.NomeTimeCasa = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
-        partida.NomeTimeFora = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow").text
-        nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(3) > a").text
-        nomepart = nome.split(" - ")
+        bot.pressionar_tecla(Keys.DOWN)
+        partida = bot.recolher_Info_Partida(driver,"PartidaAnalise")                                 #detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a
+        partida.NomeTimeCasa = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+        partida.NomeTimeFora = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+        nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(3) > a > span").text
+        nomepart = nome.split(" - ")                
         partida.Campeonato = nomepart[0].strip()
-        partida.PartidaAnalise = True
-        diajogo =str(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__startTime > div").text)
+        partida.PartidaAnalise = True                       
+        diajogo =str(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__startTime > div").text)
         partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
         partida.TipoPartida = "PartidaAnalise"
 
@@ -65,7 +66,7 @@ def Ultimos_Jogos(url:str):
             return
 
 
-        adiado = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__status > span").text
+        adiado = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__status > span").text
         if adiado == "ADIADO":
             driver.quit()
             return
@@ -83,7 +84,7 @@ def Ultimos_Jogos(url:str):
             print("")
             
         desc='Falha ao recolher Urls de Partidas anteriores'
-                                ##detail > div.detailOver > div > a:nth-child(3) > button
+                                #detail > div.detailOver > div > a:nth-child(3) > button
         driver.find_element(By.CSS_SELECTOR, "#detail > div.detailOver > div > a:nth-child(3) > button").click()
         # Listas para armazenar dados
         items = [] 
@@ -95,17 +96,26 @@ def Ultimos_Jogos(url:str):
         count = 3      
         jogofora=0 #para verificar se ja passou a seunda ou terceira coluna
         bot.pressionar_tecla(Keys.DOWN)
-        try:
-            botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
-            botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+        variacao=0
+        try :                                                                   #detail > div:nth-child(5) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button
+            botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(5) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
+            botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(5) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+            variacao=5
         except:
-            try:
-                botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
-                botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+            try:                                                                    #detail > div:nth-child(5) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button
+                botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
+                botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+                variacao=6
             except:
-                botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(8) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
-                botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(8) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
-
+                try:
+                    botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
+                    botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+                    variacao=7
+                except:
+                    botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(8) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
+                    botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(8) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
+                    variacao=8
+                    
         confronto = driver.find_elements(By.CLASS_NAME, "rows") 
         #essa variavel é para evitar excessões como passar por jogos q o bot n leu pq os times nunca se enfretaram ent melhor tirar
         leu_tudo=0
@@ -116,12 +126,11 @@ def Ultimos_Jogos(url:str):
             if contador==5 and count ==3:
                 count = 1
                 keyboard.send_keys(Keys.PAGE_UP).perform()
-                keyboard.send_keys(Keys.PAGE_UP).perform()
-                botaocasa.click()
+                wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button"))).click()
                 contador = 0
             if contador==5 and count==1:
                 keyboard.send_keys(Keys.PAGE_UP).perform()
-                botaofora.click()
+                wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button"))).click()
                 jogofora=1 
                 contador = 0
                 leu_tudo=1
@@ -179,4 +188,4 @@ def Ultimos_Jogos(url:str):
 
 
 
-# Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/tQtC1Ixg/#/resumo-de-jogo")
+# Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/hhf3MIZ8/#/resumo-de-jogo")

@@ -86,4 +86,4 @@ def EmailPalpites():
     except Exception as e:
         print(f"❌ Erro ao enviar e-mail: {e}")
     
-EmailPalpites()
+# EmailPalpites()

@@ -65,6 +65,6 @@ def salvar_Palpites_do_dia(Palpite):
                 file.write(linha + "\n \n \n ")
 
 
-SolicitarPalpites( )
+# SolicitarPalpites( )
 
 #ReceberOsPalpites()
