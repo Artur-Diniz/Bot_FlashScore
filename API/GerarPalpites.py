@@ -72,18 +72,21 @@ def GerarRelatorio():
     url = "http://Junglernauti819.somee.com/botFlashScore/Partida/Relatorio"  
     headers = {"Content-Type": "application/json"}
 
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        Relatorio = response.json()  # Supondo que 'logs' seja uma lista de dicionários
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Isso vai levantar uma exceção para códigos 4xx/5xx
+        
+        # Tenta decodificar como JSON primeiro, se falhar, usa o texto simples
+        try:
+            Relatorio = response.json()
+        except ValueError:  # JSON inválido
+            Relatorio = response.text
+            
         print(Relatorio)
         return Relatorio
-    else:
-        print(f"❌ Erro na API: {response.status_code}")
-    
-    # response = requests.get(url, headers=headers)
-    # if response.status_code == 200:
-    #     palpites = response.json()  # Supondo que 'logs' seja uma lista de dicionários
-    #     salvar_Palpites_do_dia(palpites)
-    #     print("✅ Palpites salvos em 'Palpites.txt'!")
+        
+    except requests.RequestException as e:
+        print(f"❌ Erro na requisição: {e}")
+        return None
 
-GerarRelatorio()
+#GerarRelatorio()
