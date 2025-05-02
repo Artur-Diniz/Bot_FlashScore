@@ -2,10 +2,8 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent))  # Adiciona a raiz do projeto ao PATH
 
-# Agora seus imports funcionarão
 from enviarEmail.enviarErro import EmailBackLog
 from enviarEmail.EnviarPalpites import EmailPalpites
-
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC

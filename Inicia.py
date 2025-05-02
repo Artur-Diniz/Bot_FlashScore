@@ -4,7 +4,7 @@ import pyautogui as autogui
 def Iniciar():
 
 
-    autogui.PAUSE= 2.5
+    autogui.PAUSE= 3
     
     #entra até o somee
     autogui.hotkey("win","r")    
@@ -12,8 +12,10 @@ def Iniciar():
     autogui.press('enter')
     
     autogui.press('win')
-    autogui.write("txt")
+    autogui.write(".txt")
     autogui.press('enter')
+    autogui.hotkey("win","shift","up")    
+    autogui.hotkey("win","shift","down")    
     autogui.hotkey("win","up")    
     autogui.click(x =372, y=300)
     autogui.hotkey("ctrl","a")    
@@ -31,6 +33,9 @@ def Iniciar():
     autogui.click(x =372, y=300)
     autogui.write("code .")
     autogui.press('enter')
+    autogui.hotkey("win","shift","up")    
+    autogui.hotkey("win","shift","down")    
+    autogui.hotkey("win","up")   
     autogui.click(x =372, y=300)
     autogui.hotkey("alt","tab")
     autogui.hotkey("alt","f4")         

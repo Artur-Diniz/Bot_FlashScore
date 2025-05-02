@@ -280,7 +280,7 @@ class RecolherEstatisticas(automacao):
                 "Cartões Amarelos": ("Cartoes_Amarelos", "atributo"),
                 "Cartões Vermelhos": ("Cartoes_Vermelhos", "atributo"),
                 "Laterais Cobrados": ("Laterais_Cobrados", "atributo"),
-                "Toques na área adversária": ("Toques_na_area_adversaria", "atributo"),
+                "Toques dentro da área adversária": ("Toques_na_area_adversaria", "atributo"),
                 "Passes no terço final": ("Passes_no_terco_final", "atributo_Concluidos"),
                 "Cruzamentos": ("Cruzamentos", "atributo_Concluidos"),
                 "Desarmes": ("Desarmes", "atributo_Concluidos"),
