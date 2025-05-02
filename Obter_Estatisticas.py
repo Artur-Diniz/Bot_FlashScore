@@ -131,65 +131,76 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
         
                                                     #wcl-row_OFViZ
         rows =driver.find_elements(By.CLASS_NAME, "wcl-row_OFViZ")
-        for row in rows:
-            sessao = 0
-            linha = 0
-            variacao = 0
+        ft=0
+        variacao=0
+        sessao=0
+        linha=0
+        while  2>ft:
+            ft+=1
+            if ft>1:
+                bot.pressionar_tecla(Keys.HOME)                
+                bot.pressionar_tecla(Keys.DOWN)                
+                bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a:nth-child(2) > button")        
+                
+            for row in rows:              
 
-            try:
-                        # Tenta encontrar o <strong> dentro da linha
-                full_path = driver.execute_script("""
-                    function getDivPath(element) {
-                        let path = [];
-                        while (element !== document.body && element.parentNode) {
-                            if (element.tagName.toLowerCase() === 'div') {
-                                let index = Array.from(element.parentNode.children)
-                                    .filter(el => el.tagName.toLowerCase() === 'div')
-                                    .indexOf(element) + 1;
-                                path.unshift(`div:nth-child(${index})`);
+                try:
+                            # Tenta encontrar o <strong> dentro da linha
+                    full_path = driver.execute_script("""
+                        function getDivPath(element) {
+                            let path = [];
+                            while (element !== document.body && element.parentNode) {
+                                if (element.tagName.toLowerCase() === 'div') {
+                                    let index = Array.from(element.parentNode.children)
+                                        .filter(el => el.tagName.toLowerCase() === 'div')
+                                        .indexOf(element) + 1;
+                                    path.unshift(`div:nth-child(${index})`);
+                                }
+                                element = element.parentNode;
                             }
-                            element = element.parentNode;
+                            return path.join(" > ");
                         }
-                        return path.join(" > ");
-                    }
-                    return getDivPath(arguments[0]);
-                """, row)
+                        return getDivPath(arguments[0]);
+                    """, row)
 
-                # Exemplo de full_path: (era pra ser assim )
-                # "div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)"
+                    # Exemplo de full_path: (era pra ser assim )
+                    # "div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)"
 
-                parts = full_path.split(" > ")
-                variacao = int(parts[6].split("(")[1].replace(")", "") if len(parts) > 0 else "N/A")
-                sessao = int(parts[8].split("(")[1].replace(")", "") if len(parts) > 2 else "N/A")
-                linha = int(parts[9].split("(")[1].replace(")", "") if len(parts) > 3 else "N/A")
-            except Exception as e:
-                # print(f"Erro ao processar linha: {e}")
-                continue 
+                    parts = full_path.split(" > ")
+                    variacao = int(parts[6].split("(")[1].replace(")", "") if len(parts) > 0 else "N/A")
+                    sessao = int(parts[8].split("(")[1].replace(")", "") if len(parts) > 2 else "N/A")
+                    linha = int(parts[9].split("(")[1].replace(")", "") if len(parts) > 3 else "N/A")
+                except Exception as e:
+                    # print(f"Erro ao processar linha: {e}")
+                    continue 
 
-            bot.pressionar_tecla(Keys.DOWN)
-            
-            if sessao == 2 and linha == 2: #detail > div:nth-child(5) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button           
-                bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
-            
-            texto = ""
-            try:
-                texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
-                if linha == 2 and texto == 'Gols esperados (xG)':
-                    continue
-            except:
-                print("Não está reconhecendo a linha")    
-            
-            bot.pressionar_tecla(Keys.ARROW_DOWN)       
+                bot.pressionar_tecla(Keys.DOWN)
+                
+                if sessao == 2 and linha == 2: #detail > div:nth-child(5) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button           
+                    bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
+                
+                texto = ""
+                try:
+                    texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
+                    if linha == 2 and texto == 'Gols esperados (xG)':
+                        continue
+                except:
+                    print("Não está reconhecendo a linha")    
+                
+                bot.pressionar_tecla(Keys.ARROW_DOWN)       
 
-            try:
-                casa = bot.Partida(driver,casa,True,variacao, sessao,linha)
-                fora = bot.Partida(driver, fora, False,variacao, sessao ,linha)
-            except:
-                print("Erro ao extrair dados da partida")
-        if casa.Posse_de_bola==0 and casa.Passes==0 or fora.Posse_de_bola==0 and fora.Passes==0  :
-            desc="Falha ao reconhecer dados da classe de estatisticas Partidas, Aparentemente uma variação nova ou partidas sem estatisticas"
-            driver.quit() 
-            raise
+                try:
+                    casa = bot.Partida(driver,casa,True,ft,variacao,sessao,linha)
+                    fora = bot.Partida(driver,fora,False,ft,variacao,sessao,linha)
+                except:
+                    print("Erro ao extrair dados da partida")
+            if casa.Posse_de_bola==0 and casa.Passes==0 or fora.Posse_de_bola==0 and fora.Passes==0  :
+                desc="Falha ao reconhecer dados da classe de estatisticas Partidas, Aparentemente uma variação nova ou partidas sem estatisticas"
+                driver.quit() 
+                raise
+        
+        
+        
         else:            
             mandarDados(casa,fora,partida)
             
@@ -226,8 +237,30 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
     estatisticas.Cruzamentos = 0
     estatisticas.Desarmes = 0
     estatisticas.Bolas_afastadas = 0
-    estatisticas.Interceptacoes = 0
+    estatisticas.Interceptacoes = 0    
+    
+    estatisticas.Posse_de_bola_HT = 0
+    estatisticas.Total_Finalizacao_HT = 0
+    estatisticas.Chances_claras_HT = 0
+    estatisticas.Escanteios_HT = 0
+    estatisticas.Bolas_na_trave_HT = 0
+    estatisticas.Gols_de_cabeca_HT = 0
+    estatisticas.Defesas_do_goleiro_HT = 0
+    estatisticas.Impedimentos_HT = 0
+    estatisticas.Faltas_HT = 0
+    estatisticas.Cartoes_Amarelos_HT = 0
+    estatisticas.Cartoes_Vermelhos_HT = 0
+    estatisticas.Laterais_Cobrados_HT = 0
+    estatisticas.Toques_na_area_adversaria_HT = 0
+    estatisticas.Passes_HT = 0
+    estatisticas.Passes_Totais_HT = 0
+    estatisticas.Precisao_Passes_HT = 0
+    estatisticas.Passes_no_terco_final_HT = 0
+    estatisticas.Cruzamentos_HT = 0
+    estatisticas.Desarmes_HT = 0
+    estatisticas.Bolas_afastadas_HT = 0
+    estatisticas.Interceptacoes_HT = 0
     return estatisticas
 
 
-# Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/CSXwkwKN/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/CSXwkwKN/#/resumo-de-jogo/resumo-de-jogo", "Teste")   

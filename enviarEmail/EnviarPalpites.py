@@ -8,7 +8,7 @@ import smtplib
 from email.message import EmailMessage
 from enviarEmail.MeuEmail.Gmail import GMAIL, SENHA
 from datetime import datetime
-from API.GerarPalpites import SolicitarPalpites,ReceberOsPalpites
+from API.GerarPalpites import SolicitarPalpites,ReceberOsPalpites,GerarRelatorio
 from email.message import EmailMessage
 import smtplib
 from datetime import datetime
@@ -35,7 +35,7 @@ def EmailPalpites():
         msg['Subject'] = f"Palpites do dia {data_hoje}"
         msg['From'] = Email
         msg['To'] = "arturdiniz06@gmail.com"
-        msg.set_content("Segue em anexo os palpites do dia.")
+        msg.set_content("segue o anexo ai mané")
 
         # 3. Anexar arquivo de palpites
         pasta_Palpites = "Palpites"
@@ -86,4 +86,4 @@ def EmailPalpites():
     except Exception as e:
         print(f"❌ Erro ao enviar e-mail: {e}")
     
-# EmailPalpites()
+#EmailPalpites()

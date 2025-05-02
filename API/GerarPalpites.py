@@ -42,7 +42,6 @@ def ReceberOsPalpites():
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         palpites = response.json()  # Supondo que 'logs' seja uma lista de dicionários
-        print(palpites)
         salvar_Palpites_do_dia(palpites)
         print("✅ Palpites salvos em 'Palpites.txt'!")
     else:
@@ -68,3 +67,23 @@ def salvar_Palpites_do_dia(Palpite):
 # SolicitarPalpites( )
 
 #ReceberOsPalpites()
+
+def GerarRelatorio():
+    url = "http://Junglernauti819.somee.com/botFlashScore/Partida/Relatorio"  
+    headers = {"Content-Type": "application/json"}
+
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        Relatorio = response.json()  # Supondo que 'logs' seja uma lista de dicionários
+        print(Relatorio)
+        return Relatorio
+    else:
+        print(f"❌ Erro na API: {response.status_code}")
+    
+    # response = requests.get(url, headers=headers)
+    # if response.status_code == 200:
+    #     palpites = response.json()  # Supondo que 'logs' seja uma lista de dicionários
+    #     salvar_Palpites_do_dia(palpites)
+    #     print("✅ Palpites salvos em 'Palpites.txt'!")
+
+GerarRelatorio()

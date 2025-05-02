@@ -14,19 +14,17 @@ from metodos import AutomacaoHomePage
 from Obter_ultimos_Jogos import Ultimos_Jogos
 from ObterJogosEspecificos import Obter_Times_Especificos
 from datetime import datetime
+from resetarBanco import resetarBanco
+import os
 
 
-
-
-
+resetarBanco()
 driver = webdriver.Chrome()
 url="https://www.flashscore.com.br/"
 driver.get(url)
 desc=""
 try:
-
     bot = AutomacaoHomePage(driver)
-
     driver.maximize_window()
     desc="O erro aconteceu logo no começo da page especificamente na hora de adicionar as ligas alternativas"
     
@@ -84,7 +82,7 @@ try:
         Ultimos_Jogos(item)
         
     try:
-        EmailBackLog()
+        EmailBackLog()        
     except:
         print("")
     try:
@@ -93,6 +91,7 @@ try:
         print("")
 
         
+    os.system("shutdown /s /t 1")
 
     
 except:

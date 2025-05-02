@@ -258,7 +258,7 @@ class RecolherEstatisticas(automacao):
         return Estatistica    
  
     
-    def Partida(self,driver,estatistica,casafora,variacao,sessao,linha):
+    def Partida(self,driver,estatistica,casafora,temp,variacao,sessao,linha):
         if linha==2 and sessao==2: 
             self.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")
  #           texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({sessao}) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
@@ -266,52 +266,41 @@ class RecolherEstatisticas(automacao):
         texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
             
         try:
-            if texto == "Posse de bola" and estatistica.Posse_de_bola==0:            
-                estatistica.Posse_de_bola= self.atributo(driver,casafora,variacao,sessao,linha) 
-                        
-            elif texto =="Total de finalizações" and estatistica.Total_Finalizacao==0:
-                estatistica.Total_Finalizacao= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Chutes Bloqueados" and estatistica.Chutes_Bloqueados==0:
-                estatistica.Chutes_Bloqueados= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Chances claras" and estatistica.Chances_claras==0:
-                estatistica.Chances_claras= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Escanteios" and estatistica.Escanteios==0:
-                estatistica.Escanteios= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Bolas na trave" and estatistica.Bolas_na_trave==0:
-                estatistica.Bolas_na_trave= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Gols de cabeça" and estatistica.Gols_de_cabeca==0:
-                estatistica.Gols_de_cabeca= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Defesas do goleiro" and estatistica.Defesas_do_goleiro==0:
-                estatistica.Defesas_do_goleiro= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Faltas" and estatistica.Faltas==0:
-                estatistica.Faltas= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Impedimentos" and estatistica.Impedimentos==0:
-                estatistica.Impedimentos= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Cartões Amarelos" and estatistica.Cartoes_Amarelos==0:
-                estatistica.Cartoes_Amarelos= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Cartões Vermelhos" and estatistica.Cartoes_Vermelhos:
-                estatistica.Cartoes_Vermelhos= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Laterais Cobrados" and estatistica.Laterais_Cobrados==0:
-                estatistica.Laterais_Cobrados= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Toques na área adversária" and estatistica.Toques_na_area_adversaria==0:
-                estatistica.Toques_na_area_adversaria= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Passes no terço final" and  estatistica.Passes_no_terco_final==0:
-                estatistica.Passes_no_terco_final= self.atributo_Concluidos(driver,casafora,variacao,sessao,linha)
-            elif texto =="Cruzamentos" and estatistica.Cruzamentos==0:
-                estatistica.Cruzamentos= self.atributo_Concluidos(driver,casafora,variacao,sessao,linha)
-            elif texto =="Desarmes" and estatistica.Desarmes==0:
-                estatistica.Desarmes= self.atributo_Concluidos(driver,casafora,variacao,sessao,linha)
-            elif texto =="Bolas afastadas" and estatistica.Bolas_afastadas==0:
-                estatistica.Bolas_afastadas= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto =="Interceptações" and estatistica.Interceptacoes==0:
-                estatistica.Interceptacoes= self.atributo(driver,casafora,variacao,sessao,linha)
-            elif texto == "Passes" and estatistica.Passes==0:
-                estatistica.Passes= self.atributo_Concluidos(driver,casafora,variacao,sessao,linha)
-                estatistica.Passes_Totais= self.atributo_Total(driver,casafora,variacao,sessao,linha)
-                estatistica.Precisao_Passes= self.atributo_Porcentagem(driver,casafora,variacao,sessao,linha)
-        except: 
-            print("")
-   
+            stat_map = {
+                "Posse de bola": ("Posse_de_bola", "atributo"),
+                "Total de finalizações": ("Total_Finalizacao", "atributo"),
+                "Chutes Bloqueados": ("Chutes_Bloqueados", "atributo"),
+                "Chances claras": ("Chances_claras", "atributo"),
+                "Escanteios": ("Escanteios", "atributo"),
+                "Bolas na trave": ("Bolas_na_trave", "atributo"),
+                "Gols de cabeça": ("Gols_de_cabeca", "atributo"),
+                "Defesas do goleiro": ("Defesas_do_goleiro", "atributo"),
+                "Faltas": ("Faltas", "atributo"),
+                "Impedimentos": ("Impedimentos", "atributo"),
+                "Cartões Amarelos": ("Cartoes_Amarelos", "atributo"),
+                "Cartões Vermelhos": ("Cartoes_Vermelhos", "atributo"),
+                "Laterais Cobrados": ("Laterais_Cobrados", "atributo"),
+                "Toques na área adversária": ("Toques_na_area_adversaria", "atributo"),
+                "Passes no terço final": ("Passes_no_terco_final", "atributo_Concluidos"),
+                "Cruzamentos": ("Cruzamentos", "atributo_Concluidos"),
+                "Desarmes": ("Desarmes", "atributo_Concluidos"),
+                "Bolas afastadas": ("Bolas_afastadas", "atributo"),
+                "Interceptações": ("Interceptacoes", "atributo"),
+                "Passes": ("Passes", "special")
+            }
+            
+            if texto in stat_map:
+                attr, func = stat_map[texto]
+                attr += "_HT" if temp == 2 else ""
+                if getattr(estatistica, attr, 0) == 0 or (attr == "Cartoes_Vermelhos" and not getattr(estatistica, attr, False)):
+                    if func == "special":
+                        [setattr(estatistica, f"{a}{'_HT' if temp==2 else ''}", getattr(self, f"atributo_{m}")(driver,casafora,variacao,sessao,linha)) 
+                        for a, m in [("Passes", "Concluidos"), ("Passes_Totais", "Total"), ("Precisao_Passes", "Porcentagem")]]
+                    else:
+                        setattr(estatistica, attr, getattr(self, func)(driver,casafora,variacao,sessao,linha))
+        except:        
+            return estatistica
+        
         return estatistica
 
     def atributo(self,driver, timeCasa,variacao, sessao,linha ):
