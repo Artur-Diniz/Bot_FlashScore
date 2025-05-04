@@ -15,10 +15,8 @@ import random
 
 import time
 
-url=""
-tipoPartida=""
 def  Obter_Estatisticas(url:str, tipoPartida:str):
-    sleep(random.uniform(3.0, 5.5)) 
+    sleep(random.uniform(5.0, 7.5)) 
     desc=""    
     try:
         chrome_options = Options()
@@ -37,7 +35,14 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
         driver.get(url)
         
         cokie.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#onetrust-accept-btn-handler"))).click()
+        
         bot.pressionar_tecla(Keys.PAGE_DOWN)
+
+        desc="erro ao  recolher sumario"    
+        
+        
+        #eventos = bot.Sumario(driver)
+
 
         desc="falhou ao pressionar botão de estatisticas, pode ser que seja um jogo sem estatisticas, ou pode ser um jogo com mais uma variação"    
         btnEstatisticaPassou=0
@@ -77,8 +82,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                         btnEstatisticaPassou=1
                     else:
                         driver.quit() 
-                        raise
-                
+                        raise               
 
 
 
@@ -97,6 +101,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
         fora = Estatisticas()    
 
         partida = bot.recolher_Info_Partida(driver,tipoPartida)
+        partida.Url_Partida=url
         casa = bot.recolher_Estatistica_Time_Base(driver,True)
         fora = bot.recolher_Estatistica_Time_Base(driver,False)
         casa.CasaOuFora='Casa'
@@ -190,8 +195,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 bot.pressionar_tecla(Keys.ARROW_DOWN)       
 
                 try:
-                    casa = bot.Partida(driver,casa,True,ft,variacao,sessao,linha)
-                    fora = bot.Partida(driver,fora,False,ft,variacao,sessao,linha)
+                    bot.Partida(driver,casa,True,ft,variacao,sessao,linha),
+                    bot.Partida(driver,fora,False,ft,variacao,sessao,linha)                    
                 except:
                     print("Erro ao extrair dados da partida")
             if casa.Posse_de_bola==0 and casa.Passes==0 or fora.Posse_de_bola==0 and fora.Passes==0  :
@@ -262,5 +267,8 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
     estatisticas.Interceptacoes_HT = 0
     return estatisticas
 
+    
+# Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/WMBxGCZA/#/resumo-de-jogo/estatisticas-de-jogo/0", "Teste")   
+
+

@@ -80,11 +80,11 @@ class AutomacaoHomePage(automacao):
 
     def argentina(self):
         try:
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/[10]/a")
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/[10]/span[1]/span")
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/[10]/a")
-        except Exception as e:
-            print("Erro ao adicionar Argentina:", e)
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[10]/a/span")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[10]/span[1]/span")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[10]/a/span")
+        except Exception as e: #/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[10]/a/span
+            print("Erro ao adicionar Argentina:", e) #
             
     def alemanha(self):
         try:
@@ -277,8 +277,8 @@ class RecolherEstatisticas(automacao):
                 "Defesas do goleiro": ("Defesas_do_goleiro", "atributo"),
                 "Faltas": ("Faltas", "atributo"),
                 "Impedimentos": ("Impedimentos", "atributo"),
-                "Cartões Amarelos": ("Cartoes_Amarelos", "atributo"),
-                "Cartões Vermelhos": ("Cartoes_Vermelhos", "atributo"),
+                "Cartões amarelos": ("Cartoes_Amarelos", "atributo"),
+                "Cartões vermelhos": ("Cartoes_Vermelhos", "atributo"),
                 "Laterais Cobrados": ("Laterais_Cobrados", "atributo"),
                 "Toques dentro da área adversária": ("Toques_na_area_adversaria", "atributo"),
                 "Passes no terço final": ("Passes_no_terco_final", "atributo_Concluidos"),
@@ -343,6 +343,54 @@ class RecolherEstatisticas(automacao):
             atributo = int(driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-value_IuyQw.wcl-awayValue_rQvxs > strong").text.rstrip("%").rstrip(" "))
             
         return atributo
+    
+    def Sumario(self,driver):
+        eventos = []
+        
+        events = driver.find_elements(By.CLASS_NAME, "smv__incident")
+
+        for event in events:#
+            #smv__timeBox
+            tempo = event.find_element(By.CLASS_NAME, "smv__timeBox").text
+            jogador = event.find_element(By.CLASS_NAME, "smv__playerName").text
+            descricao=""
+            try:
+                try:
+                    try:
+                        try:#smv__subDown smv__playerName
+                            descricao = event.find_element(By.CLASS_NAME, "#smv__incidentSubOut smv__incidentSideAway").text
+                        except:
+                            descricao = event.find_element(By.CLASS_NAME, "smv__assist ").text
+                    except:
+                        descricao = event.find_element(By.CLASS_NAME, "smv__subIncident").text                
+                except:
+                        descricao = event.find_element(By.CLASS_NAME, "smv__subDown smv__playerName").text                
+            except:
+                print()
+                
+            descricao.rstrip("(").rstrip(")")
+            tipos_eventos = [
+                ("cartão amarelo", "card-ico yellowCard-ico"),
+                ("substituição", "substitution"),
+                ("gol", "smv__incidentHomeScore"),
+                ("gol", "smv__incidentAwayScore"), 
+                ("cartão vermelho", "card-ico redCard-ico")
+            ]
+            
+            # Verifica cada tipo de evento
+            for (nome_evento, classe) in tipos_eventos:
+                elementos = event.find_elements(By.CLASS_NAME, classe)
+                
+                for elemento in elementos:
+                    eventos.append({"tipo": nome_evento, "texto": elemento.text, "tempo": tempo,"jogador": jogador,"descricao": descricao} )
+                
+
+        return eventos
+                #card-ico yellowCard-ico 
+                #substitution 
+                #smv__incidentHomeScore
+                #smv__incidentAwayScore
+    
     
 
 class AnalisadorEstatisticoAvancado:

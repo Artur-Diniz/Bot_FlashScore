@@ -16,7 +16,7 @@ from resetarBanco import resetarBanco
 import os
 
 
-resetarBanco()
+#resetarBanco()
 driver = webdriver.Chrome()
 url="https://www.flashscore.com.br/"
 driver.get(url)
@@ -85,7 +85,7 @@ try:
         print("")
     try:
         EmailPalpites()
-    except:
+    except:    
         print("")
 
         

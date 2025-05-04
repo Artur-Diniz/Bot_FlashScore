@@ -9,6 +9,54 @@ END;
 GO
 
 BEGIN TRANSACTION;
+CREATE TABLE [Estatistica_BaseModel] (
+    [Id] int NOT NULL IDENTITY,
+    [Gol] real NULL,
+    [Gol_Slope] real NULL,
+    [Gol_DP] real NULL,
+    [GolSofrido] real NULL,
+    [GolSofrido_Slope] real NULL,
+    [GolSofrido_DP] real NULL,
+    [Posse_Bola] real NULL,
+    [Posse_Bola_Slope] real NULL,
+    [Posse_Bola_DP] real NULL,
+    [Total_Finalizacao] real NULL,
+    [Total_Finalizacao_Slope] real NULL,
+    [Total_Finalizacao_DP] real NULL,
+    [Chances_Claras] real NULL,
+    [Escanteios] real NULL,
+    [Escanteios_Slope] real NULL,
+    [Escanteios_DP] real NULL,
+    [Bolas_trave] real NULL,
+    [Gols_de_cabeça] real NULL,
+    [Defesas_Goleiro] real NULL,
+    [Impedimentos] real NULL,
+    [Impedimentos_Slope] real NULL,
+    [Impedimentos_DP] real NULL,
+    [Faltas] real NULL,
+    [Faltas_Slope] real NULL,
+    [Faltas_DP] real NULL,
+    [Cartoes_Amarelos] real NULL,
+    [Cartoes_Amarelos_Slope] real NULL,
+    [Cartoes_Amarelos_DP] real NULL,
+    [Cartoes_Vermelhos] real NULL,
+    [Cartoes_Vermelhos_Slope] real NULL,
+    [Cartoes_Vermelhos_DP] real NULL,
+    [Laterais_Cobrados] real NULL,
+    [Toque_Area_Adversaria] real NULL,
+    [Passes] real NULL,
+    [Passes_Totais] real NULL,
+    [Precisao_Passes] real NULL,
+    [Passes_terco_Final] real NULL,
+    [Cruzamentos] real NULL,
+    [Desarmes] real NULL,
+    [Desarmes_Slope] real NULL,
+    [Desarmes_DP] real NULL,
+    [Bolas_Afastadas] real NULL,
+    [Interceptacoes] real NULL,
+    CONSTRAINT [PK_Estatistica_BaseModel] PRIMARY KEY ([Id])
+);
+
 CREATE TABLE [TB_ERROSLOGS] (
     [Id] int NOT NULL IDENTITY,
     [QualPageFoi] varchar(250) NULL,
@@ -233,6 +281,7 @@ CREATE TABLE [TB_PARTIDAS] (
     [Id_EstatisticaFora] int NOT NULL,
     [NomeTimeCasa] varchar(250) NULL,
     [NomeTimeFora] varchar(250) NULL,
+    [Url_Partida] varchar(250) NULL,
     [DataPartida] datetime2 NOT NULL,
     [Campeonato] varchar(250) NULL,
     [PartidaAnalise] bit NOT NULL,
@@ -240,8 +289,144 @@ CREATE TABLE [TB_PARTIDAS] (
     CONSTRAINT [PK_TB_PARTIDAS] PRIMARY KEY ([Id])
 );
 
+CREATE TABLE [TB_ESTATISTICA_ESPERADAS] (
+    [Id] int NOT NULL IDENTITY,
+    [NomeTime] varchar(250) NULL,
+    [FTId] int NULL,
+    [HTId] int NULL,
+    [FT_AdversarioId] int NULL,
+    [HT_AdversarioId] int NULL,
+    [FT_ConfrontoId] int NULL,
+    [HT_ConfrontoId] int NULL,
+    CONSTRAINT [PK_TB_ESTATISTICA_ESPERADAS] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_TB_ESTATISTICA_ESPERADAS_Estatistica_BaseModel_FTId] FOREIGN KEY ([FTId]) REFERENCES [Estatistica_BaseModel] ([Id]),
+    CONSTRAINT [FK_TB_ESTATISTICA_ESPERADAS_Estatistica_BaseModel_FT_AdversarioId] FOREIGN KEY ([FT_AdversarioId]) REFERENCES [Estatistica_BaseModel] ([Id]),
+    CONSTRAINT [FK_TB_ESTATISTICA_ESPERADAS_Estatistica_BaseModel_FT_ConfrontoId] FOREIGN KEY ([FT_ConfrontoId]) REFERENCES [Estatistica_BaseModel] ([Id]),
+    CONSTRAINT [FK_TB_ESTATISTICA_ESPERADAS_Estatistica_BaseModel_HTId] FOREIGN KEY ([HTId]) REFERENCES [Estatistica_BaseModel] ([Id]),
+    CONSTRAINT [FK_TB_ESTATISTICA_ESPERADAS_Estatistica_BaseModel_HT_AdversarioId] FOREIGN KEY ([HT_AdversarioId]) REFERENCES [Estatistica_BaseModel] ([Id]),
+    CONSTRAINT [FK_TB_ESTATISTICA_ESPERADAS_Estatistica_BaseModel_HT_ConfrontoId] FOREIGN KEY ([HT_ConfrontoId]) REFERENCES [Estatistica_BaseModel] ([Id])
+);
+
+CREATE TABLE [TB_PARTIDA_ESTAITSTICA_ESPERADAS] (
+    [Id] int NOT NULL IDENTITY,
+    [Id_Partida] int NOT NULL,
+    [PartidaId] int NULL,
+    [Id_Estatisticas_Esperadas_Casa] int NOT NULL,
+    [Time_CasaId] int NULL,
+    [Id_Estatisticas_Esperadas_Fora] int NOT NULL,
+    [Time_ForaId] int NULL,
+    [Gol] real NULL,
+    [Gol_Slope] real NULL,
+    [Gol_DP] real NULL,
+    [GolSofrido] real NULL,
+    [GolSofrido_Slope] real NULL,
+    [GolSofrido_DP] real NULL,
+    [Posse_Bola] real NULL,
+    [Posse_Bola_Slope] real NULL,
+    [Posse_Bola_DP] real NULL,
+    [Total_Finalizacao] real NULL,
+    [Total_Finalizacao_Slope] real NULL,
+    [Total_Finalizacao_DP] real NULL,
+    [Chances_Claras] real NULL,
+    [Escanteios] real NULL,
+    [Escanteios_Slope] real NULL,
+    [Escanteios_DP] real NULL,
+    [Bolas_trave] real NULL,
+    [Gols_de_cabeça] real NULL,
+    [Defesas_Goleiro] real NULL,
+    [Impedimentos] real NULL,
+    [Impedimentos_Slope] real NULL,
+    [Impedimentos_DP] real NULL,
+    [Faltas] real NULL,
+    [Faltas_Slope] real NULL,
+    [Faltas_DP] real NULL,
+    [Cartoes_Amarelos] real NULL,
+    [Cartoes_Amarelos_Slope] real NULL,
+    [Cartoes_Amarelos_DP] real NULL,
+    [Cartoes_Vermelhos] real NULL,
+    [Cartoes_Vermelhos_Slope] real NULL,
+    [Cartoes_Vermelhos_DP] real NULL,
+    [Laterais_Cobrados] real NULL,
+    [Toque_Area_Adversaria] real NULL,
+    [Passes] real NULL,
+    [Passes_Totais] real NULL,
+    [Precisao_Passes] real NULL,
+    [Passes_terco_Final] real NULL,
+    [Cruzamentos] real NULL,
+    [Desarmes] real NULL,
+    [Desarmes_Slope] real NULL,
+    [Desarmes_DP] real NULL,
+    [Bolas_Afastadas] real NULL,
+    [Interceptacoes] real NULL,
+    [Gol_HT] real NULL,
+    [Gol_HT_Slope] real NULL,
+    [Gol_HT_DP] real NULL,
+    [GolSofrido_HT] real NULL,
+    [GolSofrido_HT_Slope] real NULL,
+    [GolSofrido_HT_DP] real NULL,
+    [Posse_Bola_HT] real NULL,
+    [Posse_Bola_HT_Slope] real NULL,
+    [Posse_Bola_HT_DP] real NULL,
+    [Total_Finalizacao_HT] real NULL,
+    [Total_Finalizacao_HT_Slope] real NULL,
+    [Total_Finalizacao_HT_DP] real NULL,
+    [Chances_Claras_HT] real NULL,
+    [Escanteios_HT] real NULL,
+    [Escanteios_HT_Slope] real NULL,
+    [Escanteios_HT_DP] real NULL,
+    [Bolas_trave_HT] real NULL,
+    [Gols_de_cabeça_HT] real NULL,
+    [Defesas_Goleiro_HT] real NULL,
+    [Impedimentos_HT] real NULL,
+    [Impedimentos_HT_Slope] real NULL,
+    [Impedimentos_HT_DP] real NULL,
+    [Faltas_HT] real NULL,
+    [Faltas_HT_Slope] real NULL,
+    [Faltas_HT_DP] real NULL,
+    [Cartoes_Amarelos_HT] real NULL,
+    [Cartoes_Amarelos_HT_Slope] real NULL,
+    [Cartoes_Amarelos_HT_DP] real NULL,
+    [Cartoes_Vermelhos_HT] real NULL,
+    [Cartoes_Vermelhos_HT_Slope] real NULL,
+    [Cartoes_Vermelhos_HT_DP] real NULL,
+    [Laterais_Cobrados_HT] real NULL,
+    [Toque_Area_Adversaria_HT] real NULL,
+    [Passes_HT] real NULL,
+    [Passes_Totais_HT] real NULL,
+    [Precisao_Passes_HT] real NULL,
+    [Passes_terco_Final_HT] real NULL,
+    [Cruzamentos_HT] real NULL,
+    [Desarmes_HT] real NULL,
+    [Desarmes_HT_Slope] real NULL,
+    [Desarmes_HT_DP] real NULL,
+    [Bolas_Afastadas_HT] real NULL,
+    [Interceptacoes_HT] real NULL,
+    CONSTRAINT [PK_TB_PARTIDA_ESTAITSTICA_ESPERADAS] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_TB_PARTIDA_ESTAITSTICA_ESPERADAS_TB_ESTATISTICA_ESPERADAS_Time_CasaId] FOREIGN KEY ([Time_CasaId]) REFERENCES [TB_ESTATISTICA_ESPERADAS] ([Id]),
+    CONSTRAINT [FK_TB_PARTIDA_ESTAITSTICA_ESPERADAS_TB_ESTATISTICA_ESPERADAS_Time_ForaId] FOREIGN KEY ([Time_ForaId]) REFERENCES [TB_ESTATISTICA_ESPERADAS] ([Id]),
+    CONSTRAINT [FK_TB_PARTIDA_ESTAITSTICA_ESPERADAS_TB_PARTIDAS_PartidaId] FOREIGN KEY ([PartidaId]) REFERENCES [TB_PARTIDAS] ([Id])
+);
+
+CREATE INDEX [IX_TB_ESTATISTICA_ESPERADAS_FT_AdversarioId] ON [TB_ESTATISTICA_ESPERADAS] ([FT_AdversarioId]);
+
+CREATE INDEX [IX_TB_ESTATISTICA_ESPERADAS_FT_ConfrontoId] ON [TB_ESTATISTICA_ESPERADAS] ([FT_ConfrontoId]);
+
+CREATE INDEX [IX_TB_ESTATISTICA_ESPERADAS_FTId] ON [TB_ESTATISTICA_ESPERADAS] ([FTId]);
+
+CREATE INDEX [IX_TB_ESTATISTICA_ESPERADAS_HT_AdversarioId] ON [TB_ESTATISTICA_ESPERADAS] ([HT_AdversarioId]);
+
+CREATE INDEX [IX_TB_ESTATISTICA_ESPERADAS_HT_ConfrontoId] ON [TB_ESTATISTICA_ESPERADAS] ([HT_ConfrontoId]);
+
+CREATE INDEX [IX_TB_ESTATISTICA_ESPERADAS_HTId] ON [TB_ESTATISTICA_ESPERADAS] ([HTId]);
+
+CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_PartidaId] ON [TB_PARTIDA_ESTAITSTICA_ESPERADAS] ([PartidaId]);
+
+CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Time_CasaId] ON [TB_PARTIDA_ESTAITSTICA_ESPERADAS] ([Time_CasaId]);
+
+CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Time_ForaId] ON [TB_PARTIDA_ESTAITSTICA_ESPERADAS] ([Time_ForaId]);
+
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20250501234024_InitialCreate', N'9.0.3');
+VALUES (N'20250504013429_InitialCreate', N'9.0.3');
 
 COMMIT;
 GO

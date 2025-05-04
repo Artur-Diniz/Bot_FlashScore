@@ -60,6 +60,7 @@ def Ultimos_Jogos(url:str):
         diajogo =str(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__startTime > div").text)
         partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
         partida.TipoPartida = "PartidaAnalise"
+        partida.Url_Partida=url
 
         if partida.Campeonato=="AMISTOSO INTERCLUBES":
             driver.quit()

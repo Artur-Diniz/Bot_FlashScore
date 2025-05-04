@@ -14,7 +14,7 @@ from datetime import datetime
 from enviarEmail.MeuEmail.Gmail import GMAIL, SENHA
 from API.EnviarBackLog import ReceberLogs
 
-def limpar_logs_antigos(pasta_log, dias=29):
+def limpar_logs_antigos(pasta_log, dias=10):
     agora = time.time()
     for arquivo in os.listdir(pasta_log):
         caminho = os.path.join(pasta_log, arquivo)
