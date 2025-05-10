@@ -23,7 +23,6 @@ import requests
 
 def mandarDados( estatisticasCasa: Estatisticas,estatisticasFora: Estatisticas, partida: Partidas) :
     url = "http://Junglernauti819.somee.com/botFlashScore/Estatistica/Partida"  
-    #url = "http://localhost:5194/Estatistica/Partida"  
     
     
     estatisticaCasa = {

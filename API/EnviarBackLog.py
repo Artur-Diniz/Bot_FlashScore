@@ -20,10 +20,10 @@ def MandraBackLogs( Erros:ErrosLogs) :
        
     ErrosLogs = {
         "Id": 0,
-        "QualPageFoi": "PáginaDoErro",  # Nome exato da coluna no SQL
-        "QualUrl": "https://exemplo.com/erro",
+        "QualPageFoi": Erros.emQualPageFoi,  # Nome exato da coluna no SQL
+        "QualUrl": Erros.QualaUrl,
         "horaErro": hora_erro,  # Formato: "2025-05-10T20:30:45.123Z"
-        "OqueProvavelmenteAConteceu": "Erro de teste"
+        "OqueProvavelmenteAConteceu": Erros.OqueProvavelmenteAConteceu
     }
 
     # 3. Configuração da requisição
