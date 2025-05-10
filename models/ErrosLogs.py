@@ -7,4 +7,5 @@ class ErrosLogs():
         self.id =0
         self.emQualPageFoi=""
         self.QualaUrl=""
+        self.horaErro=datetime
         self.OqueProvavelmenteAConteceu =""

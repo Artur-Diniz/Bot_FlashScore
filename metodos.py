@@ -54,7 +54,9 @@ class automacao:
             print(f"Erro ao clicar no elemento {cssSelector} ")
     
     def BackLogs(self, url:str,Page:int,descricao:str):
+        
         erro = ErrosLogs()
+        
         
         if Page==1:
             erro.emQualPageFoi="Obter_Estatisticas.py"        

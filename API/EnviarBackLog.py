@@ -9,35 +9,40 @@ from models.ErrosLogs import ErrosLogs
 import json
 import requests
 import os
-from datetime import datetime
+from datetime  import datetime, timezone
 
 def MandraBackLogs( Erros:ErrosLogs) :
     #acertar a URL dps pois ainda n criei o metodo na api
     url = "http://Junglernauti819.somee.com/botFlashScore/ErrosLogs/"  
     
+    hora_erro = datetime.now(timezone.utc).isoformat(timespec='milliseconds').replace("+00:00", "Z")
+
+       
     ErrosLogs = {
         "Id": 0,
-        "qualPageFoi": Erros.emQualPageFoi,
-        "qualUrl": Erros.QualaUrl,
-        "OqueProvavelmenteAConteceu": Erros.OqueProvavelmenteAConteceu       
+        "QualPageFoi": "PáginaDoErro",  # Nome exato da coluna no SQL
+        "QualUrl": "https://exemplo.com/erro",
+        "horaErro": hora_erro,  # Formato: "2025-05-10T20:30:45.123Z"
+        "OqueProvavelmenteAConteceu": "Erro de teste"
     }
-    
-    headers = {"Content-Type": "application/json"}
+
+    # 3. Configuração da requisição
+    url = "http://seu-servidor.com/api/erros"
+    headers = {
+        "Content-Type": "application/json",
+        # "Authorization": "Bearer token_secreto"  # Se necessário
+    }
+
+    # 4. Envie e trate erros
     try:
         response = requests.post(url, json=ErrosLogs, headers=headers)
-
-        if response.status_code == 200:
-            try:
-                data = response.json()
-                print("❌DEU MERDA VE AI A CAGADA O ID É:", data)
-            except json.JSONDecodeError:
-                print("Resposta bruta:", response.text)
-        else:
-            print("❌ Erro ao enviar dados:")
-            print("Status Code:", response.status_code)
-            print("Motivo:", response.reason)
-            print("Resposta do servidor:", response.text)
-            
+        response.raise_for_status()  # Lança erro se status != 200-299
+        print("✅ Log enviado com sucesso!")
+        print("Resposta do servidor:", response.json())
+    except requests.exceptions.HTTPError as e:
+        print(f"❌ Erro HTTP {e.response.status_code}: {e.response.text}")
+    except Exception as e:
+        print(f"❌ Erro inesperado: {str(e)}")
         # url=url+"GetAll"
         # response = requests.get(url, json=ErrosLogs, headers=headers)
         # print(response) 

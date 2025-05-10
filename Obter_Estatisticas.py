@@ -17,7 +17,7 @@ import time
 
 def  Obter_Estatisticas(url:str, tipoPartida:str):
     sleep(random.uniform(5.0, 7.5)) 
-    desc=""    
+    desc="erro ao incializar"    
     try:
         chrome_options = Options()
         

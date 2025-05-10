@@ -12,11 +12,11 @@ from metodos import AutomacaoHomePage
 from Obter_ultimos_Jogos import Ultimos_Jogos
 from ObterJogosEspecificos import Obter_Times_Especificos
 from datetime import datetime
-from resetarBanco import resetarBanco
+from resetarBanco import resetar_banco_selenium
 import os
 
 
-#resetarBanco()
+resetar_banco_selenium()
 driver = webdriver.Chrome()
 url="https://www.flashscore.com.br/"
 driver.get(url)
@@ -48,7 +48,6 @@ try:
 
         if nomecamp in ["brasileirao-betano", "serie-b", "laliga", "ligue-1", "campeonato-ingles", "serie-a", "bundesliga", "torneo-betano", "liga-portugal","paulista", "eredivisie", "copa-libertadores","liga-dos-campeoes" ]:
             ligas.append(item)
-
 
 
     

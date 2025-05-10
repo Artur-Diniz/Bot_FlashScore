@@ -59,6 +59,7 @@ CREATE TABLE [Estatistica_BaseModel] (
 
 CREATE TABLE [TB_ERROSLOGS] (
     [Id] int NOT NULL IDENTITY,
+    [horaErro] datetime2 NOT NULL,
     [QualPageFoi] varchar(250) NULL,
     [QualUrl] varchar(250) NULL,
     [OqueProvavelmenteAConteceu] varchar(510) NULL,
@@ -315,93 +316,15 @@ CREATE TABLE [TB_PARTIDA_ESTAITSTICA_ESPERADAS] (
     [Time_CasaId] int NULL,
     [Id_Estatisticas_Esperadas_Fora] int NOT NULL,
     [Time_ForaId] int NULL,
-    [Gol] real NULL,
-    [Gol_Slope] real NULL,
-    [Gol_DP] real NULL,
-    [GolSofrido] real NULL,
-    [GolSofrido_Slope] real NULL,
-    [GolSofrido_DP] real NULL,
-    [Posse_Bola] real NULL,
-    [Posse_Bola_Slope] real NULL,
-    [Posse_Bola_DP] real NULL,
-    [Total_Finalizacao] real NULL,
-    [Total_Finalizacao_Slope] real NULL,
-    [Total_Finalizacao_DP] real NULL,
-    [Chances_Claras] real NULL,
-    [Escanteios] real NULL,
-    [Escanteios_Slope] real NULL,
-    [Escanteios_DP] real NULL,
-    [Bolas_trave] real NULL,
-    [Gols_de_cabeça] real NULL,
-    [Defesas_Goleiro] real NULL,
-    [Impedimentos] real NULL,
-    [Impedimentos_Slope] real NULL,
-    [Impedimentos_DP] real NULL,
-    [Faltas] real NULL,
-    [Faltas_Slope] real NULL,
-    [Faltas_DP] real NULL,
-    [Cartoes_Amarelos] real NULL,
-    [Cartoes_Amarelos_Slope] real NULL,
-    [Cartoes_Amarelos_DP] real NULL,
-    [Cartoes_Vermelhos] real NULL,
-    [Cartoes_Vermelhos_Slope] real NULL,
-    [Cartoes_Vermelhos_DP] real NULL,
-    [Laterais_Cobrados] real NULL,
-    [Toque_Area_Adversaria] real NULL,
-    [Passes] real NULL,
-    [Passes_Totais] real NULL,
-    [Precisao_Passes] real NULL,
-    [Passes_terco_Final] real NULL,
-    [Cruzamentos] real NULL,
-    [Desarmes] real NULL,
-    [Desarmes_Slope] real NULL,
-    [Desarmes_DP] real NULL,
-    [Bolas_Afastadas] real NULL,
-    [Interceptacoes] real NULL,
-    [Gol_HT] real NULL,
-    [Gol_HT_Slope] real NULL,
-    [Gol_HT_DP] real NULL,
-    [GolSofrido_HT] real NULL,
-    [GolSofrido_HT_Slope] real NULL,
-    [GolSofrido_HT_DP] real NULL,
-    [Posse_Bola_HT] real NULL,
-    [Posse_Bola_HT_Slope] real NULL,
-    [Posse_Bola_HT_DP] real NULL,
-    [Total_Finalizacao_HT] real NULL,
-    [Total_Finalizacao_HT_Slope] real NULL,
-    [Total_Finalizacao_HT_DP] real NULL,
-    [Chances_Claras_HT] real NULL,
-    [Escanteios_HT] real NULL,
-    [Escanteios_HT_Slope] real NULL,
-    [Escanteios_HT_DP] real NULL,
-    [Bolas_trave_HT] real NULL,
-    [Gols_de_cabeça_HT] real NULL,
-    [Defesas_Goleiro_HT] real NULL,
-    [Impedimentos_HT] real NULL,
-    [Impedimentos_HT_Slope] real NULL,
-    [Impedimentos_HT_DP] real NULL,
-    [Faltas_HT] real NULL,
-    [Faltas_HT_Slope] real NULL,
-    [Faltas_HT_DP] real NULL,
-    [Cartoes_Amarelos_HT] real NULL,
-    [Cartoes_Amarelos_HT_Slope] real NULL,
-    [Cartoes_Amarelos_HT_DP] real NULL,
-    [Cartoes_Vermelhos_HT] real NULL,
-    [Cartoes_Vermelhos_HT_Slope] real NULL,
-    [Cartoes_Vermelhos_HT_DP] real NULL,
-    [Laterais_Cobrados_HT] real NULL,
-    [Toque_Area_Adversaria_HT] real NULL,
-    [Passes_HT] real NULL,
-    [Passes_Totais_HT] real NULL,
-    [Precisao_Passes_HT] real NULL,
-    [Passes_terco_Final_HT] real NULL,
-    [Cruzamentos_HT] real NULL,
-    [Desarmes_HT] real NULL,
-    [Desarmes_HT_Slope] real NULL,
-    [Desarmes_HT_DP] real NULL,
-    [Bolas_Afastadas_HT] real NULL,
-    [Interceptacoes_HT] real NULL,
+    [Partida_FTId] int NULL,
+    [Partida_HTId] int NULL,
+    [Partida_FT_ConfrontoId] int NULL,
+    [Partida_HT_ConfrontoId] int NULL,
     CONSTRAINT [PK_TB_PARTIDA_ESTAITSTICA_ESPERADAS] PRIMARY KEY ([Id]),
+    CONSTRAINT [FK_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Estatistica_BaseModel_Partida_FTId] FOREIGN KEY ([Partida_FTId]) REFERENCES [Estatistica_BaseModel] ([Id]),
+    CONSTRAINT [FK_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Estatistica_BaseModel_Partida_FT_ConfrontoId] FOREIGN KEY ([Partida_FT_ConfrontoId]) REFERENCES [Estatistica_BaseModel] ([Id]),
+    CONSTRAINT [FK_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Estatistica_BaseModel_Partida_HTId] FOREIGN KEY ([Partida_HTId]) REFERENCES [Estatistica_BaseModel] ([Id]),
+    CONSTRAINT [FK_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Estatistica_BaseModel_Partida_HT_ConfrontoId] FOREIGN KEY ([Partida_HT_ConfrontoId]) REFERENCES [Estatistica_BaseModel] ([Id]),
     CONSTRAINT [FK_TB_PARTIDA_ESTAITSTICA_ESPERADAS_TB_ESTATISTICA_ESPERADAS_Time_CasaId] FOREIGN KEY ([Time_CasaId]) REFERENCES [TB_ESTATISTICA_ESPERADAS] ([Id]),
     CONSTRAINT [FK_TB_PARTIDA_ESTAITSTICA_ESPERADAS_TB_ESTATISTICA_ESPERADAS_Time_ForaId] FOREIGN KEY ([Time_ForaId]) REFERENCES [TB_ESTATISTICA_ESPERADAS] ([Id]),
     CONSTRAINT [FK_TB_PARTIDA_ESTAITSTICA_ESPERADAS_TB_PARTIDAS_PartidaId] FOREIGN KEY ([PartidaId]) REFERENCES [TB_PARTIDAS] ([Id])
@@ -419,6 +342,14 @@ CREATE INDEX [IX_TB_ESTATISTICA_ESPERADAS_HT_ConfrontoId] ON [TB_ESTATISTICA_ESP
 
 CREATE INDEX [IX_TB_ESTATISTICA_ESPERADAS_HTId] ON [TB_ESTATISTICA_ESPERADAS] ([HTId]);
 
+CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Partida_FT_ConfrontoId] ON [TB_PARTIDA_ESTAITSTICA_ESPERADAS] ([Partida_FT_ConfrontoId]);
+
+CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Partida_FTId] ON [TB_PARTIDA_ESTAITSTICA_ESPERADAS] ([Partida_FTId]);
+
+CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Partida_HT_ConfrontoId] ON [TB_PARTIDA_ESTAITSTICA_ESPERADAS] ([Partida_HT_ConfrontoId]);
+
+CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Partida_HTId] ON [TB_PARTIDA_ESTAITSTICA_ESPERADAS] ([Partida_HTId]);
+
 CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_PartidaId] ON [TB_PARTIDA_ESTAITSTICA_ESPERADAS] ([PartidaId]);
 
 CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Time_CasaId] ON [TB_PARTIDA_ESTAITSTICA_ESPERADAS] ([Time_CasaId]);
@@ -426,7 +357,7 @@ CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Time_CasaId] ON [TB_PARTIDA_ES
 CREATE INDEX [IX_TB_PARTIDA_ESTAITSTICA_ESPERADAS_Time_ForaId] ON [TB_PARTIDA_ESTAITSTICA_ESPERADAS] ([Time_ForaId]);
 
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
-VALUES (N'20250504013429_InitialCreate', N'9.0.3');
+VALUES (N'20250509025335_InitialCreate', N'9.0.3');
 
 COMMIT;
 GO
