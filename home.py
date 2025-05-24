@@ -12,11 +12,11 @@ from metodos import AutomacaoHomePage
 from Obter_ultimos_Jogos import Ultimos_Jogos
 from ObterJogosEspecificos import Obter_Times_Especificos
 from datetime import datetime
-from resetarBanco import resetar_banco_selenium
+from resetarBanco import Reset_Banco
 import os
 
 
-resetar_banco_selenium()
+Reset_Banco()
 driver = webdriver.Chrome()
 url="https://www.flashscore.com.br/"
 driver.get(url)

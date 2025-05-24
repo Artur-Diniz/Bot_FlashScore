@@ -269,7 +269,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/8p0xstvR/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
+#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/8p0xstvR/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

@@ -260,3 +260,47 @@ def mandarPartidaAnalise(partida: Partidas) :
         
         
 #gerarEstatiscasMedias("Juventude","Mirassol")
+
+
+def mandarDados() :
+    url = "http://Junglernauti819.somee.com/botFlashScore/Partida/"  
+    
+    
+    
+    
+    Partida = {
+        "Id": 0,
+        "Id_EstatisticaCasa": 0,
+        "Id_EstatisticaFora": 0,
+        "NomeTimeCasa": "name Teste Casa",  
+        "NomeTimeFora": "name Teste Casa",
+        "Url_Partida": "",
+        "DataPartida":  datetime.now().isoformat(),
+        "Campeonato":"camp-teste-DataBase",
+        "PartidaAnalise": False,
+        "TipoPartida":"Teste"
+    }
+    
+ 
+
+    headers = {"Content-Type": "application/json"}
+    try:
+        response = requests.post(url, json=Partida, headers=headers)
+
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                print("✅ Dados enviados com sucesso! ID:", data)
+            except json.JSONDecodeError:
+                print("Resposta bruta:", response.text)
+            return "Banco de dados Resetado Corretamente"
+        else:
+            print("❌ Erro ao enviar dados:")
+            print("Status Code:", response.status_code)
+            print("Motivo:", response.reason)
+            print("Resposta do servidor:", response.text)
+            return "Falha Ao Resetar Banco de Dados"
+    except requests.RequestException as e:
+        print("❌ Erro de requisição:", e)
+        
+#mandarDados()
