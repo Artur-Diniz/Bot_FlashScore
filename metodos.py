@@ -202,6 +202,7 @@ class automacaoUltimosJogos(automacao):
                 # Se mudou a URL, armazena antes de voltar
                 if driver.current_url != original_url:
                     new_url = driver.current_url  # Guarda a URL nova
+
                     driver.back()  # Volta para a original
                     self.wait.until(lambda d: d.current_url == original_url)
                     

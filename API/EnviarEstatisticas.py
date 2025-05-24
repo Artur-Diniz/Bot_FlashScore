@@ -235,7 +235,8 @@ def mandarPartidaAnalise(partida: Partidas) :
         "DataPartida": partida.data.isoformat(),
         "Campeonato": partida.Campeonato,
         "PartidaAnalise": True,
-        "TipoPartida": partida.TipoPartida
+        "TipoPartida": partida.TipoPartida,
+        "url_Partida":partida.Url_Partida
     }
     
     headers = {"Content-Type": "application/json"}

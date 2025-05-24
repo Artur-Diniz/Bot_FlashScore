@@ -17,7 +17,6 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
     tentativa=0
     while tentativa<2 :
         tentativa+=1
-        sleep(random.uniform(5.0, 7.5)) 
         desc="erro ao incializar"    
         try:
             chrome_options = Options()
@@ -32,7 +31,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             bot = RecolherEstatisticas(driver)
             cokie = WebDriverWait(driver, 15)
             driver.get(url)
-            
+            sleep(random.uniform(5.0, 7.5)) 
+
             cokie.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#onetrust-accept-btn-handler"))).click()
             
             bot.pressionar_tecla(Keys.PAGE_DOWN)
@@ -201,8 +201,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 if casa.Posse_de_bola==0 and casa.Passes==0 or fora.Posse_de_bola==0 and fora.Passes==0  :
                     desc="Falha ao reconhecer dados da classe de estatisticas Partidas, Aparentemente uma variação nova ou partidas sem estatisticas"
                     driver.quit() 
-                    raise
-            
+                    raise           
             
             
             else:            
@@ -269,8 +268,8 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
     return estatisticas
 
     
-# 
-# Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/8p0xstvR/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
+ 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/8p0xstvR/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

@@ -34,6 +34,7 @@ try:
     bot.portugal()
     bot.holanda()
         
+        
 
 
     ligas = []

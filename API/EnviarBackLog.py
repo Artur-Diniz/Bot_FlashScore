@@ -27,11 +27,8 @@ def MandraBackLogs( Erros:ErrosLogs) :
     }
 
     # 3. Configuração da requisição
-    url = "http://seu-servidor.com/api/erros"
-    headers = {
-        "Content-Type": "application/json",
-        # "Authorization": "Bearer token_secreto"  # Se necessário
-    }
+    url = "http://Junglernauti819.somee.com/botFlashScore/ErrosLogs/"  
+    headers = {"Content-Type": "application/json"}
 
     # 4. Envie e trate erros
     try:
