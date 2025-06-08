@@ -189,4 +189,4 @@ def Ultimos_Jogos(url:str):
 
 
 
-#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/8KQkEX77/#/resumo-de-jogo/resumo-de-jogo")
+Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/Qi1U0KQE/#/resumo-de-jogo")

@@ -166,12 +166,11 @@ class automacaoUltimosJogos(automacao):
         
         # Tentativas de clique em diferentes seletores CSS
         selectors = [
-            f"#detail > div:nth-child(5) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})",
-            f"#detail > div:nth-child(6) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})",
-            f"#detail > div:nth-child(7) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})",
-            f"#detail > div:nth-child(8) > div > div.h2h > div:nth-child({count}) > div.rows > div:nth-child({linha})"
+            f"#detail > div:nth-child(5) > div > div.h2h > div:nth-child({count}) > div.rows > a:nth-child({linha})",
+            f"#detail > div:nth-child(6) > div > div.h2h > div:nth-child({count}) > div.rows > a:nth-child({linha})",
+            f"#detail > div:nth-child(7) > div > div.h2h > div:nth-child({count}) > div.rows > a:nth-child({linha})",
+            f"#detail > div:nth-child(8) > div > div.h2h > div:nth-child({count}) > div.rows > a:nth-child({linha})"
         ]
-        
         clicked = False
         for selector in selectors:
             try:

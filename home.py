@@ -16,7 +16,7 @@ from resetarBanco import Reset_Banco
 import os
 
 
-Reset_Banco()
+#Reset_Banco()
 driver = webdriver.Chrome()
 url="https://www.flashscore.com.br/"
 driver.get(url)
