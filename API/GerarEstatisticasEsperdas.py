@@ -36,7 +36,7 @@ def converter_json_para_partidas(dados_api):
 
 def GerarestatisticaEsperadas(Id_Partida:int, url: str):
 
-    headers = {"Content-Type": "application/json"}
+    headers = {"Content-Type": "application/json"}#http://localhost:5194/EstatisticaEsperadas/GerarEstatisticasEsperadas/
 
     response = requests.post(url+f"EstatisticaEsperadas/GerarEstatisticasEsperadas/{Id_Partida}", headers=headers)
 
@@ -58,7 +58,7 @@ def GerarestatisticaEsperadas(Id_Partida:int, url: str):
     
 def GerarPartidaEstatisticaEsperadas(Id_Partida:int, url: str):
 
-    headers = {"Content-Type": "application/json"}
+    headers = {"Content-Type": "application/json"}#http://localhost:5194/PartidaEstatisticaEsperadas/GerarEstatisticasEsperadas/
 
     response = requests.post(url+f"PartidaEstatisticaEsperadas/GerarEstatisticasEsperadas/{Id_Partida}", headers=headers)
 
@@ -79,7 +79,7 @@ def GerarPartidaEstatisticaEsperadas(Id_Partida:int, url: str):
         return "Erro ao fazer Solicitação"
 
 
-def SolicitarPalpites( ) :  
+def GerarEstatisticaIA( ) :  
     url = "http://Junglernauti819.somee.com/botFlashScore/"  
      
     partidas_analisadas = []
@@ -122,4 +122,4 @@ def SolicitarPalpites( ) :
         
         
         
-SolicitarPalpites()
+#GerarEstatisticaIA()

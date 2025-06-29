@@ -9,19 +9,31 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from metodos import AutomacaoHomePage
+from API.GerarEstatisticasEsperdas import GerarEstatisticaIA
 from Obter_ultimos_Jogos import Ultimos_Jogos
 from ObterJogosEspecificos import Obter_Times_Especificos
 from datetime import datetime
 from resetarBanco import Reset_Banco
+from selenium.webdriver.chrome.options import Options
+
 import os
 
 
 #Reset_Banco()
-driver = webdriver.Chrome()
 url="https://www.flashscore.com.br/"
-driver.get(url)
 desc=""
 try:
+    chrome_options = Options()
+
+    chrome_options.add_argument('--no-sandbox')  # Mais estável em alguns sistemas
+    chrome_options.add_argument('--disable-dev-shm-usage')  # Evita problemas de memória
+    chrome_options.add_argument('--disable-blink-features=AutomationControlled')  # Disfarça automação
+    chrome_options.add_argument('--start-maximized')  # Já inicia maximizado
+    chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])  # Remove avisos
+    
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.get(url)
+    
     bot = AutomacaoHomePage(driver)
     driver.maximize_window()
     desc="O erro aconteceu logo no começo da page especificamente na hora de adicionar as ligas alternativas"
@@ -33,6 +45,8 @@ try:
     bot.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/span") # botão more (para mostrar todos os paises)
     bot.portugal()
     bot.holanda()
+    bot.egito()
+    bot.turquia()
         
         
 
@@ -85,9 +99,10 @@ try:
         print("")
     try:
         EmailPalpites()
+        GerarEstatisticaIA()
     except:    
         print("")
-
+    
         
     os.system("shutdown /s /t 1")
 

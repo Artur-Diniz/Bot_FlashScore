@@ -21,11 +21,21 @@ def Ultimos_Jogos(url:str):
         
         chrome_options = Options()
     
-        chrome_options.add_argument('--no-sandbox')  # Mais estável em alguns sistemas
-        chrome_options.add_argument('--disable-dev-shm-usage')  # Evita problemas de memória
-        chrome_options.add_argument('--disable-blink-features=AutomationControlled')  # Disfarça automação
-        chrome_options.add_argument('--start-maximized')  # Já inicia maximizado
-        chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])  # Remove avisos
+        # --- Configurações de Performance/GPU ---
+        chrome_options.add_argument("--disable-gpu")  # Soluciona o erro da GPU não suportada
+        chrome_options.add_argument("--disable-software-rasterizer")  # Usa CPU para renderização
+        chrome_options.add_argument("--disable-dev-shm-usage")  # Problemas de memória em containers/VMs
+        chrome_options.add_argument("--no-sandbox")  # Estabilidade em alguns sistemas
+
+        # --- Stealth Mode (evitar detecção como bot) ---
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation", "enable-logging"])  # Remove logs + avisos
+        chrome_options.add_experimental_option("useAutomationExtension", False)
+
+        # --- UX/Navegação ---
+        chrome_options.add_argument("--start-maximized")  # Maximiza a janela
+        chrome_options.add_argument("--disable-infobars")  # Remove barra de "Chrome está sendo controlado"
+        chrome_options.add_argument("--disable-extensions")  # Desativa extensões
         
         driver = webdriver.Chrome(options=chrome_options)
         
@@ -158,7 +168,7 @@ def Ultimos_Jogos(url:str):
             mandarPartidaAnalise(partida)
             desc="Falha ao chamar metodo Obter_Estatisticas"
             
-            with ThreadPoolExecutor(max_workers=2) as executor:  # 3 threads
+            with ThreadPoolExecutor(max_workers=1) as executor:  # 3 threads
             # Enfileira TODAS as URLs de uma vez
                 executor.map(lambda url: Obter_Estatisticas(url, "Confronto Direto"), confrontoDireto)
                 executor.map(lambda url: Obter_Estatisticas(url, "Casa"), casacasa)
@@ -189,4 +199,4 @@ def Ultimos_Jogos(url:str):
 
 
 
-Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/Qi1U0KQE/#/resumo-de-jogo")
+#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/xYmdBM1l/#/resumo-de-jogo/resumo-de-jogo")

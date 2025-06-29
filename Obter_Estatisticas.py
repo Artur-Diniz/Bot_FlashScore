@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from metodos import RecolherEstatisticas
 from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
-from API.EnviarEstatisticas import mandarDados
+from API.EnviarEstatisticas import mandarDadosPartida,mandarDadosPartidaAnalisada
 from time import sleep
 from selenium.webdriver.chrome.options import Options
 import random
@@ -21,11 +21,22 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
         try:
             chrome_options = Options()
             
-            chrome_options.add_argument('--no-sandbox')  # Mais estável em alguns sistemas
-            chrome_options.add_argument('--disable-dev-shm-usage')  # Evita problemas de memória
-            chrome_options.add_argument('--disable-blink-features=AutomationControlled')  # Disfarça automação
-            chrome_options.add_argument('--start-maximized')  # Já inicia maximizado
-            chrome_options.add_experimental_option('excludeSwitches', ['enable-automation'])  # Remove avisos
+    # --- Configurações de Performance/GPU ---
+            chrome_options.add_argument("--disable-gpu")  # Soluciona o erro da GPU não suportada
+            chrome_options.add_argument("--disable-software-rasterizer")  # Usa CPU para renderização
+            chrome_options.add_argument("--disable-dev-shm-usage")  # Problemas de memória em containers/VMs
+            chrome_options.add_argument("--no-sandbox")  # Estabilidade em alguns sistemas
+
+            # --- Stealth Mode (evitar detecção como bot) ---
+            chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+            chrome_options.add_experimental_option("excludeSwitches", ["enable-automation", "enable-logging"])  # Remove logs + avisos
+            chrome_options.add_experimental_option("useAutomationExtension", False)
+
+            # --- UX/Navegação ---
+            chrome_options.add_argument("--start-maximized")  # Maximiza a janela
+            chrome_options.add_argument("--disable-infobars")  # Remove barra de "Chrome está sendo controlado"
+            chrome_options.add_argument("--disable-extensions")  # Desativa extensões
+        
             
             driver = webdriver.Chrome(options=chrome_options)
             bot = RecolherEstatisticas(driver)
@@ -35,7 +46,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
 
             cokie.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#onetrust-accept-btn-handler"))).click()
             
-            bot.pressionar_tecla(Keys.PAGE_DOWN)
+            #bot.pressionar_tecla(Keys.PAGE_DOWN)
 
             desc="erro ao  recolher sumario"    
             
@@ -143,7 +154,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 ft+=1
                 if ft>1:
                     bot.pressionar_tecla(Keys.HOME)                
-                    bot.pressionar_tecla(Keys.DOWN)                
+                    bot.pressionar_tecla(Keys.DOWN)                #btn de estatisticas do primeiro tempo 
                     bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a:nth-child(2) > button")        
                     
                 for row in rows:              
@@ -205,7 +216,10 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             
             
             else:            
-                mandarDados(casa,fora,partida)
+                if tipoPartida=="Analisada":
+                    mandarDadosPartidaAnalisada(casa,fora,partida)
+                else:
+                    mandarDadosPartida(casa,fora,partida)
                 tentativa+=1
             driver.quit()
         except:  
@@ -269,7 +283,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/8p0xstvR/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
+#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/QNTEQqOK/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

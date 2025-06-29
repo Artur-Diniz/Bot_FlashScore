@@ -107,6 +107,30 @@ class AutomacaoHomePage(automacao):
             self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[140]/a")    
         except Exception as e:
             print("Erro ao adicionar portugal:", )
+            
+    def turquia(self):
+        try:
+            self.pressionar_tecla(Keys.PAGE_DOWN)
+            elemento_hover = self.wait.until(         
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[172]/a"))
+        )               
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[172]/a")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[172]/span[1]/span")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[172]/a")    
+        except Exception as e:
+            print("Erro ao adicionar portugal:", )
+    
+    def egito(self):
+        try:
+            self.pressionar_tecla(Keys.PAGE_DOWN)
+            elemento_hover = self.wait.until(      
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[53]/a"))
+        )               
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[53]/a")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[53]/span[1]/span")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[53]/a")    
+        except Exception as e:
+            print("Erro ao adicionar portugal:", )
     
     
     def holanda(self):
