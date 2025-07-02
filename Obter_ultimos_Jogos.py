@@ -137,9 +137,11 @@ def Ultimos_Jogos(url:str):
             if contador==5 and count ==3:
                 count = 1
                 keyboard.send_keys(Keys.PAGE_UP).perform()
+                keyboard.send_keys(Keys.PAGE_UP).perform()
                 wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button"))).click()
                 contador = 0
             if contador==5 and count==1:
+                keyboard.send_keys(Keys.PAGE_UP).perform()
                 keyboard.send_keys(Keys.PAGE_UP).perform()
                 wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button"))).click()
                 jogofora=1 
@@ -199,4 +201,4 @@ def Ultimos_Jogos(url:str):
 
 
 
-#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/xYmdBM1l/#/resumo-de-jogo/resumo-de-jogo")
+#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/CpaUWfUO/#/resumo-de-jogo/resumo-de-jogo")

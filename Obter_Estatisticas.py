@@ -51,7 +51,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             desc="erro ao  recolher sumario"    
             
             
-            #eventos = bot.Sumario(driver)
+            eventos = bot.Sumario(driver)
 
 
             desc="falhou ao pressionar botão de estatisticas, pode ser que seja um jogo sem estatisticas, ou pode ser um jogo com mais uma variação"    
@@ -283,7 +283,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/QNTEQqOK/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Ch9PC9Qp/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

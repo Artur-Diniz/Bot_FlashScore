@@ -7,7 +7,6 @@ PROJECT_ROOT = Path(__file__).parent.parent  # Ajuste conforme necessário
 sys.path.append(str(PROJECT_ROOT))
 
 
-from selenium import webdriver
 
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
