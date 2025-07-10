@@ -48,11 +48,10 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             
             #bot.pressionar_tecla(Keys.PAGE_DOWN)
 
-            desc="erro ao  recolher sumario"    
-            
-            
+            desc="erro ao  recolher sumario"                
             eventos = bot.Sumario(driver)
             Gols_ht = bot.recolherGolHt(eventos)
+
 
 
             desc="falhou ao pressionar botão de estatisticas, pode ser que seja um jogo sem estatisticas, ou pode ser um jogo com mais uma variação"    
@@ -110,6 +109,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             partida = Partidas()
             casa = Estatisticas()
             fora = Estatisticas()    
+            InstanciarPartidaZerada(casa)
+            InstanciarPartidaZerada(fora)
 
             partida = bot.recolher_Info_Partida(driver,tipoPartida)
             partida.Url_Partida=url
@@ -120,9 +121,12 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             
             casa.Gol_HT = Gols_ht.get("gol_casa")
             fora.Gol_HT = Gols_ht.get("gol_fora")
-            
+
             casa.GolSofrido_HT=fora.Gol_HT
             fora.GolSofrido_HT=casa.Gol_HT
+            casa.GolSofrido=fora.Gol
+            fora.GolSofrido=casa.Gol
+            
             
             # em jogos disputado por penaltis o site do flash score adiciona um gol para quem passa e isso altera 
             # a quantidade de gols feitos em tempo regulamentar q é o que é esperado pelas casas de aposta
@@ -137,16 +141,13 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 print("")
             
             
-            casa.GolSofrido=fora.Gol
-            fora.GolSofrido=casa.Gol
-            
+
             # não busca informações em jogos amistosos ele n valem de nada
             if partida.Campeonato=="AMISTOSO INTERCLUBES":
                 driver.quit()
                 return
         
-            InstanciarPartidaZerada(casa)
-            InstanciarPartidaZerada(fora)
+
             desc="falha ao dados da classe Eststisticas Partida"           
             
                                                         #wcl-row_OFViZ
@@ -183,7 +184,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                             return getDivPath(arguments[0]);
                         """, row)
 
-                        # Exemplo de full_path: (era pra ser assim )
+                        # Exemplo de full_path: (era pra ser assim porém pode mudar com o tempo)
+
                         # "div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)"
 
                         parts = full_path.split(" > ")
