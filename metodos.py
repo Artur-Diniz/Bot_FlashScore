@@ -422,7 +422,38 @@ class RecolherEstatisticas(automacao):
                 #smv__incidentHomeScore
                 #smv__incidentAwayScore
     
-    
+    def recolherGolHt(self,sumario):
+        resultado = {
+            "gol_casa": 0,
+            "gol_fora": 0
+        }
+
+        ultimo_placar = (0, 0)  # começa 0x0
+
+        for event in sumario:
+            if event.get('tipo') == 'gol':
+                tempo = event.get('tempo', '')
+                if "'" in tempo:
+                    tempo_limpo = tempo.replace("'", "")
+                    if '+' in tempo_limpo:
+                        minutos = int(tempo_limpo.split('+')[0])
+                    else:
+                        minutos = int(tempo_limpo)
+
+                    if minutos <= 45:
+                        placar = event.get('texto', '')
+                        if ' - ' in placar:
+                            gols_casa, gols_fora = map(int, placar.split(' - '))
+
+                            if gols_casa > ultimo_placar[0]:
+                                resultado["gol_casa"] += 1
+                            elif gols_fora > ultimo_placar[1]:
+                                resultado["gol_fora"] += 1
+
+                            ultimo_placar = (gols_casa, gols_fora)
+
+        return resultado
+
 
 # class AnalisadorEstatisticoAvancado:
 #     @staticmethod

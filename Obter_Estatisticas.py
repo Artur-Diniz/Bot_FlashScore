@@ -52,6 +52,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             
             
             eventos = bot.Sumario(driver)
+            Gols_ht = bot.recolherGolHt(eventos)
 
 
             desc="falhou ao pressionar botão de estatisticas, pode ser que seja um jogo sem estatisticas, ou pode ser um jogo com mais uma variação"    
@@ -117,7 +118,11 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             casa.CasaOuFora='Casa'
             fora.CasaOuFora='Fora'
             
-
+            casa.Gol_HT = Gols_ht.get("gol_casa")
+            fora.Gol_HT = Gols_ht.get("gol_fora")
+            
+            casa.GolSofrido_HT=fora.Gol_HT
+            fora.GolSofrido_HT=casa.Gol_HT
             
             # em jogos disputado por penaltis o site do flash score adiciona um gol para quem passa e isso altera 
             # a quantidade de gols feitos em tempo regulamentar q é o que é esperado pelas casas de aposta
@@ -283,7 +288,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Ch9PC9Qp/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/p2FU2iQE/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 
