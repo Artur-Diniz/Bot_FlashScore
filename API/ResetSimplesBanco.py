@@ -46,3 +46,4 @@ def ResetSimplesDatabase():
     print("================ Tabelas Apagadas Com Sucesso ================")
     
 
+#ResetSimplesDatabase()

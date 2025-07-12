@@ -72,7 +72,7 @@ def Ultimos_Jogos(url:str):
         partida.TipoPartida = "PartidaAnalise"
         partida.Url_Partida=url
 
-        if partida.Campeonato=="AMISTOSO INTERCLUBES":
+        if partida.Campeonato=="AMISTOSO INTERCLUBES" or partida.Campeonato=='COPA AMÉRICA FEMININA':
             driver.quit()
             return
 
@@ -201,4 +201,4 @@ def Ultimos_Jogos(url:str):
 
 
 
-#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/CpaUWfUO/#/resumo-de-jogo/resumo-de-jogo")
+#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/WYNPomXF/#/resumo-de-jogo")
