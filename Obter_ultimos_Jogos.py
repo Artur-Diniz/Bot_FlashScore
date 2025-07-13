@@ -12,6 +12,8 @@ from API.EnviarEstatisticas import gerarEstatiscasMedias
 from API.EnviarEstatisticas import mandarPartidaAnalise
 from concurrent.futures import ThreadPoolExecutor
 from selenium.webdriver.chrome.options import Options
+from time import sleep
+
 
 
 
@@ -170,10 +172,15 @@ def Ultimos_Jogos(url:str):
             mandarPartidaAnalise(partida)
             desc="Falha ao chamar metodo Obter_Estatisticas"
             
-            with ThreadPoolExecutor(max_workers=1) as executor:  # 3 threads
-            # Enfileira TODAS as URLs de uma vez
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                
+                bot.aguardar_se_memoria_alta()
                 executor.map(lambda url: Obter_Estatisticas(url, "Confronto Direto"), confrontoDireto)
+                
+                bot.aguardar_se_memoria_alta()
                 executor.map(lambda url: Obter_Estatisticas(url, "Casa"), casacasa)
+                
+                bot.aguardar_se_memoria_alta()
                 executor.map(lambda url: Obter_Estatisticas(url, "Fora"), forafora)
 
             gerarEstatiscasMedias(partida.NomeTimeCasa,partida.NomeTimeFora)

@@ -8,16 +8,18 @@ from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from API.EnviarEstatisticas import mandarDadosPartida,mandarDadosPartidaAnalisada
 from time import sleep
+import psutil
 from selenium.webdriver.chrome.options import Options
 import random
 
 import time
 
 def  Obter_Estatisticas(url:str, tipoPartida:str):
+    
     tentativa=0
     while tentativa<2 :
         tentativa+=1
-        desc="erro ao incializar"    
+        desc= f"erro ao incializar {psutil.virtual_memory()}"    
         try:
             chrome_options = Options()
             
@@ -26,6 +28,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             chrome_options.add_argument("--disable-software-rasterizer")  # Usa CPU para renderização
             chrome_options.add_argument("--disable-dev-shm-usage")  # Problemas de memória em containers/VMs
             chrome_options.add_argument("--no-sandbox")  # Estabilidade em alguns sistemas
+            
 
             # --- Stealth Mode (evitar detecção como bot) ---
             chrome_options.add_argument("--disable-blink-features=AutomationControlled")
@@ -48,7 +51,9 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             
             #bot.pressionar_tecla(Keys.PAGE_DOWN)
 
-            desc="erro ao  recolher sumario"                
+            desc="erro ao  recolher sumario"  
+            
+                       
             eventos = bot.Sumario(driver)
             Gols_ht = bot.recolherGolHt(eventos)
 
@@ -290,7 +295,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/p2FU2iQE/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Y73yoCGP/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

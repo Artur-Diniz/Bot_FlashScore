@@ -35,7 +35,13 @@ def EmailPalpites():
         msg['Subject'] = f"Palpites do dia {data_hoje}"
         msg['From'] = Email
         msg['To'] = "arturdiniz06@gmail.com"
-        msg.set_content(GerarRelatorio())
+        
+        relatorio =""
+        relatorio = GerarRelatorio()
+        if relatorio == "":
+            msg.set_content("requeste de relatorio falhou mas ta ai os papites")
+        else:
+            msg.set_content(relatorio)
 
         # 3. Anexar arquivo de palpites
         pasta_Palpites = "Palpites"

@@ -6,10 +6,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
-from models.EstatisticaTimes import EstatisticasTimes
 from datetime import datetime
 from models.ErrosLogs import ErrosLogs
 from API.EnviarBackLog import MandraBackLogs
+import psutil
+from time import sleep
+
 
 
 class automacao:
@@ -249,6 +251,11 @@ class automacaoUltimosJogos(automacao):
 
         
         return partida 
+    def aguardar_se_memoria_alta(self,limite_percent=80, tempo_espera=10):
+        uso_ram = psutil.virtual_memory().percent
+        if uso_ram >= limite_percent:
+            print(f"[!] RAM em {uso_ram:.2f}% — aguardando {tempo_espera}s para liberar memória...")
+            sleep(tempo_espera)
     
 class RecolherEstatisticas(automacao):
     def __init__(self, driver):
@@ -373,17 +380,28 @@ class RecolherEstatisticas(automacao):
     def Sumario(self,driver):
         eventos = []
         
+        self.pressionar_tecla(Keys.PAGE_DOWN)
+        
         events = driver.find_elements(By.CLASS_NAME, "smv__incident")
 
         for event in events:#
             #smv__timeBox
-            tempo = event.find_element(By.CLASS_NAME, "smv__timeBox").text
-            jogador = event.find_element(By.CLASS_NAME, "smv__playerName").text
+            tempo=0
+            try:
+                tempo = event.find_element(By.CLASS_NAME, "smv__timeBox").text
+            except:
+                continue
+
+            jogador=""
+            try:
+                jogador = event.find_element(By.CLASS_NAME, "smv__playerName").text
+            except:
+                continue
             descricao=""
             try:
                 try:
                     try:
-                        try:#smv__subDown smv__playerName
+                        try:#
                             descricao = event.find_element(By.CLASS_NAME, "#smv__incidentSubOut smv__incidentSideAway").text
                         except:
                             descricao = event.find_element(By.CLASS_NAME, "smv__assist ").text
@@ -393,6 +411,9 @@ class RecolherEstatisticas(automacao):
                         descricao = event.find_element(By.CLASS_NAME, "smv__subDown smv__playerName").text                
             except:
                 print()
+                
+            if descricao=='':
+                continue
                 
             descricao.rstrip("(").rstrip(")")
             tipos_eventos = [
