@@ -25,6 +25,7 @@ def mandarDadosPartida( estatisticasCasa: Estatisticas,estatisticasFora: Estatis
         "CasaOuFora": estatisticasCasa.CasaOuFora,
         "NomeTime": estatisticasCasa.Nome,
         "NomeTimeRival": estatisticasCasa.NomeRival,
+        "EstastiticaAnalise":False,
         "Gol": estatisticasCasa.Gol,
         "GolSofrido": estatisticasCasa.GolSofrido,
         "Posse_bola": estatisticasCasa.Posse_de_bola,
@@ -81,6 +82,7 @@ def mandarDadosPartida( estatisticasCasa: Estatisticas,estatisticasFora: Estatis
         "CasaOuFora": estatisticasFora.CasaOuFora,
         "NomeTime": estatisticasFora.Nome,
         "NomeTimeRival": estatisticasFora.NomeRival,
+        "EstastiticaAnalise":False,
         "Gol": estatisticasFora.Gol,
         "GolSofrido": estatisticasFora.GolSofrido,
         "Posse_bola": estatisticasFora.Posse_de_bola,
@@ -185,6 +187,7 @@ def mandarDadosPartidaAnalisada( estatisticasCasa: Estatisticas,estatisticasFora
         "CasaOuFora": estatisticasCasa.CasaOuFora,
         "NomeTime": estatisticasCasa.Nome,
         "NomeTimeRival": estatisticasCasa.NomeRival,
+        "EstastiticaAnalise":False,
         "Gol": estatisticasCasa.Gol,
         "GolSofrido": estatisticasCasa.GolSofrido,
         "Posse_bola": estatisticasCasa.Posse_de_bola,
@@ -241,6 +244,7 @@ def mandarDadosPartidaAnalisada( estatisticasCasa: Estatisticas,estatisticasFora
         "CasaOuFora": estatisticasFora.CasaOuFora,
         "NomeTime": estatisticasFora.Nome,
         "NomeTimeRival": estatisticasFora.NomeRival,
+        "EstastiticaAnalise":False,
         "Gol": estatisticasFora.Gol,
         "GolSofrido": estatisticasFora.GolSofrido,
         "Posse_bola": estatisticasFora.Posse_de_bola,
@@ -303,7 +307,7 @@ def mandarDadosPartidaAnalisada( estatisticasCasa: Estatisticas,estatisticasFora
         "Url_Partida": partida.Url_Partida,
         "DataPartida": partida.data.isoformat(),
         "Campeonato": partida.Campeonato,
-        "PartidaAnalise": False,
+        "PartidaAnalise": True,
         "TipoPartida": partida.TipoPartida
     }
     

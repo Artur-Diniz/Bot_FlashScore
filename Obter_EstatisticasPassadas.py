@@ -12,12 +12,12 @@ def ObterEstatisticasPassadas():
     partidas_analisadas: List[Partidas] = GetPartidasPassadas()
 
     if partidas_analisadas!= []:
-        Reset_Banco()
-        ResetSimplesDatabase()
+        # Reset_Banco()
+        # ResetSimplesDatabase()
 
         for partida in partidas_analisadas:     
             Obter_Estatisticas(partida.Url_Partida, "Analisada")
     
     return
 
-#ObterEstatisticasPassadas()
+# ObterEstatisticasPassadas()
