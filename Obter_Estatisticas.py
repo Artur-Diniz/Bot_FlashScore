@@ -48,8 +48,11 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             sleep(random.uniform(5.0, 7.5)) 
 
             cokie.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#onetrust-accept-btn-handler"))).click()
-            
-            #bot.pressionar_tecla(Keys.PAGE_DOWN)
+            try:
+                cokie.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail-breadcrumbs > div:nth-child(2) > div > div > div.wcl-onboardingHeader_Mwn3C > button"))).click()
+            except:
+                None
+
 
             desc="erro ao  recolher sumario"  
             
@@ -62,8 +65,12 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             desc="falhou ao pressionar botão de estatisticas, pode ser que seja um jogo sem estatisticas, ou pode ser um jogo com mais uma variação"    
             btnEstatisticaPassou=0
             try:            #detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button
+                bot.pressionar_tecla(Keys.DOWN)                
+                bot.pressionar_tecla(Keys.DOWN)          
+                sleep(2)   
                 btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button").text
                 bot.cliqueCSS("#detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")      
+                sleep(2)   
                 
                 if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
                     btnEstatisticaPassou=1
@@ -295,7 +302,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Y73yoCGP/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
+#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/nRuw0gbB/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

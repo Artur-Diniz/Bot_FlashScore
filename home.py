@@ -28,7 +28,7 @@ def home():
     try:
         #reset de bancos seco
         #Reset_Banco()
-        #ResetSimplesDatabase()
+        ResetSimplesDatabase()
         
         
         chrome_options = Options()
@@ -88,15 +88,15 @@ def home():
             
         driver.quit()
 
-        desc="erro ao Buscar Jogos especificos  "
-        jogos_Especificos=Obter_Times_Especificos()
-        for item in jogos_Especificos:
-            items.append(item)
+        # desc="erro ao Buscar Jogos especificos  "
+        # jogos_Especificos=Obter_Times_Especificos()
+        # for item in jogos_Especificos:
+        #     items.append(item)
 
-        dia=datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-        if items==[]:
-            desc=f"Nem um jogo encontrado no dia {dia}, pode ser q realmente  não tenha mas é sempre bom verificar "
-            bot.BackLogs(url,3,desc)
+        # dia=datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        # if items==[]:
+        #     desc=f"Nem um jogo encontrado no dia {dia}, pode ser q realmente  não tenha mas é sempre bom verificar "
+        #     bot.BackLogs(url,3,desc)
             
         for item in items:
             Ultimos_Jogos(item)

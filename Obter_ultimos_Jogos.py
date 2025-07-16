@@ -172,7 +172,7 @@ def Ultimos_Jogos(url:str):
             mandarPartidaAnalise(partida)
             desc="Falha ao chamar metodo Obter_Estatisticas"
             
-            with ThreadPoolExecutor(max_workers=1) as executor:
+            with ThreadPoolExecutor(max_workers=2) as executor:
                 
                 bot.aguardar_se_memoria_alta()
                 executor.map(lambda url: Obter_Estatisticas(url, "Confronto Direto"), confrontoDireto)
@@ -208,4 +208,4 @@ def Ultimos_Jogos(url:str):
 
 
 
-#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/WYNPomXF/#/resumo-de-jogo")
+#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/WUcdtphg/#/resumo-de-jogo/resumo-de-jogo")

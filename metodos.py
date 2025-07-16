@@ -436,6 +436,7 @@ class RecolherEstatisticas(automacao):
                 for elemento in elementos:
                     eventos.append({"tipo": nome_evento, "texto": elemento.text, "tempo": tempo,"jogador": jogador,"descricao": descricao} )
                 
+        self.pressionar_tecla(Keys.PAGE_UP)
 
         return eventos
                 #card-ico yellowCard-ico 
