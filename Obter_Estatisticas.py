@@ -42,6 +42,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
         
             
             driver = webdriver.Chrome(options=chrome_options)
+
             bot = RecolherEstatisticas(driver)
             cokie = WebDriverWait(driver, 15)
             driver.get(url)
@@ -57,8 +58,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             desc="erro ao  recolher sumario"  
             
                        
-            eventos = bot.Sumario(driver)
-            Gols_ht = bot.recolherGolHt(eventos)
+            Gols_ht = bot.Sumario(driver)
 
 
 
@@ -70,7 +70,6 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 sleep(2)   
                 btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button").text
                 bot.cliqueCSS("#detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")      
-                sleep(2)   
                 
                 if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
                     btnEstatisticaPassou=1
@@ -172,9 +171,14 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 ft+=1
                 if ft>1:
                     bot.pressionar_tecla(Keys.HOME)                
-                    bot.pressionar_tecla(Keys.DOWN)                #btn de estatisticas do primeiro tempo 
-                    bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a:nth-child(2) > button")        
-                    
+                    bot.pressionar_tecla(Keys.DOWN)     
+                    sleep(3)                       #btn de estatisticas do primeiro tempo 
+                    try:
+                        bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a:nth-child(2) > button")        
+                    except:    
+                        try:
+                            bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a:nth-child(2) > button")        
+                        except:continue
                 for row in rows:              
 
                     try:
@@ -302,7 +306,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/nRuw0gbB/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
+#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/jBxNRpw0/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

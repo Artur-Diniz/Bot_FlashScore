@@ -27,8 +27,8 @@ def home():
     desc=""
     try:
         #reset de bancos seco
-        #Reset_Banco()
-        ResetSimplesDatabase()
+        # Reset_Banco()
+        # ResetSimplesDatabase()
         
         
         chrome_options = Options()

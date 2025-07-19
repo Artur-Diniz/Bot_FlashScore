@@ -41,7 +41,7 @@ def ResetSimplesDatabase():
     DeleteBaseAPI("Estatistica/Apague")
     print("Apagando tabela temporaria de EstatisticaTimes")
     DeleteBaseAPI("EstatisticaTimes/Apague")
-    print("Apagando tabela temporaria de EstatisticaTimes")
+    print("Apagando tabela temporaria de Partidas")
     DeleteBaseAPI("Partida/Apague")
     print("================ Tabelas Apagadas Com Sucesso ================")
     

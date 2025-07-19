@@ -11,7 +11,7 @@ from models.ErrosLogs import ErrosLogs
 from API.EnviarBackLog import MandraBackLogs
 import psutil
 from time import sleep
-
+from models.Node import ListaEncadeada
 
 
 class automacao:
@@ -202,6 +202,7 @@ class automacaoUltimosJogos(automacao):
             try:
                 self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector))).click()
                 clicked = True
+                sleep(1.5)
                 break
             except:
                 continue
@@ -378,7 +379,7 @@ class RecolherEstatisticas(automacao):
         return atributo
     
     def Sumario(self,driver):
-        eventos = []
+        eventos = ListaEncadeada()
         
         self.pressionar_tecla(Keys.PAGE_DOWN)
         
@@ -410,15 +411,14 @@ class RecolherEstatisticas(automacao):
                 except:
                         descricao = event.find_element(By.CLASS_NAME, "smv__subDown smv__playerName").text                
             except:
-                print()
-                
+                continue                
             if descricao=='':
                 continue
                 
             descricao.rstrip("(").rstrip(")")
             tipos_eventos = [
                 ("cartão amarelo", "card-ico yellowCard-ico"),#card-ico yellowCard-ico
-                ("substituição", "substitution"),
+                # ("substituição", "substitution"),
                 ("gol", "smv__incidentHomeScore"),
                 ("gol", "smv__incidentAwayScore"), 
                 ("cartão vermelho", "card-ico redCard-ico")
@@ -434,17 +434,17 @@ class RecolherEstatisticas(automacao):
 
 
                 for elemento in elementos:
-                    eventos.append({"tipo": nome_evento, "texto": elemento.text, "tempo": tempo,"jogador": jogador,"descricao": descricao} )
+                    eventos.adicionar({"tipo": nome_evento, "texto": elemento.text, "tempo": tempo,"jogador": jogador,"descricao": descricao} )
                 
         self.pressionar_tecla(Keys.PAGE_UP)
-
-        return eventos
+        
+        return self.recolherGolHt(eventos)
                 #card-ico yellowCard-ico 
                 #substitution 
                 #smv__incidentHomeScore
                 #smv__incidentAwayScore
     
-    def recolherGolHt(self,sumario):
+    def recolherGolHt(self,sumario:ListaEncadeada):
         resultado = {
             "gol_casa": 0,
             "gol_fora": 0
@@ -476,62 +476,4 @@ class RecolherEstatisticas(automacao):
 
         return resultado
 
-
-# class AnalisadorEstatisticoAvancado:
-#     @staticmethod
-#     def calcular_medias_contextuais(partidas_casa: list, 
-#                                   partidas_fora: list, 
-#                                   confrontos_diretos: list) -> EstatisticasTimes:
-#         estatisticas = EstatisticasTimes()
-        
-#         # 1. Médias do time jogando EM CASA (contra vários adversários)
-#         if partidas_casa:
-#             estatisticas = AnalisadorEstatisticoAvancado._calcular_medias(
-#                 partidas_casa, estatisticas, sufixo='')
-        
-#         # 2. Médias do time jogando FORA (contra vários adversários)
-#         if partidas_fora:
-#             # Aqui armazenamos como "Adversaria" pois é o desempenho do time quando visita
-#             estatisticas = AnalisadorEstatisticoAvancado._calcular_medias(
-#                 partidas_fora, estatisticas, sufixo='_Adversaria')
-        
-#         # 3. Médias específicas de confrontos diretos
-#         if confrontos_diretos:
-#             estatisticas = AnalisadorEstatisticoAvancado._calcular_medias(
-#                 confrontos_diretos, estatisticas, sufixo='_Confronto')
-        
-#         return estatisticas
-    
-#     @staticmethod
-#     def _calcular_medias(partidas: list, estatisticas: EstatisticasTimes, sufixo: str) -> EstatisticasTimes:
-#         atributos = [attr for attr in dir(EstatisticasTimes()) 
-#                     if not attr.startswith('__') 
-#                     and not attr.endswith(('_Adversaria', '_Confronto'))
-#                     and attr != 'Id']
-        
-#         for attr in atributos:
-#             attr_alvo = attr + sufixo
-#             valores = [getattr(p, attr) for p in partidas if hasattr(p, attr)]
-            
-#             if valores:
-#                 # Calcula média ponderada pelo nível do adversário (opcional)
-#                 media = sum(valores) / len(valores)
-#                 setattr(estatisticas, attr_alvo, round(media, 2))
-        
-#         return estatisticas
-
-#     @staticmethod
-#     def validar_dados(partidas: list, contexto: str) -> bool:
-#         """Verifica se os dados são consistentes para análise"""
-#         if not partidas:
-#             print(f"Aviso: Sem dados para {contexto}")
-#             return False
-            
-#         # Verifica se há variação suficiente nos adversários
-#         adversarios = set([p.nome_adversario for p in partidas])
-#         if len(adversarios) < 3 and len(partidas) >= 3:
-#             print(f"Aviso: Pouca variação de adversários em {contexto}")
-#             return False
-            
-#         return True
 

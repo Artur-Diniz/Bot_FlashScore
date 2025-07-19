@@ -40,7 +40,7 @@ def Ultimos_Jogos(url:str):
         chrome_options.add_argument("--disable-extensions")  # Desativa extensões
         
         driver = webdriver.Chrome(options=chrome_options)
-        
+
         bot = automacaoUltimosJogos(driver)
 
         driver.get(url)
@@ -140,11 +140,13 @@ def Ultimos_Jogos(url:str):
                 count = 1
                 keyboard.send_keys(Keys.PAGE_UP).perform()
                 keyboard.send_keys(Keys.PAGE_UP).perform()
+                sleep(1.5)
                 wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button"))).click()
                 contador = 0
             if contador==5 and count==1:
                 keyboard.send_keys(Keys.PAGE_UP).perform()
                 keyboard.send_keys(Keys.PAGE_UP).perform()
+                sleep(1.5)
                 wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button"))).click()
                 jogofora=1 
                 contador = 0
@@ -172,7 +174,7 @@ def Ultimos_Jogos(url:str):
             mandarPartidaAnalise(partida)
             desc="Falha ao chamar metodo Obter_Estatisticas"
             
-            with ThreadPoolExecutor(max_workers=2) as executor:
+            with ThreadPoolExecutor(max_workers=1) as executor:
                 
                 bot.aguardar_se_memoria_alta()
                 executor.map(lambda url: Obter_Estatisticas(url, "Confronto Direto"), confrontoDireto)
@@ -208,4 +210,4 @@ def Ultimos_Jogos(url:str):
 
 
 
-#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/WUcdtphg/#/resumo-de-jogo/resumo-de-jogo")
+#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/EyUAiVHi/#/resumo-de-jogo/resumo-de-jogo")
