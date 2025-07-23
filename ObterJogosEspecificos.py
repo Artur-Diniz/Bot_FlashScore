@@ -39,6 +39,9 @@ def Obter_Times_Especificos():
         except:
             print("\n")
         
+            
+        driver.find_element(By.CSS_SELECTOR,"#radix-«r9» > div > header > div > button").click()
+
 
         dia = driver.find_element(By.CSS_SELECTOR, "#live-table > div > div > div:nth-child(1) > div").text 
         diaDeHoje = dia.split(" - ")
@@ -58,4 +61,5 @@ def Obter_Times_Especificos():
     except:  
         bot.BackLogs(url,4,desc)
         return
-# Obter_Times_Especificos()
+
+#Obter_Times_Especificos()

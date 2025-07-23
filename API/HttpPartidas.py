@@ -7,16 +7,15 @@ from selenium.webdriver.support import expected_conditions as EC
 import json
 import requests
 from datetime import datetime
-from models.Node import criar_lista_encadeada,imprimir_lista_encadeada
 from models.Palpites import Palpites
 
 def converter_json_para_Palpites(dados_api):
     partidas_analisadas = []
     
     for item in dados_api:
-        IdPartida = item.get("idPartida", 0)
+        urlPartidaPassadas = item.get("url_Partida", "")
                 
-        partidas_analisadas.append(IdPartida)
+        partidas_analisadas.append(urlPartidaPassadas)
     
     return partidas_analisadas
 
@@ -28,7 +27,7 @@ def GetPartidasPassadas( ) :
 
     headers = {"Content-Type": "application/json"}
     try:
-        response = requests.get(url+"Palpite/GetPalpitesEmAndamento", headers=headers)
+        response = requests.get(url+"Partida/GetComfirmarPalpites", headers=headers)
 
         if response.status_code == 200:
             try:
@@ -48,14 +47,8 @@ def GetPartidasPassadas( ) :
     return PalpitesAnalise
    
 def id_Partidasemprocesso():
-# Obter os palpites
-    palpites = GetPartidasPassadas()
+
+    partidas = GetPartidasPassadas()
 
 
-    # Criar lista encadeada com os ids
-    lista_encadeada = criar_lista_encadeada(palpites)
 
-    # Exibir lista encadeada
-    imprimir_lista_encadeada(lista_encadeada)
-    
-#id_Partidasemprocesso()

@@ -9,15 +9,15 @@ from resetarBanco import Reset_Banco
 
 
 def ObterEstatisticasPassadas():
-    partidas_analisadas: List[Partidas] = GetPartidasPassadas()
+    partidas_analisadas = GetPartidasPassadas()
 
     if partidas_analisadas!= []:
         # Reset_Banco()
         # ResetSimplesDatabase()
 
         for partida in partidas_analisadas:     
-            Obter_Estatisticas(partida.Url_Partida, "Analisada")
+            Obter_Estatisticas(partida, "Analisada")
     
     return
 
-# ObterEstatisticasPassadas()
+#ObterEstatisticasPassadas()

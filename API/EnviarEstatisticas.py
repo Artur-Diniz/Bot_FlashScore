@@ -308,7 +308,7 @@ def mandarDadosPartidaAnalisada( estatisticasCasa: Estatisticas,estatisticasFora
         "DataPartida": partida.data.isoformat(),
         "Campeonato": partida.Campeonato,
         "PartidaAnalise": True,
-        "TipoPartida": partida.TipoPartida
+        "TipoPartida": "PartidaAnalise"
     }
     
     EstatisticaPartida= PartidaCompletaDto()
