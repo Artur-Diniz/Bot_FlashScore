@@ -46,9 +46,4 @@ def GetPartidasPassadas( ) :
         
     return PalpitesAnalise
    
-def id_Partidasemprocesso():
-
-    partidas = GetPartidasPassadas()
-
-
 

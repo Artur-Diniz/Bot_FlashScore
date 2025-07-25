@@ -13,7 +13,7 @@ from API.GerarEstatisticasEsperdas import GerarEstatisticaIA
 from Obter_ultimos_Jogos import Ultimos_Jogos
 from ObterJogosEspecificos import Obter_Times_Especificos
 from API.ResetSimplesBanco import ResetSimplesDatabase
-
+from Obter_EstatisticasPassadas import analisando_Fim_do_Dia
 from datetime import datetime
 from resetarBanco import Reset_Banco
 from selenium.webdriver.chrome.options import Options
@@ -26,9 +26,9 @@ def home():
     url="https://www.flashscore.com.br/"
     desc=""
     try:
-        #reset de bancos seco
-        Reset_Banco()
-        ResetSimplesDatabase()
+        
+        analisando_Fim_do_Dia()
+
         
         
         chrome_options = Options()

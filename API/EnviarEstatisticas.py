@@ -178,7 +178,7 @@ def mandarDadosPartida( estatisticasCasa: Estatisticas,estatisticasFora: Estatis
         
 
 def mandarDadosPartidaAnalisada( estatisticasCasa: Estatisticas,estatisticasFora: Estatisticas, partida: Partidas) :
-    url = "http://Junglernauti819.somee.com/botFlashScore/Estatistica/PartidaAnalisada" 
+    url = "http://localhost:5194/Estatistica/PartidaAnalisada" 
      #esse método é o mesmo q o de cima muda a url em vez de ser Post aqui é Put
     
     
@@ -187,7 +187,7 @@ def mandarDadosPartidaAnalisada( estatisticasCasa: Estatisticas,estatisticasFora
         "CasaOuFora": estatisticasCasa.CasaOuFora,
         "NomeTime": estatisticasCasa.Nome,
         "NomeTimeRival": estatisticasCasa.NomeRival,
-        "estastiticaAnalise":False,
+        "estastiticaAnalise":True,
         "Gol": estatisticasCasa.Gol,
         "GolSofrido": estatisticasCasa.GolSofrido,
         "Posse_bola": estatisticasCasa.Posse_de_bola,
@@ -244,7 +244,7 @@ def mandarDadosPartidaAnalisada( estatisticasCasa: Estatisticas,estatisticasFora
         "CasaOuFora": estatisticasFora.CasaOuFora,
         "NomeTime": estatisticasFora.Nome,
         "NomeTimeRival": estatisticasFora.NomeRival,
-        "estastiticaAnalise":False,
+        "estastiticaAnalise":True,
         "Gol": estatisticasFora.Gol,
         "GolSofrido": estatisticasFora.GolSofrido,
         "Posse_bola": estatisticasFora.Posse_de_bola,
