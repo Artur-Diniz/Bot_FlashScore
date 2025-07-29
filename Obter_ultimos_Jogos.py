@@ -12,6 +12,7 @@ from API.EnviarEstatisticas import gerarEstatiscasMedias
 from API.EnviarEstatisticas import mandarPartidaAnalise
 from concurrent.futures import ThreadPoolExecutor
 from selenium.webdriver.chrome.options import Options
+from API.GerarEstatisticasEsperdas import gerarEstatisticasIA
 from time import sleep
 
 
@@ -159,7 +160,8 @@ def Ultimos_Jogos(url:str):
                 if Url_Jogo=='' and contador==1:
                     contador=5
                     break
-                items.append(Url_Jogo) 
+                if  Url_Jogo!="":
+                    items.append(Url_Jogo) 
                 if count == 3:                  
                     confrontoDireto.append(Url_Jogo)
                 elif count == 1 and jogofora==0:
@@ -171,9 +173,9 @@ def Ultimos_Jogos(url:str):
         
         if leu_tudo==1:      
             desc="Erro ao enviar Partida Analise"
-            mandarPartidaAnalise(partida)
-            desc="Falha ao chamar metodo Obter_Estatisticas"
-            
+            Id_partida= mandarPartidaAnalise(partida)
+
+            desc="Falha ao chamar metodo Obter_Estatisticas"            
             with ThreadPoolExecutor(max_workers=1) as executor:
                 
                 bot.aguardar_se_memoria_alta()
@@ -186,6 +188,9 @@ def Ultimos_Jogos(url:str):
                 executor.map(lambda url: Obter_Estatisticas(url, "Fora"), forafora)
 
             gerarEstatiscasMedias(partida.NomeTimeCasa,partida.NomeTimeFora)
+
+            gerarEstatisticasIA(Id_partida)
+
         else:
             desc='Erro ao ler Partidas anteriores, provalvelmente uma variação nova ou pode ser que esses times nunca tenham jogados Juntos'
             raise
@@ -210,4 +215,4 @@ def Ultimos_Jogos(url:str):
 
 
 
-#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/EyUAiVHi/#/resumo-de-jogo/resumo-de-jogo")
+Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/MFKPpxBc/#/resumo-de-jogo/resumo-de-jogo")

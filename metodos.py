@@ -209,7 +209,7 @@ class automacaoUltimosJogos(automacao):
         
         if not clicked:
             print("Não foi possível clicar em nenhum dos elementos")
-            return None  # Retorna None se não conseguir clicar
+            return ""  # Retorna None se não conseguir clicar
 
         try:
             # Espera por nova janela ou mudança de URL
@@ -234,7 +234,7 @@ class automacaoUltimosJogos(automacao):
                     
         except Exception as e:
             print(f"Ocorreu um erro após o clique: {e}")
-            return None
+            return ""
 
         return new_url 
     # Retorna a nova URL (ou None se falhar)

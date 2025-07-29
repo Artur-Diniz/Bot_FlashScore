@@ -78,48 +78,21 @@ def GerarPartidaEstatisticaEsperadas(Id_Partida:int, url: str):
         print("Resposta do servidor:", response.text)
         return "Erro ao fazer Solicitação"
 
-
-def GerarEstatisticaIA( ) :  
-    url = "http://Junglernauti819.somee.com/botFlashScore/"  
-     
-    partidas_analisadas = []
-
-    headers = {"Content-Type": "application/json"}
-    try:
-        response = requests.get(url+"Partida/PartidasAnalisadas", headers=headers)
-
-        if response.status_code == 200:
-            try:
-                data = response.json()
-                print(data)
-            except json.JSONDecodeError:
-                print("Resposta bruta:", response.text)
-            partidas_analisadas= converter_json_para_partidas(data)
-        else:
-            print("❌ Erro ao Solicitar dados:")
-            print("Status Code:", response.status_code)
-            print("Motivo:", response.reason)
-            print("Resposta do servidor:", response.text)
-    except requests.RequestException as e:
-        print("❌ Erro de requisição:", e)
-        
-    for partida in partidas_analisadas:
-        
-  
+def gerarEstatisticasIA(id:int):
+        url= "http://Junglernauti819.somee.com/botFlashScore/"
         resposta=''
-        id_partida=0
-        id_partida=partida.Id_Partida
-        print(f"foi solicitado para gerar a estatisticas esperadas da partida: {id_partida}"  )        
+    
+        print(f"foi solicitado para gerar a estatisticas esperadas da partida: {id}"  )        
         
-        resposta = GerarestatisticaEsperadas(id_partida, url)
-        if resposta =="solcitado e enviado corretamente":            
+        resposta = GerarestatisticaEsperadas(id, url)
+        if resposta =="solcitado e enviado corretamente : ":            
             print(resposta)
-            resposta = GerarPartidaEstatisticaEsperadas(id_partida, url)
-            if resposta == " solcitado e enviado corretamente ":            
+            resposta = GerarPartidaEstatisticaEsperadas(id, url)
+            if resposta == " solcitado e enviado corretamente :":            
                 print(resposta)            
         elif resposta =="Erro ao fazer Solicitação": 
             print(resposta +"\npassando para Proxima partida")
-        
+    
         
         
 #GerarEstatisticaIA()

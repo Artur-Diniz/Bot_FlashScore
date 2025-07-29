@@ -7,15 +7,11 @@ from enviarEmail.EnviarPalpites import EmailPalpites
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 from metodos import AutomacaoHomePage
-from API.GerarEstatisticasEsperdas import GerarEstatisticaIA
 from Obter_ultimos_Jogos import Ultimos_Jogos
 from ObterJogosEspecificos import Obter_Times_Especificos
-from API.ResetSimplesBanco import ResetSimplesDatabase
 from Obter_EstatisticasPassadas import analisando_Fim_do_Dia
 from datetime import datetime
-from resetarBanco import Reset_Banco
 from selenium.webdriver.chrome.options import Options
 
 import os
@@ -107,7 +103,6 @@ def home():
             print("")
         try:
             EmailPalpites()
-            GerarEstatisticaIA()
         except:    
             print("")
         

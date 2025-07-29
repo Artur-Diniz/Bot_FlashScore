@@ -178,7 +178,7 @@ def mandarDadosPartida( estatisticasCasa: Estatisticas,estatisticasFora: Estatis
         
 
 def mandarDadosPartidaAnalisada( estatisticasCasa: Estatisticas,estatisticasFora: Estatisticas, partida: Partidas) :
-    url = "http://localhost:5194/Estatistica/PartidaAnalisada" 
+    url = "http://Junglernauti819.somee.com/botFlashScore/Estatistica/PartidaAnalisada" 
      #esse método é o mesmo q o de cima muda a url em vez de ser Post aqui é Put
     
     
@@ -382,6 +382,15 @@ def gerarEstatiscasMedias(casa,fora):
     except requests.RequestException as e:
         print("❌ Erro de requisição:", e)
         
+def converter_json_para_Palpites(dados_api):
+    Palpites_EmAndamentos = []
+    
+    for item in dados_api:
+        urlPartidaPassadas = item.get("id", "")
+                
+        Palpites_EmAndamentos.append(urlPartidaPassadas)
+    
+    return Palpites_EmAndamentos
 def mandarPartidaAnalise(partida: Partidas) :
     url = "http://Junglernauti819.somee.com/botFlashScore/Partida/"  
     
@@ -416,6 +425,8 @@ def mandarPartidaAnalise(partida: Partidas) :
 
     except requests.RequestException as e:
         print("❌ Erro de requisição:", e)
+
+    return data.get("primaryId","")
         
         
 #gerarEstatiscasMedias("Juventude","Mirassol")
