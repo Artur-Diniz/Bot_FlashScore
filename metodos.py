@@ -279,7 +279,7 @@ class RecolherEstatisticas(automacao):
         return partida 
     def recolher_Estatistica_Time_Base(self,driver,CasaOufora ):
         Estatistica = Estatisticas()    
-        if CasaOufora==True:                                                
+        if CasaOufora==True:                                        #detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child(1) > div:nth-child(2) > div.wcl-category_Ydwqh > div.wcl-value_XJG99.wcl-homeValue_3Q-7P > span                                            
             Estatistica.Nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
             Estatistica.NomeRival = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
             Estatistica.Gol=int(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__score > div > div.detailScore__wrapper > span:nth-child(1)").text)            
@@ -294,11 +294,11 @@ class RecolherEstatisticas(automacao):
     
     def Partida(self,driver,estatistica,casafora,temp,variacao,sessao,linha):
         if linha==2 and sessao==2: 
-            self.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")
- #           texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({sessao}) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
+            self.cliqueCSS(f"#detail >  div.tabContent__match-statistics > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")
+                     
                             
         texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
-            
+
         try:
             stat_map = {
                 "Posse de bola": ("Posse_de_bola", "atributo"),

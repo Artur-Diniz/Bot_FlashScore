@@ -58,7 +58,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             desc="erro ao  recolher sumario"  
             
                        
-            Gols_ht = bot.Sumario(driver)
+            #Gols_ht = bot.Sumario(driver)
 
 
 
@@ -68,8 +68,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 bot.pressionar_tecla(Keys.DOWN)                
                 bot.pressionar_tecla(Keys.DOWN)          
                 sleep(2)   
-                btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button").text
-                bot.cliqueCSS("#detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")      
+                btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div.tabContent__match-summary > div.filterOver.filterOver--indent > div > a:nth-child(2) > button").text
+                bot.cliqueCSS("#detail > div.tabContent__match-summary > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")      
                 
                 if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
                     btnEstatisticaPassou=1
@@ -130,8 +130,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             casa.CasaOuFora='Casa'
             fora.CasaOuFora='Fora'
             
-            casa.Gol_HT = Gols_ht.get("gol_casa")
-            fora.Gol_HT = Gols_ht.get("gol_fora")
+            # casa.Gol_HT = Gols_ht.get("gol_casa")
+            # fora.Gol_HT = Gols_ht.get("gol_fora")
 
             casa.GolSofrido_HT=fora.Gol_HT
             fora.GolSofrido_HT=casa.Gol_HT
@@ -161,8 +161,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
 
             desc="falha ao dados da classe Eststisticas Partida"           
             
-                                                        #wcl-row_OFViZ
-            rows =driver.find_elements(By.CLASS_NAME, "wcl-row_OFViZ")
+                                                        #wcl-row_2oCpS
+            rows =driver.find_elements(By.CLASS_NAME, "wcl-row_2oCpS")
             ft=0
             variacao=0
             sessao=0
@@ -173,7 +173,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                     bot.pressionar_tecla(Keys.HOME)                
                     bot.pressionar_tecla(Keys.DOWN)     
                     sleep(3)                       #btn de estatisticas do primeiro tempo 
-                    try:
+                    try:               
                         bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a:nth-child(2) > button")        
                     except:    
                         try:
@@ -206,7 +206,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
 
                         parts = full_path.split(" > ")
                         variacao = int(parts[6].split("(")[1].replace(")", "") if len(parts) > 0 else "N/A")
-                        sessao = int(parts[8].split("(")[1].replace(")", "") if len(parts) > 2 else "N/A")
+                        sessao = int(parts[8].split("(")[1].replace(")", "") if len(parts) > 1 else "N/A")
                         linha = int(parts[9].split("(")[1].replace(")", "") if len(parts) > 3 else "N/A")
                     except Exception as e:
                         # print(f"Erro ao processar linha: {e}")
@@ -217,9 +217,9 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                     if sessao == 2 and linha == 2: #detail > div:nth-child(5) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button           
                         bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
                     
-                    texto = ""
-                    try:
-                        texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
+                    texto = ""                                             #detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child(1) > div:nth-child(2) > div.wcl-category_Ydwqh > div.wcl-category_6sT1J > span
+                    try:                                                #detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child(1) > div:nth-child(2) > div.wcl-category_Ydwqh > div.wcl-category_6sT1J > span
+                        texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child({sessao}) > div:nth-child({linha})  > div.wcl-category_Ydwqh > div.wcl-category_6sT1J > span").text                              
                         if linha == 2 and texto == 'Gols esperados (xG)':
                             continue
                     except:
@@ -306,7 +306,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/jBxNRpw0/#/resumo-de-jogo/resumo-de-jogo", "Teste") 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/mirassol-pQ8ryEe7/palmeiras-hMn9FTbH/?mid=WQmXs9qR", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 
