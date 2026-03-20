@@ -29,15 +29,28 @@ class automacao:
         except Exception as e:
             print(f"Erro ao pressionar a tecla {tecla}: {e}")
     
-    def digitar_texto(self, seletor, texto):
+    def digitar_texto(self, xpath, texto):
         try:
             # Localiza o elemento
-            elemento = self.driver.find_element(By.XPATH, seletor)
+            elemento = self.driver.find_element(By.XPATH, xpath)
 
             # Digita o texto no campo
             elemento.send_keys(texto)
+            return elemento     
         except Exception as e:
-            print(f"Erro ao digitar o texto '{texto}' no elemento com seletor '{seletor}': {e}")
+            print(f"Erro ao digitar o texto '{texto}' no elemento com xpath '{xpath}': {e}")
+            
+    def digitar_textoCSS(self, CSS_SELECTOR, texto):
+        try:
+            # Localiza o elemento
+            elemento = self.driver.find_element(By.CSS_SELECTOR, CSS_SELECTOR)
+
+            # Digita o texto no campo
+            elemento.send_keys(texto)
+            return elemento     
+        except Exception as e:
+            print(f"Erro ao digitar o texto '{texto}' no elemento com CSS_SELECTOR '{CSS_SELECTOR}': {e}")            
+            
 
     def clique(self, xpath):
         """Método para clicar em um elemento usando seu XPath"""
@@ -46,6 +59,8 @@ class automacao:
             elemento.click()
         except Exception as e:
             print(f"Erro ao clicar no elemento {xpath} ")
+        return elemento     
+
     
     def cliqueCSS(self, cssSelector):
         """Método para clicar em um elemento usando seu cssSelector"""
@@ -54,6 +69,9 @@ class automacao:
             elemento.click()
         except Exception as e:
             print(f"Erro ao clicar no elemento {cssSelector} ")
+            
+        return elemento     
+    
     
     def BackLogs(self, url:str,Page:int,descricao:str):
         
@@ -292,14 +310,13 @@ class RecolherEstatisticas(automacao):
         return Estatistica    
  
     
-    def Partida(self,driver,estatistica,casafora,temp,variacao,sessao,linha):
-        if linha==2 and sessao==2: 
-            self.cliqueCSS(f"#detail >  div.tabContent__match-statistics > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")
-                     
-                            
-        texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_ITphf > div.wcl-category_7qsgP > strong").text                              
-
+    def Partida(self, driver, estatistica, casafora, temp, variacao, row):
         try:
+            texto = row.find_element(By.CSS_SELECTOR, '[data-testid="wcl-statistics-category"]').text
+
+            valores = row.find_elements(By.CSS_SELECTOR, '[data-testid="wcl-statistics-value"]')
+            valor = valores[0].text if casafora else valores[1].text
+
             stat_map = {
                 "Posse de bola": ("Posse_de_bola", "atributo"),
                 "Total de finalizações": ("Total_Finalizacao", "atributo"),
@@ -322,19 +339,70 @@ class RecolherEstatisticas(automacao):
                 "Interceptações": ("Interceptacoes", "atributo"),
                 "Passes": ("Passes", "special")
             }
-            
             if texto in stat_map:
                 attr, func = stat_map[texto]
                 attr += "_HT" if temp == 2 else ""
-                if getattr(estatistica, attr, 0) == 0 or (attr == "Cartoes_Vermelhos" and not getattr(estatistica, attr, False)):
-                    if func == "special":
-                        [setattr(estatistica, f"{a}{'_HT' if temp==2 else ''}", getattr(self, f"atributo_{m}")(driver,casafora,variacao,sessao,linha)) 
-                        for a, m in [("Passes", "Concluidos"), ("Passes_Totais", "Total"), ("Precisao_Passes", "Porcentagem")]]
-                    else:
-                        setattr(estatistica, attr, getattr(self, func)(driver,casafora,variacao,sessao,linha))
-        except:        
-            return estatistica
-        
+
+                if func == "special":
+                    spans = valores[0].find_elements(By.CSS_SELECTOR, '[data-testid="wcl-scores-simple-text-01"]') if casafora else valores[1].find_elements(By.CSS_SELECTOR, '[data-testid="wcl-scores-simple-text-01"]')
+
+                    try:
+                        precisao = spans[0].text.replace("%", "")
+                        passes = spans[1].text.replace("(", "").replace(")", "")
+
+                        passes_conc, passes_tot = passes.split("/")
+
+                        passes_conc = int(passes_conc)
+                        passes_tot = int(passes_tot)
+                        precisao = int(precisao)
+
+                    except Exception as e:
+                        print("Erro ao tratar passes:", spans, "| erro:", e)
+                        passes_conc, passes_tot, precisao = 0, 0, 0
+                    sufixo = "_HT" if temp == 2 else ""
+
+                    setattr(estatistica, f"Passes{sufixo}", passes_conc)
+                    setattr(estatistica, f"Passes_Totais{sufixo}", passes_tot)
+                    setattr(estatistica, f"Precisao_Passes{sufixo}", precisao)
+
+                else:
+                    try:
+                        valor_limpo = valor.strip().replace(",", ".")
+
+                        # separa quando vem com quebra de linha
+                        if "\n" in valor_limpo:
+                            parte1, parte2 = valor_limpo.split("\n")
+
+                            # parte1 → "70%"
+                            # parte2 → "(68/97)"
+
+                            if "%" in parte1:
+                                valor_limpo = parte1.replace("%", "")
+                            elif "/" in parte2:
+                                valor_limpo = parte2.replace("(", "").replace(")", "")
+
+                        valor_limpo = valor_limpo.replace("%", "")
+
+                        if func == "atributo_Concluidos":
+                            valor_tratado = int(valor_limpo.split("/")[0])
+
+                        else:
+                            if "." in valor_limpo:
+                                valor_tratado = float(valor_limpo)
+                                if valor_tratado.is_integer():
+                                    valor_tratado = int(valor_tratado)
+                            else:
+                                valor_tratado = int(valor_limpo)
+
+                    except Exception as e:
+                        print("Erro ao tratar valor:", valor, "| erro:", e)
+                        valor_tratado = 0
+
+                    setattr(estatistica, attr, valor_tratado)
+
+        except Exception as e:
+                        print("Erro no Partida:", e)
+
         return estatistica
 
     def atributo(self,driver, timeCasa,variacao, sessao,linha ):

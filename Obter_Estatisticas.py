@@ -61,61 +61,38 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             #Gols_ht = bot.Sumario(driver)
 
 
-
-            desc="falhou ao pressionar botão de estatisticas, pode ser que seja um jogo sem estatisticas, ou pode ser um jogo com mais uma variação"    
-            btnEstatisticaPassou=0
-            try:            #detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button
-                bot.pressionar_tecla(Keys.DOWN)                
-                bot.pressionar_tecla(Keys.DOWN)          
-                sleep(2)   
-                btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div.tabContent__match-summary > div.filterOver.filterOver--indent > div > a:nth-child(2) > button").text
-                bot.cliqueCSS("#detail > div.tabContent__match-summary > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")      
-                
-                if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
-                    btnEstatisticaPassou=1
-                else:
-                        driver.quit() 
-                        raise
-            except:
             
-                try:             ##detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button 
-                    btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(7) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button").text
-                    bot.cliqueCSS("#detail > div:nth-child(7) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")      
-                    
-                    if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
-                        btnEstatisticaPassou=1
-                    else:
-                            driver.quit() 
-                            raise
-                except:
-                    try:
-                        btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button ").text
-                        bot.cliqueCSS("#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button ")
-                        if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
-                            btnEstatisticaPassou=1
-                        else:
-                            driver.quit() 
-                            raise
-                    except:
-                        btnEstatistica=driver.find_element(By.CSS_SELECTOR, "#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a.selected > button").text      
-                        bot.cliqueCSS("#detail > div:nth-child(6) > div.filterOver.filterOver--indent > div > a.selected > button")
-                        if  btnEstatistica=="ESTATÍSTICAS" or btnEstatistica=="Estatísticas":
-                            btnEstatisticaPassou=1
-                        else:
-                            driver.quit() 
-                            raise               
+            desc="falhou ao pressionar botão de estatisticas, pode ser que seja um jogo sem estatisticas, ou pode ser um jogo com mais uma variação"    
+            # btnEstatistica=0
+            bot.pressionar_tecla(Keys.DOWN)                
+            bot.pressionar_tecla(Keys.DOWN)          
+            sleep(2)   
+                
+            btnEstatisticas = bot.cliqueCSS("#detail > div.tabContent__match-summary > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")    
+            
+            # try:            #detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button
+               
+                  
+                
+            #     if  btnEstatisticas.text=="ESTATÍSTICAS" or  btnEstatisticas.text=="Estatísticas":
+            #         btnEstatistica=1
+            #     else:
+            #             driver.quit() 
+            #             raise
+            # except:
+            #     driver.quit() 
+            #     raise
 
 
 
-            if btnEstatisticaPassou==0:
-                driver.quit()       
-                raise 
+            # if btnEstatistica==0:
+            #     driver.quit()       
+            #     raise 
                 
             
             desc="falha ao dados da classe partida"    
 
-            bot.cliqueCSS("#detail > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button") 
-            # esse clique é pra impedir que ele leia antes q a page carregue 
+            bot.cliqueCSS("#detail > div.duelParticipant__container") 
             
             partida = Partidas()
             casa = Estatisticas()
@@ -161,82 +138,102 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
 
             desc="falha ao dados da classe Eststisticas Partida"           
             
-                                                        #wcl-row_2oCpS
-            rows =driver.find_elements(By.CLASS_NAME, "wcl-row_2oCpS")
+                                                        #wcl-category_Ydwqh
+                                                        
+                                                        #detail > div.tabContent__match-summary
+            rows=driver.find_elements(By.CLASS_NAME, "wcl-row_2oCpS")
+            if len(rows)==0:
+                rows = WebDriverWait(driver, 10).until(
+                    EC.presence_of_all_elements_located((By.CSS_SELECTOR, '[data-testid="wcl-statistics"]'))
+                    )
+
+                    
             ft=0
             variacao=0
             sessao=0
             linha=0
             while  2>ft:
+                bot.pressionar_tecla(Keys.ARROW_DOWN)
+                bot.pressionar_tecla(Keys.ARROW_DOWN)
+
                 ft+=1
                 if ft>1:
-                    bot.pressionar_tecla(Keys.HOME)                
-                    bot.pressionar_tecla(Keys.DOWN)     
-                    sleep(3)                       #btn de estatisticas do primeiro tempo 
-                    try:               
-                        bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a:nth-child(2) > button")        
-                    except:    
-                        try:
-                            bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a:nth-child(2) > button")        
-                        except:continue
-                for row in rows:              
+                    tempo1=bot.cliqueCSS("#detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a:nth-child(2) > button")
 
+                    
+                # for row in rows:              
+
+                #     try:
+                #                 # Tenta encontrar o <strong> dentro da linha
+                #         full_path = driver.execute_script("""
+                #             function getDivPath(element) {
+                #                 let path = [];
+                #                 while (element !== document.body && element.parentNode) {
+                #                     if (element.tagName.toLowerCase() === 'div') {
+                #                         let index = Array.from(element.parentNode.children)
+                #                             .filter(el => el.tagName.toLowerCase() === 'div')
+                #                             .indexOf(element) + 1;
+                #                         path.unshift(`div:nth-child(${index})`);
+                #                     }
+                #                     element = element.parentNode;
+                #                 }
+                #                 return path.join(" > ");
+                #             }
+                #             return getDivPath(arguments[0]);
+                #         """, row)
+
+                #         # Exemplo de full_path: (era pra ser assim porém pode mudar com o tempo)
+
+                #         # "div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)"
+
+                #         parts = full_path.split(" > ")
+                #         # variacao = int(parts[6].split("(")[1].replace(")", "") if len(parts) > 0 else "N/A")
+                #         sessao = int(parts[9].split("(")[1].replace(")", "") if len(parts) > 1 else "N/A")
+                #         linha = int(parts[10].split("(")[1].replace(")", "") if len(parts) > 3 else "N/A")
+                #     except Exception as e:
+                #         # print(f"Erro ao processar linha: {e}")
+                #         continue 
+
+                #     bot.pressionar_tecla(Keys.DOWN)
+                    
+                    
+                #     # if sessao == 2 and linha == 2: #detail > div:nth-child(5) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button           
+                #     #     bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
+                    
+                #     # texto = ""                                            
+                #     # try:                                                #detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child(1) > div:nth-child(2) > div.wcl-category_Ydwqh > div.wcl-category_6sT1J > span
+                #     #     texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_Ydwqh > div.wcl-category_6sT1J > span").text                              
+                #     #     if linha == 2 and texto == 'Gols esperados (xG)':
+                #     #         continue
+                #     # except:
+                #     #     print("Não está reconhecendo a linha")    
+                    
+                #     bot.pressionar_tecla(Keys.ARROW_DOWN)       
+
+                #     try:
+                #         bot.Partida(driver,casa,True,ft,variacao,sessao,linha),
+                #         bot.Partida(driver,fora,False,ft,variacao,sessao,linha)                    
+                #     except:
+                #         print("Erro ao extrair dados da partida")
+                
+                for row in rows:
                     try:
-                                # Tenta encontrar o <strong> dentro da linha
-                        full_path = driver.execute_script("""
-                            function getDivPath(element) {
-                                let path = [];
-                                while (element !== document.body && element.parentNode) {
-                                    if (element.tagName.toLowerCase() === 'div') {
-                                        let index = Array.from(element.parentNode.children)
-                                            .filter(el => el.tagName.toLowerCase() === 'div')
-                                            .indexOf(element) + 1;
-                                        path.unshift(`div:nth-child(${index})`);
-                                    }
-                                    element = element.parentNode;
-                                }
-                                return path.join(" > ");
-                            }
-                            return getDivPath(arguments[0]);
-                        """, row)
+                        bot.pressionar_tecla(Keys.ARROW_DOWN)
 
-                        # Exemplo de full_path: (era pra ser assim porém pode mudar com o tempo)
+                        bot.Partida(driver, casa, True, ft, variacao, row)
+                        bot.Partida(driver, fora, False, ft, variacao, row)
 
-                        # "div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)"
-
-                        parts = full_path.split(" > ")
-                        variacao = int(parts[6].split("(")[1].replace(")", "") if len(parts) > 0 else "N/A")
-                        sessao = int(parts[8].split("(")[1].replace(")", "") if len(parts) > 1 else "N/A")
-                        linha = int(parts[9].split("(")[1].replace(")", "") if len(parts) > 3 else "N/A")
                     except Exception as e:
-                        # print(f"Erro ao processar linha: {e}")
-                        continue 
+                        print("Erro ao extrair dados da partida:", e)
+                
+                bot.pressionar_tecla(Keys.HOME)
 
-                    bot.pressionar_tecla(Keys.DOWN)
-                    
-                    if sessao == 2 and linha == 2: #detail > div:nth-child(5) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button           
-                        bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
-                    
-                    texto = ""                                             #detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child(1) > div:nth-child(2) > div.wcl-category_Ydwqh > div.wcl-category_6sT1J > span
-                    try:                                                #detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child(1) > div:nth-child(2) > div.wcl-category_Ydwqh > div.wcl-category_6sT1J > span
-                        texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child({sessao}) > div:nth-child({linha})  > div.wcl-category_Ydwqh > div.wcl-category_6sT1J > span").text                              
-                        if linha == 2 and texto == 'Gols esperados (xG)':
-                            continue
-                    except:
-                        print("Não está reconhecendo a linha")    
-                    
-                    bot.pressionar_tecla(Keys.ARROW_DOWN)       
-
-                    try:
-                        bot.Partida(driver,casa,True,ft,variacao,sessao,linha),
-                        bot.Partida(driver,fora,False,ft,variacao,sessao,linha)                    
-                    except:
-                        print("Erro ao extrair dados da partida")
+                        
                 if casa.Posse_de_bola==0 and casa.Passes==0 or fora.Posse_de_bola==0 and fora.Passes==0  :
                     desc="Falha ao reconhecer dados da classe de estatisticas Partidas, Aparentemente uma variação nova ou partidas sem estatisticas"
                     driver.quit() 
                     raise           
-            
+                
             
             else:            
                 if tipoPartida=="Analisada":
