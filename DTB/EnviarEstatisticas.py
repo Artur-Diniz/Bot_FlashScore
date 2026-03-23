@@ -6,59 +6,10 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).parent.parent  # Ajuste conforme necessário
 sys.path.append(str(PROJECT_ROOT))
 
+from DTB.temporadadb import get_temporada_id 
+from DTB.Partidasdb import inserir_partida 
 
 
-from selenium.webdriver.support import expected_conditions as EC
-from datetime import datetime, timedelta
-from models.Partidas import Partidas
-from models.EstatisticaPartidas import Estatisticas
-from models.Partida_Estatistica_Dto import PartidaCompletaDto
-import json
-import requests
-
-def get_temporada_id(cursor, competicao_nome, ano):
-    query = """
-    SELECT t.id
-    FROM temporadas t
-    JOIN competicoes c ON c.id = t.competicao_id
-    WHERE c.nome = %s AND t.ano = %s
-    LIMIT 1;
-    """
-
-    cursor.execute(query, (competicao_nome, ano))
-    result = cursor.fetchone()
-
-    if not result:
-        raise Exception(f"Temporada não encontrada: {competicao_nome} {ano}")
-
-    return result[0]
-
-def inserir_partida(cursor, partida, temporada_id):
-    cursor.execute("""
-        INSERT INTO partidas (
-            temporada_id,
-            nome_time_casa,
-            nome_time_casa_normalizado,
-            nome_time_fora,
-            nome_time_fora_normalizado,
-            data,
-            tipo_partida,
-            url_partida
-        )
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
-        RETURNING id;
-    """, (
-        temporada_id,
-        partida.NomeTimeCasa,
-        partida.NomeTimeCasa,  # já vem tratado
-        partida.NomeTimeFora,
-        partida.NomeTimeFora,
-        partida.data,
-        partida.TipoPartida,
-        partida.Url_Partida
-    ))
-
-    return cursor.fetchone()[0]
 
 def inserir_estatistica(cursor, partida_id, est):
     cursor.execute("""
@@ -190,3 +141,4 @@ def salvar_jogo(cursor, partida, est_casa, est_fora):
 
     inserir_estatistica(cursor, partida_id, est_casa)
     inserir_estatistica(cursor, partida_id, est_fora)
+    

@@ -7,13 +7,12 @@ from metodos import RecolherEstatisticas
 from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from API.EnviarEstatisticas import mandarDadosPartida,mandarDadosPartidaAnalisada
-from DTB.processarJogo import ProcessarJogo
+from DTB.processarJogo import ProcessarJogo,GetPartidabyNamesAndDate 
 from time import sleep
 import psutil
 from selenium.webdriver.chrome.options import Options
 import random
 
-import time
 
 def  Obter_Estatisticas(url:str, tipoPartida:str):
     
@@ -115,6 +114,10 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             fora.GolSofrido_HT=casa.Gol_HT
             casa.GolSofrido=fora.Gol
             fora.GolSofrido=casa.Gol
+            
+            PartidaExistente = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)            
+            if PartidaExistente != 0: #aqui caso a partida ja tenha sido analisada anteriormente
+                return PartidaExistente[7]
             
             
             # em jogos disputado por penaltis o site do flash score adiciona um gol para quem passa e isso altera 
@@ -240,7 +243,12 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 if tipoPartida=="Analisada":
                     mandarDadosPartidaAnalisada(casa,fora,partida)
                 else:
-                    ProcessarJogo(partida,casa,fora)
+                    ProcessarJogo(partida,casa,fora)              
+                    partidaLida = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)
+                    
+                if partidaLida != 0: #aqui caso a partida ja tenha sido lida 
+                    return partidaLida[0]
+                      
                 tentativa+=1
             driver.quit()
         except:  
@@ -304,7 +312,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/bahia-UeD7XtzM/remo-2i0B6Zul/?mid=Gfc2n3nl", "Teste") 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/chapecoense-jcQV3XP6/internacional-tSCiHj0I/?mid=C0iQ6kId", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 
