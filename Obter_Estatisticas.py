@@ -7,6 +7,7 @@ from metodos import RecolherEstatisticas
 from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from API.EnviarEstatisticas import mandarDadosPartida,mandarDadosPartidaAnalisada
+from DTB.processarJogo import ProcessarJogo
 from time import sleep
 import psutil
 from selenium.webdriver.chrome.options import Options
@@ -104,8 +105,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             partida.Url_Partida=url
             casa = bot.recolher_Estatistica_Time_Base(driver,True)
             fora = bot.recolher_Estatistica_Time_Base(driver,False)
-            casa.CasaOuFora='Casa'
-            fora.CasaOuFora='Fora'
+            casa.CasaOuFora='casa'
+            fora.CasaOuFora='fora'
             
             # casa.Gol_HT = Gols_ht.get("gol_casa")
             # fora.Gol_HT = Gols_ht.get("gol_fora")
@@ -239,7 +240,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 if tipoPartida=="Analisada":
                     mandarDadosPartidaAnalisada(casa,fora,partida)
                 else:
-                    mandarDadosPartida(casa,fora,partida)
+                    ProcessarJogo(partida,casa,fora)
                 tentativa+=1
             driver.quit()
         except:  
@@ -303,7 +304,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/mirassol-pQ8ryEe7/palmeiras-hMn9FTbH/?mid=WQmXs9qR", "Teste") 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/bahia-UeD7XtzM/remo-2i0B6Zul/?mid=Gfc2n3nl", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

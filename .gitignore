@@ -3,4 +3,8 @@ enviarEmail/MeuEmail/
 LOG/
 Palpites/
 
+
+DTB/ConnectionDtb.py
+
+
 /resetarBanco.py

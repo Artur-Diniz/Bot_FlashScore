@@ -28,7 +28,6 @@ class EstatisticasTimes():
         self.Passes_no_terco_final = 0
         self.Cruzamentos = 0
         self.Desarmes = 0
-        self.Bolas_afastadas = 0
         self.Interceptacoes = 0
         
         
@@ -53,7 +52,6 @@ class EstatisticasTimes():
         self.Passes_no_terco_final_adversaria = 0
         self.Cruzamentos_adversaria = 0
         self.Desarmes_adversaria = 0
-        self.Bolas_afastadas_adversaria = 0
         self.Interceptacoes_adversaria = 0
         
         
@@ -79,7 +77,6 @@ class EstatisticasTimes():
         self.Passes_no_terco_final_Confronto = 0
         self.Cruzamentos_Confronto = 0
         self.Desarmes_Confronto = 0
-        self.Bolas_afastadas_Confronto = 0
         self.Interceptacoes_Confronto = 0
         
         

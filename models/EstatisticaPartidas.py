@@ -33,7 +33,6 @@ class Estatisticas():
         self.Passes_no_terco_final = 0
         self.Cruzamentos = 0
         self.Desarmes = 0
-        self.Bolas_afastadas = 0
         self.Interceptacoes = 0
         self.Gol = 0
         self.GolSofrido = 0
@@ -56,7 +55,6 @@ class Estatisticas():
         self.Passes_no_terco_final = 0
         self.Cruzamentos = 0
         self.Desarmes = 0
-        self.Bolas_afastadas = 0
         self.Interceptacoes = 0
         
         
@@ -81,7 +79,6 @@ class Estatisticas():
         self.Passes_no_terco_final_HT = 0
         self.Cruzamentos_HT = 0
         self.Desarmes_HT = 0
-        self.Bolas_afastadas_HT = 0
         self.Interceptacoes_HT = 0
         self.Gol_HT = 0
         self.GolSofrido_HT = 0
@@ -104,6 +101,5 @@ class Estatisticas():
         self.Passes_no_terco_final_HT = 0
         self.Cruzamentos_HT = 0
         self.Desarmes_HT = 0
-        self.Bolas_afastadas_HT = 0
         self.Interceptacoes_HT = 0
         
