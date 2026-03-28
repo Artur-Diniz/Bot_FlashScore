@@ -82,8 +82,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             partida.Url_Partida=url
             casa = bot.recolher_Estatistica_Time_Base(driver,True)
             fora = bot.recolher_Estatistica_Time_Base(driver,False)
-            casa.CasaOuFora='fora'
-            fora.CasaOuFora='casa'
+            casa.CasaOuFora='casa'
+            fora.CasaOuFora='fora'
             
             # casa.Gol_HT = Gols_ht.get("gol_casa")
             # fora.Gol_HT = Gols_ht.get("gol_fora")

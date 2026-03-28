@@ -34,6 +34,13 @@ class automacao:
             # Localiza o elemento
             elemento = self.driver.find_element(By.XPATH, xpath)
 
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", elemento)
+
+            elemento = self.wait.until(
+                EC.element_to_be_clickable((By.XPATH, xpath))
+            )
+            
+            
             # Digita o texto no campo
             elemento.send_keys(texto)
             return elemento     
@@ -44,6 +51,12 @@ class automacao:
         try:
             # Localiza o elemento
             elemento = self.driver.find_element(By.CSS_SELECTOR, CSS_SELECTOR)
+            
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", elemento)
+
+            elemento = self.wait.until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, CSS_SELECTOR))
+            )
 
             # Digita o texto no campo
             elemento.send_keys(texto)
@@ -56,6 +69,13 @@ class automacao:
         """Método para clicar em um elemento usando seu XPath"""
         try:
             elemento = self.wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", elemento)
+
+            elemento = self.wait.until(
+                EC.element_to_be_clickable((By.XPATH, xpath))
+            )
+            
             elemento.click()
         except Exception as e:
             print(f"Erro ao clicar no elemento {xpath} ")
@@ -66,6 +86,13 @@ class automacao:
         """Método para clicar em um elemento usando seu cssSelector"""
         try:
             elemento = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, cssSelector)))
+            
+            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", elemento)
+
+            elemento = self.wait.until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, cssSelector))
+            )
+                
             elemento.click()
         except Exception as e:
             print(f"Erro ao clicar no elemento {cssSelector} ")
