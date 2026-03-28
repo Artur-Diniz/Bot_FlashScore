@@ -103,3 +103,4 @@ def Obter_Partidas_Liga(url:str):
 
 
 Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-betano-2025/resultados/")
+Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-betano-2024/resultados/")

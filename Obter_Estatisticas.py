@@ -231,7 +231,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/palmeiras-hMn9FTbH/sao-paulo-QgP0oAUH/", "Teste") 
+#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/flamengo-WjxY29qB/remo-2i0B6Zul/?mid=baSfzIsI", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

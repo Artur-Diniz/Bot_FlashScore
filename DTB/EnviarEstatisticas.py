@@ -6,7 +6,7 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).parent.parent  # Ajuste conforme necessário
 sys.path.append(str(PROJECT_ROOT))
 
-from DTB.temporadadb import get_temporada_id 
+from DTB.temporadadb import get_temporada_id,resolver_ano_temporada,get_competicao
 from DTB.Partidasdb import inserir_partida 
 
 
@@ -131,14 +131,20 @@ def inserir_estatistica(cursor, partida_id, est):
     
 def salvar_jogo(cursor, partida, est_casa, est_fora):
 
+    competicao = get_competicao(cursor, partida.Campeonato)
+
+    ano_temporada = resolver_ano_temporada(
+        partida.data,
+        competicao["temporada_cruzada"]
+    )
+
     temporada_id = get_temporada_id(
         cursor,
-        partida.Campeonato,
-        partida.data.year
+        competicao["nome"],
+        ano_temporada
     )
 
     partida_id = inserir_partida(cursor, partida, temporada_id)
 
     inserir_estatistica(cursor, partida_id, est_casa)
     inserir_estatistica(cursor, partida_id, est_fora)
-    
