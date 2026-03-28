@@ -6,7 +6,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from metodos import RecolherEstatisticas
 from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
-from API.EnviarEstatisticas import mandarDadosPartida,mandarDadosPartidaAnalisada
 from DTB.processarJogo import ProcessarJogo,GetPartidabyNamesAndDate 
 from time import sleep
 import psutil
@@ -15,7 +14,7 @@ import random
 
 
 def  Obter_Estatisticas(url:str, tipoPartida:str):
-    
+    """Retorna somente o ID da Partida Ou Zero """
     tentativa=0
     while tentativa<2 :
         tentativa+=1
@@ -54,11 +53,9 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             except:
                 None
 
-
             desc="erro ao  recolher sumario"  
             
                        
-            #Gols_ht = bot.Sumario(driver)
 
 
             
@@ -70,25 +67,6 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 
             btnEstatisticas = bot.cliqueCSS("#detail > div.tabContent__match-summary > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")    
             
-            # try:            #detail > div:nth-child(5) > div.filterOver.filterOver--indent > div > a:nth-child(2) > button
-               
-                  
-                
-            #     if  btnEstatisticas.text=="ESTATÍSTICAS" or  btnEstatisticas.text=="Estatísticas":
-            #         btnEstatistica=1
-            #     else:
-            #             driver.quit() 
-            #             raise
-            # except:
-            #     driver.quit() 
-            #     raise
-
-
-
-            # if btnEstatistica==0:
-            #     driver.quit()       
-            #     raise 
-                
             
             desc="falha ao dados da classe partida"    
 
@@ -104,8 +82,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             partida.Url_Partida=url
             casa = bot.recolher_Estatistica_Time_Base(driver,True)
             fora = bot.recolher_Estatistica_Time_Base(driver,False)
-            casa.CasaOuFora='casa'
-            fora.CasaOuFora='fora'
+            casa.CasaOuFora='fora'
+            fora.CasaOuFora='casa'
             
             # casa.Gol_HT = Gols_ht.get("gol_casa")
             # fora.Gol_HT = Gols_ht.get("gol_fora")
@@ -117,7 +95,8 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             
             PartidaExistente = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)            
             if PartidaExistente != 0: #aqui caso a partida ja tenha sido analisada anteriormente
-                return PartidaExistente[7]
+                driver.quit()
+                return PartidaExistente[0]
             
             
             # em jogos disputado por penaltis o site do flash score adiciona um gol para quem passa e isso altera 
@@ -153,9 +132,6 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
 
                     
             ft=0
-            variacao=0
-            sessao=0
-            linha=0
             while  2>ft:
                 bot.pressionar_tecla(Keys.ARROW_DOWN)
                 bot.pressionar_tecla(Keys.ARROW_DOWN)
@@ -164,68 +140,13 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 if ft>1:
                     tempo1=bot.cliqueCSS("#detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a:nth-child(2) > button")
 
-                    
-                # for row in rows:              
-
-                #     try:
-                #                 # Tenta encontrar o <strong> dentro da linha
-                #         full_path = driver.execute_script("""
-                #             function getDivPath(element) {
-                #                 let path = [];
-                #                 while (element !== document.body && element.parentNode) {
-                #                     if (element.tagName.toLowerCase() === 'div') {
-                #                         let index = Array.from(element.parentNode.children)
-                #                             .filter(el => el.tagName.toLowerCase() === 'div')
-                #                             .indexOf(element) + 1;
-                #                         path.unshift(`div:nth-child(${index})`);
-                #                     }
-                #                     element = element.parentNode;
-                #                 }
-                #                 return path.join(" > ");
-                #             }
-                #             return getDivPath(arguments[0]);
-                #         """, row)
-
-                #         # Exemplo de full_path: (era pra ser assim porém pode mudar com o tempo)
-
-                #         # "div:nth-child(6) > div:nth-child(2) > div:nth-child(2) > div:nth-child(2)"
-
-                #         parts = full_path.split(" > ")
-                #         # variacao = int(parts[6].split("(")[1].replace(")", "") if len(parts) > 0 else "N/A")
-                #         sessao = int(parts[9].split("(")[1].replace(")", "") if len(parts) > 1 else "N/A")
-                #         linha = int(parts[10].split("(")[1].replace(")", "") if len(parts) > 3 else "N/A")
-                #     except Exception as e:
-                #         # print(f"Erro ao processar linha: {e}")
-                #         continue 
-
-                #     bot.pressionar_tecla(Keys.DOWN)
-                    
-                    
-                #     # if sessao == 2 and linha == 2: #detail > div:nth-child(5) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button           
-                #     #     bot.cliqueCSS(f"#detail > div:nth-child({variacao}) > div:nth-child(2) > div.subFilterOver.subFilterOver--indent.subFilterOver--radius > div > a.active > button")        
-                    
-                #     # texto = ""                                            
-                #     # try:                                                #detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child(1) > div:nth-child(2) > div.wcl-category_Ydwqh > div.wcl-category_6sT1J > span
-                #     #     texto = driver.find_element(By.CSS_SELECTOR, f"#detail > div.tabContent__match-summary > div.tabContent__match-statistics > div.sectionsWrapper > div:nth-child({sessao}) > div:nth-child({linha}) > div.wcl-category_Ydwqh > div.wcl-category_6sT1J > span").text                              
-                #     #     if linha == 2 and texto == 'Gols esperados (xG)':
-                #     #         continue
-                #     # except:
-                #     #     print("Não está reconhecendo a linha")    
-                    
-                #     bot.pressionar_tecla(Keys.ARROW_DOWN)       
-
-                #     try:
-                #         bot.Partida(driver,casa,True,ft,variacao,sessao,linha),
-                #         bot.Partida(driver,fora,False,ft,variacao,sessao,linha)                    
-                #     except:
-                #         print("Erro ao extrair dados da partida")
                 
                 for row in rows:
                     try:
                         bot.pressionar_tecla(Keys.ARROW_DOWN)
 
-                        bot.Partida(driver, casa, True, ft, variacao, row)
-                        bot.Partida(driver, fora, False, ft, variacao, row)
+                        bot.Partida(driver, casa, True, ft,row)
+                        bot.Partida(driver, fora, False, ft,row)
 
                     except Exception as e:
                         print("Erro ao extrair dados da partida:", e)
@@ -240,13 +161,11 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 
             
             else:            
-                if tipoPartida=="Analisada":
-                    mandarDadosPartidaAnalisada(casa,fora,partida)
-                else:
-                    ProcessarJogo(partida,casa,fora)              
-                    partidaLida = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)
+                ProcessarJogo(partida,casa,fora)              
+                partidaLida = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)
                     
                 if partidaLida != 0: #aqui caso a partida ja tenha sido lida 
+                    driver.quit()
                     return partidaLida[0]
                       
                 tentativa+=1
@@ -312,7 +231,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/chapecoense-jcQV3XP6/internacional-tSCiHj0I/?mid=C0iQ6kId", "Teste") 
+#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/palmeiras-hMn9FTbH/sao-paulo-QgP0oAUH/", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

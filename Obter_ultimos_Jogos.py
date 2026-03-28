@@ -1,19 +1,14 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 from metodos import automacaoUltimosJogos
 from models.Partidas import Partidas
 from Obter_Estatisticas import Obter_Estatisticas
-from API.EnviarEstatisticas import gerarEstatiscasMedias
-from API.EnviarEstatisticas import mandarPartidaAnalise
 from concurrent.futures import ThreadPoolExecutor
 from selenium.webdriver.chrome.options import Options
-from API.GerarEstatisticasEsperdas import gerarEstatisticasIA
-from time import sleep
 
 
 
@@ -64,15 +59,15 @@ def Ultimos_Jogos(url:str):
         partida = Partidas()
         bot.pressionar_tecla(Keys.DOWN)
         partida = bot.recolher_Info_Partida(driver,"PartidaAnalise")                                 #detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a
-        partida.NomeTimeCasa = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
-        partida.NomeTimeFora = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
-        nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(3) > a > span").text
-        nomepart = nome.split(" - ")                
-        partida.Campeonato = nomepart[0].strip()
-        partida.PartidaAnalise = True                       
-        diajogo =str(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__startTime > div").text)
-        partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
-        partida.TipoPartida = "PartidaAnalise"
+        # partida.NomeTimeCasa = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+        # partida.NomeTimeFora = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
+        # nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(3) > a > span").text
+        # nomepart = nome.split(" - ")                
+        # partida.Campeonato = nomepart[0].strip()
+        # partida.PartidaAnalise = True                       
+        # diajogo =str(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__startTime > div").text)
+        # partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
+        # partida.TipoPartida = "PartidaAnalise"
         partida.Url_Partida=url
 
         if partida.Campeonato=="AMISTOSO INTERCLUBES" or partida.Campeonato=='COPA AMÉRICA FEMININA':
@@ -86,114 +81,68 @@ def Ultimos_Jogos(url:str):
             return
         
         
-        try:
-            if nomepart[1].strip() in ["PLAYOFFS", "QUALIFICAÇÃO"]:
-                brasileiro = False
-                if "Bra" in partida.NomeTimeCasa or "Bra" in partida.NomeTimeFora:
-                    brasileiro = True
-                if not brasileiro: # não analisamos jogos mata a mata
-                    driver.quit()
-                    return
-        except:
-            print("")
+        # try:
+        #     if nomepart[1].strip() in ["PLAYOFFS", "QUALIFICAÇÃO"]:
+        #         brasileiro = False
+        #         if "Bra" in partida.NomeTimeCasa or "Bra" in partida.NomeTimeFora:
+        #             brasileiro = True
+        #         if not brasileiro: # não analisamos jogos mata a mata
+        #             driver.quit()
+        #             return
+        # except:
+        #     print("")
             
         desc='Falha ao recolher Urls de Partidas anteriores'
                                 #detail > div.detailOver > div > a:nth-child(3) > button
-        driver.find_element(By.CSS_SELECTOR, "#detail > div.detailOver > div > a:nth-child(3) > button").click()
-        # Listas para armazenar dados
-        items = [] 
         confrontoDireto = [] 
         casacasa = [] 
         forafora = [] 
-        keyboard = ActionChains(driver)
-        contador = 0    #contador é pq são até os 5 ultimos jogos
-        count = 3      
-        jogofora=0 #para verificar se ja passou a seunda ou terceira coluna
+
+        # Listas para armazenar dados
+
+
         bot.pressionar_tecla(Keys.DOWN)
-        variacao=0
-        try :                                                                   #detail > div:nth-child(5) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button
-            botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(5) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
-            botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(5) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
-            variacao=5
-        except:
-            try:                                                                    #detail > div:nth-child(5) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button
-                botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
-                botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(6) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
-                variacao=6
-            except:
-                try:
-                    botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
-                    botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(7) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
-                    variacao=7
-                except:
-                    botaocasa = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(8) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")))
-                    botaofora = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "#detail > div:nth-child(8) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")))
-                    variacao=8
-                    
-        confronto = driver.find_elements(By.CLASS_NAME, "rows") 
-        #essa variavel é para evitar excessões como passar por jogos q o bot n leu pq os times nunca se enfretaram ent melhor tirar
-        leu_tudo=0
-        for confr in confronto:
-            if contador==5 and count ==3 and confrontoDireto== []:
-                break
+        bot.pressionar_tecla(Keys.DOWN)
+
+       
+        btnH2H = bot.cliqueCSS("#detail > div.detailOver > div > a:nth-child(3) > button")   
+        
+           
+        bot.pressionar_tecla(Keys.DOWN)
+        bot.pressionar_tecla(Keys.DOWN)      
+        btnConfrontoDireto = bot.cliqueCSS("#detail > div.tabContent__h2h > div > div.filterOver.filterOver--indent > div > a:nth-child(1) > button")         
+        confrontoDireto = bot.recolherUltimasPartidas(driver,True )
+        
+        
+        bot.pressionar_tecla(Keys.HOME)
+        bot.pressionar_tecla(Keys.DOWN)
+        bot.pressionar_tecla(Keys.DOWN)
+        btnCasaCasaPartidas = bot.cliqueCSS("#detail > div.tabContent__h2h > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")         
+        casacasa = bot.recolherUltimasPartidas(driver,False )
+        
+        bot.pressionar_tecla(Keys.HOME)
+        bot.pressionar_tecla(Keys.DOWN)
+        bot.pressionar_tecla(Keys.DOWN)
+        btnForaForaPartidas = bot.cliqueCSS("#detail > div.tabContent__h2h > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button")    
+        forafora = bot.recolherUltimasPartidas(driver,False )
+
+
+
+
+        desc="Falha ao chamar metodo Obter_Estatisticas"            
+        with ThreadPoolExecutor(max_workers=1) as executor:
             
-            if contador==5 and count ==3:
-                count = 1
-                keyboard.send_keys(Keys.PAGE_UP).perform()
-                keyboard.send_keys(Keys.PAGE_UP).perform()
-                sleep(1.5)
-                wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div > div.filterOver.filterOver--indent > div > a:nth-child(2) > button"))).click()
-                contador = 0
-            if contador==5 and count==1:
-                keyboard.send_keys(Keys.PAGE_UP).perform()
-                keyboard.send_keys(Keys.PAGE_UP).perform()
-                sleep(1.5)
-                wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, f"#detail > div:nth-child({variacao}) > div > div.filterOver.filterOver--indent > div > a:nth-child(3) > button"))).click()
-                jogofora=1 
-                contador = 0
-                leu_tudo=1
-            while contador!= 5:
-                contador+=1
-                #count é em qual coluna do flashscore está localizado (3 é sobre confronto diretos) 
-                # os confrontos diretos variam entre quem é o mandante 
-                Url_Jogo= bot.reconhecerUltimosJogos(count,contador)
-                if Url_Jogo=='' and contador==1:
-                    contador=5
-                    break
-                if  Url_Jogo!="":
-                    items.append(Url_Jogo) 
-                if count == 3:                  
-                    confrontoDireto.append(Url_Jogo)
-                elif count == 1 and jogofora==0:
-                    casacasa.append(Url_Jogo)
-                elif count == 1 and jogofora==1:
-                    forafora.append(Url_Jogo)
-        driver.quit()
-        
-        
-        if leu_tudo==1:      
-            desc="Erro ao enviar Partida Analise"
-            Id_partida= mandarPartidaAnalise(partida)
+            bot.aguardar_se_memoria_alta()
+            executor.map(lambda url: Obter_Estatisticas(url, "Teste"), confrontoDireto)
+            
+            bot.aguardar_se_memoria_alta()
+            executor.map(lambda url: Obter_Estatisticas(url, "Teste"), casacasa)
+            
+            bot.aguardar_se_memoria_alta()
+            executor.map(lambda url: Obter_Estatisticas(url, "Teste"), forafora)
 
-            desc="Falha ao chamar metodo Obter_Estatisticas"            
-            with ThreadPoolExecutor(max_workers=1) as executor:
-                
-                bot.aguardar_se_memoria_alta()
-                executor.map(lambda url: Obter_Estatisticas(url, "Confronto Direto"), confrontoDireto)
-                
-                bot.aguardar_se_memoria_alta()
-                executor.map(lambda url: Obter_Estatisticas(url, "Casa"), casacasa)
-                
-                bot.aguardar_se_memoria_alta()
-                executor.map(lambda url: Obter_Estatisticas(url, "Fora"), forafora)
 
-            gerarEstatiscasMedias(partida.NomeTimeCasa,partida.NomeTimeFora)
 
-            gerarEstatisticasIA(Id_partida)
-
-        else:
-            desc='Erro ao ler Partidas anteriores, provalvelmente uma variação nova ou pode ser que esses times nunca tenham jogados Juntos'
-            raise
             
     except:
         try:
@@ -211,8 +160,15 @@ def Ultimos_Jogos(url:str):
         print("MADEIRAAAAA !!!!!!!!")
         bot.BackLogs(url,2,desc)
         return
+    
+    
+    finally:
+            try:
+                driver.quit()
+            except:
+                None
+    
 
 
 
-
-Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/MFKPpxBc/#/resumo-de-jogo/resumo-de-jogo")
+Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/athletico-pr-UoAxb1Tq/botafogo-jXzWoWa5/?mid=xUgkXiV8")

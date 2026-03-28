@@ -201,60 +201,35 @@ class AutomacaoHomePage(automacao):
 class automacaoUltimosJogos(automacao):
     def __init__(self, driver):
         self.driver = driver
-        self.wait = WebDriverWait(driver, 3)
+        self.wait = WebDriverWait(driver, 3)    
+
     
-    def reconhecerUltimosJogos(self, count, linha):
-        driver = self.driver
-        original_url = driver.current_url
-        new_url = None  # Variável para armazenar a nova URL
+    def recolherUltimasPartidas(self,driver, confrontoDireto):
+        jogos = []
+        rows_list = driver.find_elements("css selector", "div.rows")
         
-        # Tentativas de clique em diferentes seletores CSS
-        selectors = [
-            f"#detail > div:nth-child(5) > div > div.h2h > div:nth-child({count}) > div.rows > a:nth-child({linha})",
-            f"#detail > div:nth-child(6) > div > div.h2h > div:nth-child({count}) > div.rows > a:nth-child({linha})",
-            f"#detail > div:nth-child(7) > div > div.h2h > div:nth-child({count}) > div.rows > a:nth-child({linha})",
-            f"#detail > div:nth-child(8) > div > div.h2h > div:nth-child({count}) > div.rows > a:nth-child({linha})"
-        ]
-        clicked = False
-        for selector in selectors:
-            try:
-                self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector))).click()
-                clicked = True
-                sleep(1.5)
-                break
-            except:
-                continue
-        
-        if not clicked:
-            print("Não foi possível clicar em nenhum dos elementos")
-            return ""  # Retorna None se não conseguir clicar
-
         try:
-            # Espera por nova janela ou mudança de URL
-            WebDriverWait(driver, 3).until(
-                lambda d: len(d.window_handles) > 1 or d.current_url != original_url
-            )
-            
-            if len(driver.window_handles) > 1:
-                # Se abriu nova janela, muda para ela e pega a URL
-                for window in driver.window_handles:
-                    if window != driver.current_window_handle:
-                        driver.switch_to.window(window)
-                        new_url = driver.current_url  # Armazena a nova URL
-                        break
+            if confrontoDireto:
+                linhas = rows_list[2]  # terceiro elemento
             else:
-                # Se mudou a URL, armazena antes de voltar
-                if driver.current_url != original_url:
-                    new_url = driver.current_url  # Guarda a URL nova
-
-                    driver.back()  # Volta para a original
-                    self.wait.until(lambda d: d.current_url == original_url)
-                    
+                linhas = rows_list[0]  # terceiro elemento
         except Exception as e:
-            print(f"Ocorreu um erro após o clique: {e}")
-            return ""
+            print(f"Ocorreu ao recloher url de das ultimás partidas: {e}")
+            return []
+        
+        
+        matches = linhas.find_elements("css selector", "a.h2h__row")
 
-        return new_url 
+        for match in matches:
+            url = match.get_attribute("href")
+            jogos.append(url) 
+
+        
+        return  jogos
+        
+        
+        
+
     # Retorna a nova URL (ou None se falhar)
     def recolher_Info_Partida(self,driver,tipoPartida):
         partida = Partidas()                                #detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a
@@ -310,7 +285,7 @@ class RecolherEstatisticas(automacao):
         return Estatistica    
  
     
-    def Partida(self, driver, estatistica, casafora, temp, variacao, row):
+    def Partida(self, driver, estatistica, casafora, temp,  row):
         try:
             texto = row.find_element(By.CSS_SELECTOR, '[data-testid="wcl-statistics-category"]').text
 
