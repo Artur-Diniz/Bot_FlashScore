@@ -8,7 +8,7 @@ sys.path.append(str(PROJECT_ROOT))
 from DTB.connectionDtb import get_connection
 from DTB.EnviarEstatisticas import salvar_jogo
 from DTB.Partidasdb import get_partida 
-from models.Partidas import Partidas
+from models.partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 
 def ProcessarJogo(partida:Partidas,estCasa:Estatisticas,estFora:Estatisticas):

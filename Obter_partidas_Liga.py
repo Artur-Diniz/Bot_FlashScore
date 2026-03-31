@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 from metodos import automacaoUltimosJogos
-from models.Partidas import Partidas
+from models.partidas import Partidas
 from Obter_Estatisticas import Obter_Estatisticas
 from concurrent.futures import ThreadPoolExecutor
 from selenium.webdriver.chrome.options import Options

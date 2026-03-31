@@ -6,7 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 from metodos import automacaoUltimosJogos
-from models.Partidas import Partidas
+from models.partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from models.EstatisticaTimes import EstatisticasTimes
 from metodos import AutomacaoHomePage

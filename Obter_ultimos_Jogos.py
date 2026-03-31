@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 from metodos import automacaoUltimosJogos
-from models.Partidas import Partidas
+from models.partidas import Partidas
 from Obter_Estatisticas import Obter_Estatisticas
 from concurrent.futures import ThreadPoolExecutor
 from selenium.webdriver.chrome.options import Options
@@ -59,15 +59,10 @@ def Ultimos_Jogos(url:str):
         partida = Partidas()
         bot.pressionar_tecla(Keys.DOWN)
         partida = bot.recolher_Info_Partida(driver,"PartidaAnalise")                                 #detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a
-        # partida.NomeTimeCasa = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__home > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
-        # partida.NomeTimeFora = driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__away > div.participant__participantNameWrapper > div.participant__participantName.participant__overflow > a").text
-        # nome = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(3) > a > span").text
-        # nomepart = nome.split(" - ")                
-        # partida.Campeonato = nomepart[0].strip()
-        # partida.PartidaAnalise = True                       
-        # diajogo =str(driver.find_element(By.CSS_SELECTOR, "#detail > div.duelParticipant__container > div.duelParticipant > div.duelParticipant__startTime > div").text)
-        # partida.data = datetime.strptime(diajogo, "%d.%m.%Y %H:%M")
-        # partida.TipoPartida = "PartidaAnalise"
+
+        if partida.Campeonato == "COPA DO MUNDO":
+            return 
+
         partida.Url_Partida=url
 
         if partida.Campeonato=="AMISTOSO INTERCLUBES" or partida.Campeonato=='COPA AMÉRICA FEMININA':
@@ -80,17 +75,7 @@ def Ultimos_Jogos(url:str):
             driver.quit()
             return
         
-        
-        # try:
-        #     if nomepart[1].strip() in ["PLAYOFFS", "QUALIFICAÇÃO"]:
-        #         brasileiro = False
-        #         if "Bra" in partida.NomeTimeCasa or "Bra" in partida.NomeTimeFora:
-        #             brasileiro = True
-        #         if not brasileiro: # não analisamos jogos mata a mata
-        #             driver.quit()
-        #             return
-        # except:
-        #     print("")
+
             
         desc='Falha ao recolher Urls de Partidas anteriores'
                                 #detail > div.detailOver > div > a:nth-child(3) > button
@@ -133,13 +118,13 @@ def Ultimos_Jogos(url:str):
         with ThreadPoolExecutor(max_workers=1) as executor:
             
             bot.aguardar_se_memoria_alta()
-            executor.map(lambda url: Obter_Estatisticas(url, "Teste"), confrontoDireto)
+            executor.map(lambda url: Obter_Estatisticas(url, "liga"), confrontoDireto)
             
             bot.aguardar_se_memoria_alta()
-            executor.map(lambda url: Obter_Estatisticas(url, "Teste"), casacasa)
+            executor.map(lambda url: Obter_Estatisticas(url, "liga"), casacasa)
             
             bot.aguardar_se_memoria_alta()
-            executor.map(lambda url: Obter_Estatisticas(url, "Teste"), forafora)
+            executor.map(lambda url: Obter_Estatisticas(url, "liga"), forafora)
 
 
 
@@ -171,4 +156,4 @@ def Ultimos_Jogos(url:str):
 
 
 
-Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/athletico-pr-UoAxb1Tq/botafogo-jXzWoWa5/?mid=xUgkXiV8")
+#Ultimos_Jogos("https://www.flashscore.com.br/jogo/futebol/dr-congo-phn9mm8H/jamaica-CWmDb3zj/?mid=nHRhJvF8")

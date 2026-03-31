@@ -2,16 +2,17 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent))  # Adiciona a raiz do projeto ao PATH
 
-from enviarEmail.enviarErro import EmailBackLog
-from enviarEmail.EnviarPalpites import EmailPalpites
+#from enviarEmail.enviarErro import EmailBackLog
+#from enviarEmail.EnviarPalpites import EmailPalpites
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from metodos import AutomacaoHomePage
 from Obter_ultimos_Jogos import Ultimos_Jogos
 from ObterJogosEspecificos import Obter_Times_Especificos
-from Obter_EstatisticasPassadas import analisando_Fim_do_Dia
-from datetime import datetime
+from selenium.webdriver.common.keys import Keys
+#from Obter_EstatisticasPassadas import analisando_Fim_do_Dia
+#from datetime import datetime
 from selenium.webdriver.chrome.options import Options
 
 import os
@@ -23,7 +24,7 @@ def home():
     desc=""
     try:
         
-        analisando_Fim_do_Dia()
+       # analisando_Fim_do_Dia()
 
         
         
@@ -43,15 +44,23 @@ def home():
         desc="O erro aconteceu logo no começo da page especificamente na hora de adicionar as ligas alternativas"
         
         bot.clique("/html/body/div[6]/div[2]/div/div[1]/div/div[2]/div/button[1]") #cookies
+
+        notMostrarMaisbtn = 0
+        while notMostrarMaisbtn==0:
+            try:
+                bot.pressionar_tecla(Keys.END)                
+                btnMostrarMaisJogos = bot.cliqueCSS("#category-left-menu > div > span")   
+            except:
+                notMostrarMaisbtn=1
+            
         #principal liga dos paises:
         bot.alemanha()
-        bot.argentina()            
-        bot.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/span") # botão more (para mostrar todos os paises)
+        #bot.argentina()            
+        bot.championship()            
         bot.portugal()
         bot.holanda()
-        bot.egito()
-        bot.turquia()
-            
+        #bot.egito()
+        #bot.turquia()
             
 
 
@@ -97,17 +106,17 @@ def home():
         for item in items:
             Ultimos_Jogos(item)
             
-        try:
-            EmailBackLog()        
-        except:
-            print("")
-        try:
-            EmailPalpites()
-        except:    
-            print("")
+        # try:
+        #     EmailBackLog()        
+        # except:
+        #     print("")
+        # try:
+        #     EmailPalpites()
+        # except:    
+        #     print("")
         
             
-        os.system("shutdown /s /t 1")
+        #os.system("shutdown /s /t 1")
 
         
     except:

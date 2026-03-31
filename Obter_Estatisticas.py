@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from metodos import RecolherEstatisticas
-from models.Partidas import Partidas
+from models.partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from DTB.processarJogo import ProcessarJogo,GetPartidabyNamesAndDate 
 from time import sleep

@@ -142,16 +142,23 @@ class AutomacaoHomePage(automacao):
             self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[4]/a/span")        
         except Exception as e:
             print("Erro ao adicionar alemanha:", e)
+    def championship(self):
+        try:#/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[83]/span[2]/span/svg
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[83]/a/span")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[83]/span[2]/span")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[83]/a/span")        
+        except Exception as e:
+            print("Erro ao adicionar alemanha:", e)
             
     def portugal(self):
         try:
             self.pressionar_tecla(Keys.PAGE_DOWN)
             elemento_hover = self.wait.until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[140]/a"))
-        )
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[140]/a")
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[140]/span[1]/span")
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[140]/a")    
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[134]/a"))
+        )          
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[134]/a")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[134]/span[1]/span")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[134]/a")    
         except Exception as e:
             print("Erro ao adicionar portugal:", )
             
@@ -182,9 +189,9 @@ class AutomacaoHomePage(automacao):
     
     def holanda(self):
         try:
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[133]/a")# cliaca na aba
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[133]/span[1]/span")# add liga
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[133]/a")# fecha aba
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[127]/a")# cliaca na aba
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[127]/span[1]/span")# add liga
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[127]/a")# fecha aba
         except Exception as e:
             print("Erro ao adicionar holanda:", )
     
