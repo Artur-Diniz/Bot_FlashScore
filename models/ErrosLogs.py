@@ -1,5 +1,5 @@
 from datetime import datetime
-from models.Partidas import Partidas
+from models.partidas import Partidas
 
 class ErrosLogs():
     def __init__(self):

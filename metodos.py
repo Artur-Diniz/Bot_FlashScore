@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-from models.Partidas import Partidas
+from models.partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from datetime import datetime
 from models.ErrosLogs import ErrosLogs

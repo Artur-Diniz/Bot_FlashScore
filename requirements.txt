@@ -1,0 +1,6 @@
+selenium
+psutil
+requests
+pyautogui
+schedule
+pydantic
