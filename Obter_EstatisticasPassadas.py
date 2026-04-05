@@ -5,7 +5,6 @@ from Obter_Estatisticas import Obter_Estatisticas
 from API.HttpPartidas import GetPartidasPassadas
 from API.HttpPalpites import analisando_Palpite
 from API.ResetSimplesBanco import ResetSimplesDatabase
-from resetarBanco import Reset_Banco
 
 
 
@@ -20,7 +19,6 @@ def analisando_Fim_do_Dia():
 
     analisando_Palpite()
 
-    Reset_Banco()
     ResetSimplesDatabase()
     return
 

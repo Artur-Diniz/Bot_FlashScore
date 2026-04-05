@@ -87,6 +87,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             
             # casa.Gol_HT = Gols_ht.get("gol_casa")
             # fora.Gol_HT = Gols_ht.get("gol_fora")
+            
 
             casa.GolSofrido_HT=fora.Gol_HT
             fora.GolSofrido_HT=casa.Gol_HT
@@ -98,6 +99,11 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 driver.quit()
                 return PartidaExistente[0]
             
+                
+            if partida.Campeonato == "SÉRIE A":
+                isBrasileirao = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(2) > a > span").text
+                if isBrasileirao == "BRASIL":
+                    partida.Campeonato= "BRASILEIRÃO BETANO"
             
             # em jogos disputado por penaltis o site do flash score adiciona um gol para quem passa e isso altera 
             # a quantidade de gols feitos em tempo regulamentar q é o que é esperado pelas casas de aposta
@@ -230,8 +236,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
     return estatisticas
 
     
- 
-#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/flamengo-WjxY29qB/remo-2i0B6Zul/?mid=baSfzIsI", "Teste") 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/cruzeiro-0SwtclaU/palmeiras-hMn9FTbH/?mid=trh1mKqD", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

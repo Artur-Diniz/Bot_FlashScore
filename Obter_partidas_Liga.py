@@ -69,7 +69,7 @@ def Obter_Partidas_Liga(url:str):
         with ThreadPoolExecutor(max_workers=3) as executor:
             
             bot.aguardar_se_memoria_alta()
-            executor.map(lambda url: Obter_Estatisticas(url, "Teste"), urls)
+            executor.map(lambda url: Obter_Estatisticas(url, "liga"), urls)
             
 
 
@@ -94,7 +94,7 @@ def Obter_Partidas_Liga(url:str):
     
     
     finally:
-            try:
+            try: 
                 driver.quit()
             except:
                 None
@@ -102,5 +102,17 @@ def Obter_Partidas_Liga(url:str):
 
 
 
-Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-betano-2025/resultados/")
-Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-betano-2024/resultados/")
+
+
+#Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/alemanha/bundesliga-2022-2023/resultados/")
+
+
+Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-betano-2023/resultados/")
+# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/espanha/laliga-2022-2023/resultados/")
+# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/franca/ligue-1-2022-2023/resultados/")
+# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/inglaterra/campeonato-ingles-2022-2023/resultados/")
+# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/inglaterra/2-divisao-2022-2023/resultados/")
+# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/italia/serie-a-2022-2023/resultados/")
+# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/holanda/eredivisie-2022-2023/resultados/")
+# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/portugal/liga-portugal-2022-2023/resultados/")
+# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-serie-b-superbet-2023/resultados/")
