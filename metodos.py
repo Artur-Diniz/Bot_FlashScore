@@ -461,6 +461,7 @@ class RecolherEstatisticas(automacao):
         
         events = driver.find_elements(By.CLASS_NAME, "smv__incident")
 
+
         for event in events:#
             #smv__timeBox
             tempo=0
@@ -471,7 +472,8 @@ class RecolherEstatisticas(automacao):
 
             jogador=""
             try:
-                jogador = event.find_element(By.CLASS_NAME, "smv__playerName").text
+                jogador = event.find_element(By.CLASS_NAME, "smv__playerName")\
+                            .find_element(By.TAG_NAME, "div").text   
             except:
                 continue
             descricao=""

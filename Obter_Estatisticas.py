@@ -55,7 +55,10 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
 
             desc="erro ao  recolher sumario"  
             
-                       
+            Gol_HT = bot.Sumario(driver)
+            
+
+
 
 
             
@@ -85,13 +88,16 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             casa.CasaOuFora='casa'
             fora.CasaOuFora='fora'
             
-            # casa.Gol_HT = Gols_ht.get("gol_casa")
-            # fora.Gol_HT = Gols_ht.get("gol_fora")
+            casa.Gol_HT = Gol_HT.get("gol_casa")
+            fora.Gol_HT = Gol_HT.get("gol_fora")
+
 
             casa.GolSofrido_HT=fora.Gol_HT
             fora.GolSofrido_HT=casa.Gol_HT
             casa.GolSofrido=fora.Gol
             fora.GolSofrido=casa.Gol
+
+
             
             PartidaExistente = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)            
             if PartidaExistente != 0: #aqui caso a partida ja tenha sido analisada anteriormente
@@ -160,14 +166,15 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                     raise           
                 
             
-            else:            
+            else:         
+                print('')   
                 ProcessarJogo(partida,casa,fora)              
                 partidaLida = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)
-                    
+              
                 if partidaLida != 0: #aqui caso a partida ja tenha sido lida 
                     driver.quit()
                     return partidaLida[0]
-                      
+                
                 tentativa+=1
             driver.quit()
         except:  
@@ -231,7 +238,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
 
     
  
-#Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/flamengo-WjxY29qB/remo-2i0B6Zul/?mid=baSfzIsI", "Teste") 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/bahia-UeD7XtzM/palmeiras-hMn9FTbH/?mid=ULezwdEb", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 
