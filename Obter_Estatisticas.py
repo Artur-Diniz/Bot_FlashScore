@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from metodos import RecolherEstatisticas
 from models.partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
-from DTB.processarJogo import ProcessarJogo,GetPartidabyNamesAndDate 
+#from DTB.processarJogo import ProcessarJogo,GetPartidabyNamesAndDate 
 from time import sleep
 import psutil
 from selenium.webdriver.chrome.options import Options
@@ -64,12 +64,43 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             
             desc="falhou ao pressionar botão de estatisticas, pode ser que seja um jogo sem estatisticas, ou pode ser um jogo com mais uma variação"    
             # btnEstatistica=0
-            bot.pressionar_tecla(Keys.DOWN)                
-            bot.pressionar_tecla(Keys.DOWN)          
-            sleep(2)   
+            # bot.pressionar_tecla(Keys.DOWN)                
+            # bot.pressionar_tecla(Keys.DOWN)          
+            # sleep(2)   
                 
-            btnEstatisticas = bot.cliqueCSS("#detail > div.tabContent__match-summary > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")    
+            # btnODDs  = bot.cliqueCSS("#detail > div.detailOver > div > a:nth-child(2) > button")
+
+
+            # btnOdds1x2  = bot.cliqueCSS('a[data-analytics-alias="1x2"]')
+
+            # sleep(1.5)
+            # rowsBet = driver.find_elements(By.CLASS_NAME, "ui-table__row")
+
+            # # betanoId = data-analytics-bookmaker-id="574"
+            # # bet365Id = data-analytics-bookmaker-id="16"
+            # # etrelabetID = data-analytics-bookmaker-id="833"
+
+            # for row in rowsBet:
+            #      Odds = row.find_elements(By.CLASS_NAME, "oddsCell__odd  ")
+
+            #      for od in Odds:
+            #          print(od.text)
+                
+
+
+            # btnOddsOverUnder  = bot.cliqueCSS('a[data-analytics-alias="under-over"]')
+
+            # btnOddsAmbas = bot.cliqueCSS('a[data-analytics-alias="both-teams-to-score"]')
+
+
+            # btnOddsDoubleChance = bot.cliqueCSS('a[data-analytics-alias="double-chance"]')
+
+            # btnOddsEmpateAnula = bot.cliqueCSS('a[data-analytics-alias="draw-no-bet"]')
             
+
+
+
+            btnEstatisticas = bot.cliqueCSS("#detail > div.tabContent__match-summary > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")    
             
             desc="falha ao dados da classe partida"    
 
@@ -99,10 +130,10 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
 
 
             
-            PartidaExistente = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)            
-            if PartidaExistente != 0: #aqui caso a partida ja tenha sido analisada anteriormente
-                driver.quit()
-                return PartidaExistente[0]
+            # PartidaExistente = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)            
+            # if PartidaExistente != 0: #aqui caso a partida ja tenha sido analisada anteriormente
+            #     driver.quit()
+            #     return PartidaExistente[0]
             
             
             # em jogos disputado por penaltis o site do flash score adiciona um gol para quem passa e isso altera 
@@ -168,12 +199,12 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             
             else:         
                 print('')   
-                ProcessarJogo(partida,casa,fora)              
-                partidaLida = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)
+                # ProcessarJogo(partida,casa,fora)              
+                # partidaLida = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)
               
-                if partidaLida != 0: #aqui caso a partida ja tenha sido lida 
-                    driver.quit()
-                    return partidaLida[0]
+                # if partidaLida != 0: #aqui caso a partida ja tenha sido lida 
+                #     driver.quit()
+                #     return partidaLida[0]
                 
                 tentativa+=1
             driver.quit()
