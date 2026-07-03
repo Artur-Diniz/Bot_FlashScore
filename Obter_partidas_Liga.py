@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 import os
 from metodos import automacaoUltimosJogos
-from models.Partidas import Partidas
+from models.partidas import Partidas
 from Obter_Estatisticas import Obter_Estatisticas
 from concurrent.futures import ThreadPoolExecutor
 from selenium.webdriver.chrome.options import Options
