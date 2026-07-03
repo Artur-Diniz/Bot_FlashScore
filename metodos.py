@@ -100,6 +100,27 @@ class automacao:
         return elemento     
     
     
+    def cliqueElemento(self, elemento):
+        """Clica em um WebElement já localizado."""
+        try:
+            # centraliza o elemento na tela
+            self.driver.execute_script(
+                "arguments[0].scrollIntoView({block: 'center'});",
+                elemento
+            )
+
+            # espera o elemento estar habilitado e visível
+            self.wait.until(
+                lambda d: elemento.is_displayed() and elemento.is_enabled()
+            )
+
+            elemento.click()
+
+        except Exception as e:
+            print(f"Erro ao clicar no elemento: {e}")
+
+        return elemento
+    
     def BackLogs(self, url:str,Page:int,descricao:str):
         
         erro = ErrosLogs()
@@ -142,16 +163,23 @@ class AutomacaoHomePage(automacao):
             self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[4]/a/span")        
         except Exception as e:
             print("Erro ao adicionar alemanha:", e)
+    def championship(self):
+        try:#/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[83]/span[2]/span/svg
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[83]/a/span")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[83]/span[2]/span")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[83]/a/span")        
+        except Exception as e:
+            print("Erro ao adicionar alemanha:", e)
             
     def portugal(self):
         try:
             self.pressionar_tecla(Keys.PAGE_DOWN)
             elemento_hover = self.wait.until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[140]/a"))
-        )
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[140]/a")
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[140]/span[1]/span")
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[140]/a")    
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[134]/a"))
+        )          
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[134]/a")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[134]/span[1]/span")
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[134]/a")    
         except Exception as e:
             print("Erro ao adicionar portugal:", )
             
@@ -182,9 +210,9 @@ class AutomacaoHomePage(automacao):
     
     def holanda(self):
         try:
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[133]/a")# cliaca na aba
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[133]/span[1]/span")# add liga
-            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[133]/a")# fecha aba
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[127]/a")# cliaca na aba
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[127]/span[1]/span")# add liga
+            self.clique("/html/body/div[4]/div[1]/div/div/aside/div/div[4]/div/div[127]/a")# fecha aba
         except Exception as e:
             print("Erro ao adicionar holanda:", )
     
@@ -454,6 +482,7 @@ class RecolherEstatisticas(automacao):
         
         events = driver.find_elements(By.CLASS_NAME, "smv__incident")
 
+
         for event in events:#
             #smv__timeBox
             tempo=0
@@ -464,7 +493,8 @@ class RecolherEstatisticas(automacao):
 
             jogador=""
             try:
-                jogador = event.find_element(By.CLASS_NAME, "smv__playerName").text
+                jogador = event.find_element(By.CLASS_NAME, "smv__playerName")\
+                            .find_element(By.TAG_NAME, "div").text   
             except:
                 continue
             descricao=""
@@ -480,16 +510,20 @@ class RecolherEstatisticas(automacao):
                 except:
                         descricao = event.find_element(By.CLASS_NAME, "smv__subDown smv__playerName").text                
             except:
-                continue                
-            if descricao=='':
-                continue
+                None
+                #continue                
+            # if descricao=='':
+            #     continue
                 
-            descricao.rstrip("(").rstrip(")")
+            try:
+                descricao.rstrip("(").rstrip(")")
+            except:
+                None
             tipos_eventos = [
                 ("cartão amarelo", "card-ico yellowCard-ico"),#card-ico yellowCard-ico
                 # ("substituição", "substitution"),
                 ("gol", "smv__incidentHomeScore"),
-                ("gol", "smv__incidentAwayScore"), 
+                ("gol", "smv__incidentAwayScore"), #smv__incidentHomeScore
                 ("cartão vermelho", "card-ico redCard-ico")
             ]
             
@@ -544,5 +578,3 @@ class RecolherEstatisticas(automacao):
                             ultimo_placar = (gols_casa, gols_fora)
 
         return resultado
-
-

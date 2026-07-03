@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
+import os
 from metodos import automacaoUltimosJogos
 from models.Partidas import Partidas
 from Obter_Estatisticas import Obter_Estatisticas
@@ -104,15 +105,25 @@ def Obter_Partidas_Liga(url:str):
 
 
 
-#Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/alemanha/bundesliga-2022-2023/resultados/")
+def desligar_computador():
+    print("Execucao finalizada. O computador sera desligado em 60 segundos.")
+    print("Se quiser cancelar, execute: shutdown /a")
+    os.system("shutdown /s /t 180")
 
 
-Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-betano-2023/resultados/")
-# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/espanha/laliga-2022-2023/resultados/")
-# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/franca/ligue-1-2022-2023/resultados/")
-# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/inglaterra/campeonato-ingles-2022-2023/resultados/")
-# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/inglaterra/2-divisao-2022-2023/resultados/")
-# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/italia/serie-a-2022-2023/resultados/")
-# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/holanda/eredivisie-2022-2023/resultados/")
-# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/portugal/liga-portugal-2022-2023/resultados/")
-# Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-serie-b-superbet-2023/resultados/")
+def main():
+    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/alemanha/bundesliga-2023-2024/resultados/")
+    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-betano-2024/resultados/")
+    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/espanha/laliga-2023-2024/resultados/")
+    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/franca/ligue-1-2023-2024/resultados/")
+    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/inglaterra/campeonato-ingles-2023-2024/resultados/")
+    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/inglaterra/2-divisao-2023-2024/resultados/")
+    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/italia/serie-a-2023-2024/resultados/")
+    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/holanda/eredivisie-2023-2024/resultados/")
+    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/portugal/liga-portugal-2023-2024/resultados/")
+    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-serie-b-superbet-2024/resultados/")
+    desligar_computador()
+
+
+if __name__ == "__main__":
+    main()
