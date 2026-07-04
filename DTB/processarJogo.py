@@ -8,15 +8,15 @@ sys.path.append(str(PROJECT_ROOT))
 from DTB.connectionDtb import get_connection
 from DTB.EnviarEstatisticas import salvar_jogo
 from DTB.Partidasdb import get_partida 
-from models.partidas import Partidas
+from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 
 def ProcessarJogo(partida:Partidas,estCasa:Estatisticas,estFora:Estatisticas):
     conn = get_connection()
     cursor = conn.cursor()
-
+    partida_id = 0
     try:
-        salvar_jogo(cursor, partida, estCasa, estFora)
+        partida_id = salvar_jogo(cursor, partida, estCasa, estFora)
 
         conn.commit()  # 🔥 ESSENCIAL
 
@@ -27,6 +27,9 @@ def ProcessarJogo(partida:Partidas,estCasa:Estatisticas,estFora:Estatisticas):
     finally:
         cursor.close()
         conn.close()
+        
+    return partida_id
+        
         
 def GetPartidabyNamesAndDate(nomeCasa,nomeFora,Date):
     conn = get_connection()

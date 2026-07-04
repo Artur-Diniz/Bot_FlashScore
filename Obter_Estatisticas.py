@@ -8,6 +8,7 @@ from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from models.Odd import OddMarket
 from DTB.processarJogo import ProcessarJogo,GetPartidabyNamesAndDate 
+from DTB.processarOdd import ProcessarOdds 
 from time import sleep
 import psutil
 from selenium.webdriver.chrome.options import Options
@@ -66,164 +67,14 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             # btnEstatistica=0
             bot.pressionar_tecla(Keys.DOWN)                
             bot.pressionar_tecla(Keys.DOWN)          
-            sleep(2)   
+            sleep(2)    
+            
+            all_rows = bot.recolherOdd(driver,url,3746)
+            
+            if 0< len(all_rows):
+                ProcessarOdds(all_rows)
                 
-            btnODDS = bot.cliqueCSS("#detail > div.detailOver > div > a:nth-child(2) > button")    
-            
 
-            seletor = """
-            a[data-analytics-alias='under-over']
-            """
-            # seletor = """
-            # a[data-analytics-alias='1x2'],
-            # a[data-analytics-alias='under-over'],
-            # a[data-analytics-alias='both-teams-to-score'],
-            # a[data-analytics-alias='asian-handicap'],
-            # a[data-analytics-alias='double-chance'],
-            # a[data-analytics-alias='european-handicap'],
-            # a[data-analytics-alias='draw-no-bet'],
-            # a[data-analytics-alias='correct-score']
-            # """
-            
-            
-            sleep(5)
-            abas = driver.find_elements(By.CSS_SELECTOR, seletor)
-
-            BOOKMAP = {
-                "16": "bet365",
-                "574": "betano",
-                "833": "estrela_bet",
-                "933": "super_bet",
-                "1157": "one_xbet"
-            }
-
-            POSITION_MAP = {
-                "1x2": ["home", "draw", "away"],
-                "under-over": ["line", "over", "under"],
-                "both-teams-to-score": ["yes", "no"],
-                "asian-handicap": ["line", "home", "away"],
-                "double-chance": ["home_draw", "home_away", "draw_away"],
-                "european-handicap": ["line", "home", "draw", "away"],
-                "draw-no-bet": ["home", "away"],
-                "correct-score": ["score", "odd"]
-            }
-
-            all_rows = []
-
-            for aba in abas:
-
-                alias = aba.get_attribute("data-analytics-alias")
-
-                bot.pressionar_tecla(Keys.HOME)
-                bot.cliqueElemento(aba)
-                sleep(1.5)
-                bot.pressionar_tecla(Keys.END)
-
-                linhas = driver.find_elements(By.CSS_SELECTOR, ".ui-table__row")
-
-                buffer = {}
-
-                expected = POSITION_MAP.get(alias)
-
-                for linha in linhas:
-
-                    elementos = linha.find_elements(
-                        By.CSS_SELECTOR,
-                        "a.oddsCell__odd"
-                    )
-
-                    # -----------------------------
-                    # CONTEXTO DA LINHA
-                    # -----------------------------
-                    market_line = None
-                    selection_ctx = None
-
-                    try:
-                        ctx = linha.find_element(
-                            By.CSS_SELECTOR,
-                            "[data-testid='wcl-oddsValue']"
-                        ).text.strip()
-                    except:
-                        ctx = None
-
-                    if alias in ["under-over", "asian-handicap", "european-handicap"]:
-                        market_line = ctx
-
-                    elif alias == "correct-score":
-                        selection_ctx = ctx
-
-                    # -----------------------------
-                    # 1x2: seleção por índice FIXA
-                    # -----------------------------
-                    for i, el in enumerate(elementos):
-
-                        bookmaker_id = el.get_attribute("data-analytics-bookmaker-id")
-
-                        if bookmaker_id not in BOOKMAP:
-                            continue
-
-                        col = BOOKMAP[bookmaker_id]
-
-                        value = el.text.strip()
-
-                        if not value or len(value) > 5:
-                            continue
-
-                        try:
-                            odd_value = float(value)
-                        except:
-                            continue
-
-                        selection = None
-
-                        # -----------------------------
-                        # SELEÇÃO CORRETA POR MERCADO
-                        # -----------------------------
-                        if alias == "1x2" and expected and i < len(expected):
-                            selection = expected[i]
-
-                        elif alias == "correct-score":
-                            selection = selection_ctx
-
-                        elif alias != "1x2":
-                            # fallback genérico (caso necessário)
-                            selection = None
-
-                        # -----------------------------
-                        # CHAVE FINAL (AGORA CORRETA)
-                        # -----------------------------
-                        key = (alias, market_line, selection)
-
-                        if key not in buffer:
-                            buffer[key] = {
-                                "match_id": 1,
-                                "market_type": alias,
-                                "market_line": market_line,
-                                "selection": selection,
-                                "bet365": None,
-                                "betano": None,
-                                "estrela_bet": None,
-                                "super_bet": None,
-                                "one_xbet": None,
-                                "extras": {}
-                            }
-
-                        obj = buffer[key]
-
-                        obj[col] = odd_value
-
-                all_rows = list(buffer.values())
-
-
-            # ===========================
-            # OUTPUT FINAL
-            # ===========================
-
-            for row in all_rows:
-                print(row)
-
-                                                        
-                
             btnEstatisticas = bot.cliqueCSS("#detail > div.tabContent__match-summary > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")    
             
             
@@ -247,11 +98,11 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             casa.Gol_HT = Gol_HT.get("gol_casa")
             fora.Gol_HT = Gol_HT.get("gol_fora")
 
-            if partida.Campeonato == "SÉRIE A" or partida.Campeonato == "BRASILEIRÃO SÉRIE B SUPERBET" : 
+            if partida.Campeonato == "SÉRIE A" or partida.Campeonato == "BRASILEIRÃO SÉRIE B SUPERBET"  or partida.Campeonato == "BRASILEIRÃO SÉRIE B": 
                 isBrasileirao = driver.find_element(By.CSS_SELECTOR, "#detail > div.detail__breadcrumbs > nav > ol > li:nth-child(2) > a > span").text
                 if isBrasileirao == "BRASIL" and partida.Campeonato == "SÉRIE A":
                     partida.Campeonato= "BRASILEIRÃO BETANO"
-                elif  partida.Campeonato == "BRASILEIRÃO SÉRIE B SUPERBET":
+                elif  partida.Campeonato == "BRASILEIRÃO SÉRIE B SUPERBET" or partida.Campeonato == "BRASILEIRÃO SÉRIE B":
                     partida.Campeonato= "SÉRIE B"
 
 
@@ -330,7 +181,12 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 
             
             else:         
-                ProcessarJogo(partida,casa,fora)              
+                partida_id = ProcessarJogo(partida,casa,fora)          
+                all_rows = bot.recolherOdd(driver,url,partida_id)
+                
+                if 0< len(all_rows):
+                    ProcessarOdds(all_rows)
+   
                 # partidaLida = GetPartidabyNamesAndDate(casa.Nome,fora.Nome,partida.data)
               
                 # if partidaLida != 0: #aqui caso a partida ja tenha sido lida 
@@ -398,74 +254,8 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
     estatisticas.Interceptacoes_HT = 0
     return estatisticas
 
-    
-def get_or_create_market(buffer, key, base_obj):
-    if key not in buffer:
-        buffer[key] = base_obj
-    return buffer[key]
 
-def build_key(match_id, alias, market_line, selection):
-    return (match_id, alias, market_line, selection)
-
-def parse_market_values(alias, elementos):
-    values = [
-        e.text.strip()
-        for e in elementos
-        if len(e.text.strip()) <= 5
-    ]
-
-    return values
-
-def extract_market_context(linha, alias):
-    market_line = None
-    selection = None
-
-    try:
-        if alias in ["under-over", "asian-handicap", "european-handicap"]:
-            market_line = linha.find_element(
-                By.CSS_SELECTOR,
-                "[data-testid='wcl-oddsValue']"
-            ).text
-
-        elif alias == "correct-score":
-            selection = linha.find_element(
-                By.CSS_SELECTOR,
-                "[data-testid='wcl-oddsValue']"
-            ).text
-
-    except:
-        pass
-
-    return market_line, selection
-
-
-def build_market_object(alias, base_obj, elementos, BOOKMAP):
-    obj = OddMarket()
-    obj.match_id = base_obj["match_id"]
-    obj.market_type = alias
-
-    for elemento in elementos:
-
-        bookmaker_id = elemento.get_attribute("data-analytics-bookmaker-id")
-
-        if bookmaker_id not in BOOKMAP:
-            continue
-
-        col = BOOKMAP[bookmaker_id]
-
-        value = elemento.text.strip()
-
-        if len(value) > 5:
-            continue
-
-        try:
-            setattr(obj, col, float(value))
-        except:
-            pass
-
-    return obj
-
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/botafogo-sp-2yRUzy5N/crb-QHa3bLrj/?mid=rXIPzJNb", "Teste") 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/fortaleza-42FbPIs2/sport-recife-KIBeGAFO/?mid=Cl8dkIxh", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 

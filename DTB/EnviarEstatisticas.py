@@ -148,3 +148,5 @@ def salvar_jogo(cursor, partida, est_casa, est_fora):
 
     inserir_estatistica(cursor, partida_id, est_casa)
     inserir_estatistica(cursor, partida_id, est_fora)
+
+    return partida_id

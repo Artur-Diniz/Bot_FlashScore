@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-from models.partidas import Partidas
+from models.Partidas import Partidas
 from models.EstatisticaPartidas import Estatisticas
 from datetime import datetime
 from models.ErrosLogs import ErrosLogs
@@ -578,3 +578,197 @@ class RecolherEstatisticas(automacao):
                             ultimo_placar = (gols_casa, gols_fora)
 
         return resultado
+    
+    def recolherOdd(self,driver,url:str,partida_id:int):
+        driver.get(url)
+    
+        sleep(5)
+        
+        btnODDS = self.cliqueCSS("#detail > div.detailOver > div > a:nth-child(2) > button")    
+        
+
+        seletor = """
+        a[data-analytics-alias='1x2'],
+        a[data-analytics-alias='under-over'],
+        a[data-analytics-alias='both-teams-to-score'],
+        a[data-analytics-alias='asian-handicap'],
+        a[data-analytics-alias='double-chance'],
+        a[data-analytics-alias='draw-no-bet'],
+        a[data-analytics-alias='correct-score']
+        """
+        
+        url_atual = driver.current_url
+
+        sleep(5)
+        try:
+            abas = driver.find_elements(By.CSS_SELECTOR, seletor)
+            
+            if len(abas) < 1:
+                raise
+        except:
+            driver.get(url_atual)
+            sleep(5)
+            abas = driver.find_elements(By.CSS_SELECTOR, seletor)
+            
+    
+        BOOKMAP = {
+            "16": "bet365",
+            "574": "betano",
+            "833": "estrela_bet",
+            "933": "super_bet",
+            "1157": "one_xbet"
+        }
+
+        POSITION_MAP = {
+            "1x2": ["home", "draw", "away"],
+            "under-over": ["line", "over", "under"],
+            "both-teams-to-score": ["yes", "no"],
+            "asian-handicap": ["line", "home", "away"],
+            "double-chance": ["home_draw", "home_away", "draw_away"],
+            "draw-no-bet": ["home", "away"],
+            "correct-score": ["score", "odd"]
+        }
+
+        all_rows = []
+
+        # FT = não faz clique
+        # HT = faz clique
+        periodos = [
+            ("FT", False),
+            ("HT", True)
+        ]
+
+        for period, is_ht in periodos:
+
+            abas = driver.find_elements(By.CSS_SELECTOR, seletor)
+
+            buffer = {}
+
+            for aba in abas:
+
+                alias = aba.get_attribute("data-analytics-alias")
+
+                sleep(1.5)
+
+                self.cliqueElemento(aba)
+                sleep(1.5)
+                # tratamento especial do HT
+                if is_ht:
+                    sleep(1.5)
+
+                    if alias == "correct-score":
+                        self.cliqueCSS(
+                            "#detail > div.tabContent__odds-comparison > div > div:nth-child(1) > div > div.subFilterOver.subFilterOver--indent > div > a:nth-child(3) > button"
+                        )
+                    else:
+                        self.cliqueCSS(
+                            "#detail > div.tabContent__odds-comparison > div > div:nth-child(1) > div > div.subFilterOver.subFilterOver--indent > div > a:nth-child(2) > button"
+                        )
+
+                    sleep(1.5)
+
+                self.pressionar_tecla(Keys.HOME)
+
+                self.pressionar_tecla(Keys.END)
+
+                linhas = driver.find_elements(
+                    By.CSS_SELECTOR,
+                    ".ui-table__row"
+                )
+
+                expected = POSITION_MAP.get(alias)
+
+                for linha in linhas:
+
+                    elementos = linha.find_elements(
+                        By.CSS_SELECTOR,
+                        "a.oddsCell__odd"
+                    )
+
+                    market_line = None
+                    selection_ctx = None
+
+                    try:
+                        ctx = linha.find_element(
+                            By.CSS_SELECTOR,
+                            "[data-testid='wcl-oddsValue']"
+                        ).text.strip()
+                    except:
+                        ctx = None
+
+                    if alias in [
+                        "under-over",
+                        "asian-handicap",
+                        "european-handicap"
+                    ]:
+                        market_line = ctx
+
+                        # Ignora linhas quarter handicap/quarter goals
+                        if market_line is not None:
+                            market_line_str = str(market_line).strip()
+
+                            if market_line_str.endswith(".25") or market_line_str.endswith(".75"):
+                                continue
+
+                    elif alias == "correct-score":
+                        selection_ctx = ctx
+
+                    for i, el in enumerate(elementos):
+
+                        bookmaker_id = el.get_attribute(
+                            "data-analytics-bookmaker-id"
+                        )
+
+                        if bookmaker_id not in BOOKMAP:
+                            continue
+
+                        col = BOOKMAP[bookmaker_id]
+
+                        value = el.text.strip()
+
+                        if not value or len(value) > 5:
+                            continue
+
+                        try:
+                            odd_value = float(value)
+                        except:
+                            continue
+
+                        selection = None
+
+                        if alias == "1x2" and expected and i < len(expected):
+                            selection = expected[i]
+
+                        elif alias == "correct-score":
+                            selection = selection_ctx
+
+                        # IMPORTANTE:
+                        # adiciona period na chave
+                        key = (
+                            period,
+                            alias,
+                            market_line,
+                            selection
+                        )
+
+                        if key not in buffer:
+                            buffer[key] = {
+                                "match_id": partida_id,
+                                "period": period,
+                                "market_type": alias,
+                                "market_line": market_line,
+                                "selection": selection,
+                                "bet365": None,
+                                "betano": None,
+                                "estrela_bet": None,
+                                "super_bet": None,
+                                "one_xbet": None,
+                                "extras": {}
+                            }
+
+                        buffer[key][col] = odd_value
+
+            all_rows.extend(buffer.values())
+                
+        
+        return all_rows

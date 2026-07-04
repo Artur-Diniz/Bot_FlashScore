@@ -9,7 +9,6 @@ class OddMarket:
         self.market_line = None
         self.selection = None
 
-        # 👇 NOVO CAMPO
         self.period = None   # FT | HT
 
         self.bet365 = None
