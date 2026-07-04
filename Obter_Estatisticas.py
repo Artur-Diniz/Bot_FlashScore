@@ -68,11 +68,7 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
             bot.pressionar_tecla(Keys.DOWN)                
             bot.pressionar_tecla(Keys.DOWN)          
             sleep(2)    
-            
-            all_rows = bot.recolherOdd(driver,url,3746)
-            
-            if 0< len(all_rows):
-                ProcessarOdds(all_rows)
+
                 
 
             btnEstatisticas = bot.cliqueCSS("#detail > div.tabContent__match-summary > div.filterOver.filterOver--indent > div > a:nth-child(2) > button")    
@@ -181,9 +177,13 @@ def  Obter_Estatisticas(url:str, tipoPartida:str):
                 
             
             else:         
-                partida_id = ProcessarJogo(partida,casa,fora)          
-                all_rows = bot.recolherOdd(driver,url,partida_id)
-                
+                partida_id = ProcessarJogo(partida,casa,fora)        
+                try:  
+                    if partida_id != 0:
+                        all_rows = bot.recolherOdd(driver,url,partida_id)
+                except e:
+                    print(e)
+                    
                 if 0< len(all_rows):
                     ProcessarOdds(all_rows)
    
@@ -255,7 +255,7 @@ def InstanciarPartidaZerada(estatisticas:Estatisticas):
     return estatisticas
 
 
-Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/fortaleza-42FbPIs2/sport-recife-KIBeGAFO/?mid=Cl8dkIxh", "Teste") 
+Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/america-mg-xUT0Bp8o/fortaleza-42FbPIs2/?mid=6DSiHXQ8", "Teste") 
   
 #Obter_Estatisticas("https://www.flashscore.com.br/jogo/futebol/Yg2idzak/#/resumo-de-jogo/resumo-de-jogo", "Teste")   
 
