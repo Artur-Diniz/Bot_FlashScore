@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime, timedelta
 import os
 from metodos import automacaoUltimosJogos
-from models.partidas import Partidas
+from models.Partidas import Partidas
 from Obter_Estatisticas import Obter_Estatisticas
 from concurrent.futures import ThreadPoolExecutor
 from selenium.webdriver.chrome.options import Options
@@ -112,17 +112,9 @@ def desligar_computador():
 
 
 def main():
-    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/alemanha/bundesliga-2023-2024/resultados/")
-    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-betano-2024/resultados/")
-    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/espanha/laliga-2023-2024/resultados/")
-    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/franca/ligue-1-2023-2024/resultados/")
-    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/inglaterra/campeonato-ingles-2023-2024/resultados/")
-    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/inglaterra/2-divisao-2023-2024/resultados/")
-    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/italia/serie-a-2023-2024/resultados/")
-    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/holanda/eredivisie-2023-2024/resultados/")
-    Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/portugal/liga-portugal-2023-2024/resultados/")
+
     Obter_Partidas_Liga("https://www.flashscore.com.br/futebol/brasil/brasileirao-serie-b-superbet-2024/resultados/")
-    desligar_computador()
+    # desligar_computador()
 
 
 if __name__ == "__main__":

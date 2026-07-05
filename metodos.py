@@ -657,9 +657,11 @@ class RecolherEstatisticas(automacao):
                     sleep(1.5)
 
                     if alias == "correct-score":
-                        self.cliqueCSS(
-                            "#detail > div.tabContent__odds-comparison > div > div:nth-child(1) > div > div.subFilterOver.subFilterOver--indent > div > a:nth-child(3) > button"
-                        )
+                        try:
+                            btnCorrectScoreHT = self.cliqueCSS("#detail > div.tabContent__odds-comparison > div > div:nth-child(1) > div > div.subFilterOver.subFilterOver--indent > div > a:nth-child(3) > button")
+                        except:                              
+                            btnCorrectScoreHT = self.cliqueCSS("#detail > div.tabContent__odds-comparison > div > div:nth-child(1) > div > div.subFilterOver.subFilterOver--indent > div > a:nth-child(2) > button")
+                            
                     else:
                         self.cliqueCSS(
                             "#detail > div.tabContent__odds-comparison > div > div:nth-child(1) > div > div.subFilterOver.subFilterOver--indent > div > a:nth-child(2) > button"
